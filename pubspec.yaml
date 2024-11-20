@@ -1,0 +1,30 @@
+name: f_bapp
+description: Chinchin Business App flutter 
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.5.3
+
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  flutter_dotenv: ^5.2.1
+  google_fonts: ^6.2.1
+  provider: ^6.1.2
+  flutter_secure_storage: ^9.2.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+  flutter_flavorizr: ^2.2.3
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - .env
+  #   - images/a_dot_ham.jpeg

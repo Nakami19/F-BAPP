@@ -1,0 +1,80 @@
+flavors:
+  developer:
+    app:
+      name: "Chinchin Business"
+
+    android:
+      applicationId: "com.chinchinbusiness.app"
+      resValues:
+        environmentTitle:
+          type: "string"
+          value: "DEVELOPER"
+    ios:
+      bundleId: "com.chinchinbusiness.app"
+      variables:
+        environmentTitle:
+          value: "DEVELOPER"
+
+  qa:
+    app:
+      name: "Chinchin Business"
+
+    android:
+      applicationId: "com.chinchinbusiness.app"
+      resValues:
+        environmentTitle:
+          type: "string"
+          value: "QUALITY"
+    ios:
+      bundleId: "com.chinchinbusiness.app"
+      variables:
+        environmentTitle:
+          value: "QUALITY"
+
+  sandbox:
+    app:
+      name: "Chinchin Business"
+
+    android:
+      applicationId: "com.chinchinbusiness.app"
+      resValues:
+        environmentTitle:
+          type: "string"
+          value: "SANDBOX"
+    ios:
+      bundleId: "com.chinchinbusiness.app"
+      variables:
+        environmentTitle:
+          value: "SANDBOX"
+
+  preproduction:
+    app:
+      name: "Chinchin Business"
+
+    android:
+      applicationId: "com.chinchinbusiness.app"
+      resValues:
+        environmentTitle:
+          type: "string"
+          value: "PREPRODUCTION"
+    ios:
+      bundleId: "com.chinchinbusiness.app"
+      variables:
+        environmentTitle:
+          value: "PREPRODUCTION"
+
+  production:
+    app:
+      name: "Chinchin Business"
+
+    android:
+      applicationId: "com.chinchinbusiness.app"
+      resValues:
+        environmentTitle:
+          type: "string"
+          value: "PRODUCTION"
+    ios:
+      bundleId: "com.chinchinbusiness.app"
+      variables:
+        environmentTitle:
+          value: "PRODUCTION"
