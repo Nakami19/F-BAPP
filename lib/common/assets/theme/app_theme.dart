@@ -10,6 +10,7 @@ part 'light_theme.dart';
 part 'dark_theme.dart';
 
 const Color primaryColor = Color(0xFF14C6A4);
+const Color secondaryColor = Color(0xFF6A9CF3);
 const Color primaryScaffoldColor = Color(0xFFFFFFFF);
 const Color lightColor = Color(0xFFf1f4f8);
 const Color errorColor = Color(0xFFEA3A3D);
@@ -27,7 +28,7 @@ class AppTheme {
 
   static Color secColorScaffold = const Color(0xFFFFFFFF);
   static Color dialogsBarrierColor = const Color(0xFF24264D).withOpacity(0.75);
-  static const lightThemeTextColor = Color(0xFF35445F);
+  static const lightThemeTextColor = Color.fromARGB(255, 35, 43, 58);
 
   // Variable color de placeholders gris
   static const hintTextColor = Color(0xDDc9c7c7);

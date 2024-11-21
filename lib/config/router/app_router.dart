@@ -1,6 +1,6 @@
 import 'package:f_bapp/config/helpers/fade_page_transition.dart';
 import 'package:f_bapp/config/router/routes.dart';
-import 'package:f_bapp/infrastructure/auth/login/first_login_screen.dart';
+import 'package:f_bapp/presentation/screens/auth/login/first_login_screen.dart';
 import 'package:flutter/material.dart';
 
 class AppRouter {
