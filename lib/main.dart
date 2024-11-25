@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:f_bapp/common/data/enviroment.dart';
-import 'package:f_bapp/presentation/providers/shared/theme_provider.dart';
+import 'package:f_bapp/common/providers/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'app.dart';

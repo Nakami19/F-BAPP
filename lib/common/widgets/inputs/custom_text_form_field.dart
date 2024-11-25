@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../presentation/providers/shared/theme_provider.dart';
+import '../../providers/theme_provider.dart';
 import '../../assets/theme/app_theme.dart';
 
 class CustomTextFormField extends StatelessWidget {
   const CustomTextFormField({
     super.key,
     required this.controller,
+    this.node,
     this.hintText,
     this.inputType,
     this.suffixIcon,
@@ -31,6 +32,7 @@ class CustomTextFormField extends StatelessWidget {
     });
 
   final TextEditingController controller;
+  final FocusNode? node;
   final String? hintText;
   final TextInputType? inputType;
   final Widget? suffixIcon;
@@ -62,7 +64,9 @@ class CustomTextFormField extends StatelessWidget {
           : EdgeInsets.symmetric(vertical: paddingV, horizontal: paddingH),
       child: TextFormField(
           keyboardType: inputType ?? TextInputType.text,
+          autofocus: autofocus ?? false,
           controller: controller,
+          focusNode: node,
           readOnly: readOnly ?? false,
           showCursor: showCursor ?? true,
           obscureText: obscureText,

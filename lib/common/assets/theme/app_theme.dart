@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-import '../../../presentation/providers/shared/theme_provider.dart';
+import '../../providers/theme_provider.dart';
 
 part 'fonts.dart';
 part 'light_theme.dart';

@@ -1,13 +1,23 @@
 import 'package:f_bapp/config/helpers/fade_page_transition.dart';
 import 'package:f_bapp/config/router/routes.dart';
-import 'package:f_bapp/presentation/screens/auth/login/first_login_screen.dart';
+import 'package:f_bapp/presentation/screens/auth/first_login_screen.dart';
+import 'package:f_bapp/presentation/screens/auth/second_login_screen.dart';
+import 'package:f_bapp/presentation/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 
 class AppRouter {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case firstLoginScreen:
-        return FadePageTransition(builder: (_) => FirstLoginScreen());
+        return FadePageTransition(builder: (_) => const FirstLoginScreen());
+      
+      case secondLoginScreen:
+        return FadePageTransition(
+          builder: (_) => const SecondLoginScreen(),
+        );
+
+      case homeScreen:
+        return FadePageTransition(builder: (_) => const HomeScreen());
       
       default:
         return FadePageTransition(

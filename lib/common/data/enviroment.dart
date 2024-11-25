@@ -1,9 +1,14 @@
 import 'package:f_bapp/common/data/constants.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-class Enviroment {
+class Enviroment{
   static int headbandColor = 0;
   static String environmentName = '';
+  static String imageUrl = dotenv.env['IMAGE_URL']!;
+  static String recaptcha = dotenv.env['RECAPTCHA']!;
+  static String verificationUrl = dotenv.env['VERIFICATION_URL']!;
+  static String liveChatLicense = '12145539';
+  static String CC_FBUS_GATEWAY = 'http://172.16.4.100:4005';
 
 
   static   initEnviroment() async {

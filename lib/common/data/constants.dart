@@ -8,6 +8,10 @@ enum Connection {
   preProduction,
   production,
 }
+class Constants{
+  static String? appVersion;
+  static String? buildNumber;
+}
 
 List<String> typeDocuments = [
   'V',
