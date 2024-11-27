@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../infrastructure/shared/error_type.dart';
+import '../../infrastructure/shared/error_type.dart';
 
 class GeneralProvider extends ChangeNotifier {
   List<Map<String, ErrorType>> errors = [];

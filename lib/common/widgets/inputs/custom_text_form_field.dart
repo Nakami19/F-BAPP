@@ -134,9 +134,12 @@ class CustomTextFormField extends StatelessWidget {
               // Ocultar el teclado al tocar el campo de texto en iOS
               if (inputType == TextInputType.number &&
                   Theme.of(context).platform == TargetPlatform.iOS) {
-                FocusScope.of(context).unfocus();
+                  FocusScope.of(context).unfocus();
               }
-        
+
+              if (node != null) {
+                FocusScope.of(context).requestFocus(node);
+                }
               if (onTap != null) {
                 onTap!();
               }

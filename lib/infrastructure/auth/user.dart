@@ -1,3 +1,5 @@
+import 'package:f_bapp/infrastructure/auth/privileges.dart';
+
 class User {
   final String personName;
   final String? personLastName;
@@ -7,8 +9,9 @@ class User {
   final String? lastSession;
   final bool usernameChangeNeeded;
   final bool isPasswordExpired;
-  final int? idDocumentType;
-  final String? documentNumber;
+  // final int? idDocumentType;
+  // final String? documentNumber;
+  // List<Privilege> privileges;
 
   User({
     required this.personName,
@@ -19,8 +22,9 @@ class User {
     required this.lastSession,
     required this.usernameChangeNeeded,
     required this.isPasswordExpired,
-    this.idDocumentType,
-    this.documentNumber,
+    // this.idDocumentType,
+    // this.documentNumber,
+    // required this.privileges
   });
 
   factory User.fromJson(Map<String, dynamic> json) => User(
@@ -32,8 +36,11 @@ class User {
         lastSession: json['lastSession'],
         usernameChangeNeeded: json['usernameChangeNeeded'],
         isPasswordExpired: json['isPasswordExpired'],
-        idDocumentType: json['idDocumentType'],
-        documentNumber: json['documentNumber'],
+        // idDocumentType: json['idDocumentType'],
+        // documentNumber: json['documentNumber'],
+        // privileges: (json['privileges'] as List<dynamic>)
+        //   .map((privilege) => Privilege.fromJson(privilege as Map<String, dynamic>))
+        //   .toList(), // Mapeo de privilegios.
       );
 
   Map<String, dynamic> toJson() {
@@ -46,8 +53,8 @@ class User {
       'lastSession': lastSession,
       'usernameChangeNeeded': usernameChangeNeeded,
       'isPasswordExpired': isPasswordExpired,
-      'idDocumentType': idDocumentType,
-      'documentNumber': documentNumber,
+      // 'idDocumentType': idDocumentType,
+      // 'documentNumber': documentNumber,
     };
   }
 
@@ -63,9 +70,9 @@ class User {
       lastSession: $lastSession,
       usernameChangeNeeded: $usernameChangeNeeded,
       isPasswordExpired: $isPasswordExpired,
-      idDocumentType: $idDocumentType,
-      documentNumber: $documentNumber,
     )
     ''';
+      //     idDocumentType: $idDocumentType, 
+      // documentNumber: $documentNumber,
   }
 }

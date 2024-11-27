@@ -3,6 +3,7 @@ import 'package:f_bapp/config/router/routes.dart';
 import 'package:f_bapp/presentation/screens/auth/first_login_screen.dart';
 import 'package:f_bapp/presentation/screens/auth/second_login_screen.dart';
 import 'package:f_bapp/presentation/screens/home_screen.dart';
+import 'package:f_bapp/presentation/screens/terms_condition_screen.dart';
 import 'package:flutter/material.dart';
 
 class AppRouter {
@@ -14,6 +15,11 @@ class AppRouter {
       case secondLoginScreen:
         return FadePageTransition(
           builder: (_) => const SecondLoginScreen(),
+        );
+      
+      case termsConditionsScreen:
+        return FadePageTransition(
+          builder: (_) => const TermsConditionScreen(),
         );
 
       case homeScreen:

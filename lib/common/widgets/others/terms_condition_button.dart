@@ -1,3 +1,4 @@
+import 'package:f_bapp/config/router/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -29,7 +30,12 @@ class TermsConditionsButton extends StatelessWidget {
                 decoration: TextDecoration.underline,
               ),
             ),
-            onPressed: () => (),
+            onPressed: () => (
+              Navigator.pushNamed(
+              context,
+              route ?? termsConditionsScreen,
+            ),
+            ),
           ),
         ],
       ),

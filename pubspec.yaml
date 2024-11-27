@@ -23,6 +23,7 @@ dependencies:
   connectivity_plus: ^6.1.0
   another_flushbar: ^1.12.30
   shared_preferences: ^2.3.3
+  local_auth: ^2.3.0
 
 dev_dependencies:
   flutter_test:

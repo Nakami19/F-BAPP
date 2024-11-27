@@ -1,9 +1,11 @@
+import 'package:f_bapp/presentation/providers/shared/utils_provider.dart';
+import 'package:f_bapp/presentation/providers/user/privileges_provider.dart';
 import 'package:provider/single_child_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
 import 'auth/login_provider.dart';
-import 'shared/general_provider.dart';
+import '../../common/providers/general_provider.dart';
 import 'shared/session_provider.dart';
 
 
@@ -12,6 +14,8 @@ class AppProviders {
     ChangeNotifierProvider(create: (_) => SessionProvider()),
     ChangeNotifierProvider(create: (_) => GeneralProvider()),
     ChangeNotifierProvider(create: (_) => LoginProvider()),
+    ChangeNotifierProvider(create: (_) => PrivilegesProvider()),
+    ChangeNotifierProvider(create: (_) => UtilsProvider()),
   ];
 
   static List<GeneralProvider> getDisposableProviders(BuildContext context) {
