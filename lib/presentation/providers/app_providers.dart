@@ -1,3 +1,4 @@
+import 'package:f_bapp/presentation/providers/shared/home_provider.dart';
 import 'package:f_bapp/presentation/providers/shared/utils_provider.dart';
 import 'package:f_bapp/presentation/providers/user/privileges_provider.dart';
 import 'package:provider/single_child_widget.dart';
@@ -16,6 +17,7 @@ class AppProviders {
     ChangeNotifierProvider(create: (_) => LoginProvider()),
     ChangeNotifierProvider(create: (_) => PrivilegesProvider()),
     ChangeNotifierProvider(create: (_) => UtilsProvider()),
+    ChangeNotifierProvider(create: (_) => HomeProvider())
   ];
 
   static List<GeneralProvider> getDisposableProviders(BuildContext context) {

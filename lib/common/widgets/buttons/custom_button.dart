@@ -16,6 +16,7 @@ class CustomButton extends StatelessWidget {
   final double? paddingH;
   final double? paddingV;
   final double? height; 
+  final double? width; 
   final double borderRadius = BorderRadiusValue; 
   final ButtonStyle? styleTextButton;
   final TextStyle? styleText;
@@ -30,6 +31,7 @@ class CustomButton extends StatelessWidget {
     this.paddingH,
     this.paddingV,
     this.height,
+    this.width,
     this.isText = false,
     this.styleTextButton,
     this.styleText,
@@ -47,7 +49,7 @@ class CustomButton extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 50),
         child: SizedBox(
-          width: double.infinity,
+          width: width ?? double.infinity,
           height: height?? 55,
           child: isText ?
                 TextButton(
@@ -73,6 +75,7 @@ class CustomButton extends StatelessWidget {
                   child: LoadingButtonText(
                     text: title,
                     provider: provider,
+                    styleText: styleText,
                   ),
                 )
               : FilledButton(
@@ -87,6 +90,7 @@ class CustomButton extends StatelessWidget {
                   child: LoadingButtonText(
                     text: title,
                     provider: provider,
+                    styleText: styleText,
                   ),
                 ),
         ),

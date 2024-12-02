@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 class LoadingButtonText extends StatelessWidget {
   final GeneralProvider provider;
   final String text;
+  final TextStyle? styleText;
 
   const LoadingButtonText({
     super.key,
     required this.text,
     required this.provider,
+    this.styleText
   });
 
   @override
@@ -39,7 +41,7 @@ class LoadingButtonText extends StatelessWidget {
           )
         : Text(
             text,
-            style: textStyle,
+            style: styleText?? textStyle,
           );
   }
 }

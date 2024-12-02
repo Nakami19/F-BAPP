@@ -1,0 +1,241 @@
+import 'package:f_bapp/common/assets/theme/app_theme.dart';
+import 'package:f_bapp/common/providers/general_provider.dart';
+import 'package:f_bapp/common/providers/theme_provider.dart';
+import 'package:f_bapp/common/widgets/buttons/custom_button.dart';
+import 'package:f_bapp/common/widgets/others/snackbars.dart';
+import 'package:f_bapp/config/router/routes.dart';
+import 'package:f_bapp/infrastructure/services/secure_storage_service.dart';
+import 'package:f_bapp/presentation/providers/app_providers.dart';
+import 'package:f_bapp/presentation/providers/shared/session_provider.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:provider/provider.dart';
+
+class Dialogs {
+  static TextStyle fontStyle = const TextStyle(fontSize: 18);
+
+  static customDialog(BuildContext context,
+      {required String title,
+      Widget? content,
+      bool? showButtons = true,
+      bool? showOnlyConfirmButton = false,
+      String? confirmButtonText = 'CONFIRMAR',
+      String? cancelButtonText = 'CANCELAR',
+      required VoidCallback actionSuccess,
+      VoidCallback? closeAction}) {
+    final themeProvider = context.watch<ThemeProvider>();
+
+    return AlertDialog(
+      backgroundColor:
+          themeProvider.isDarkModeEnabled ? darkColor : primaryScaffoldColor,
+      title: Text(
+        title,
+        style: fontStyle,
+        textAlign: TextAlign.center,
+      ),
+      content: content,
+      actionsAlignment: MainAxisAlignment.center,
+      actions: showButtons != null && showButtons
+          ? showOnlyConfirmButton != null && showOnlyConfirmButton
+              ? <Widget>[
+                  CustomButton(
+                      title: confirmButtonText ?? 'ACEPTAR',
+                      isPrimaryColor: true,
+                      isOutline: false,
+                      onTap: actionSuccess,
+                      provider: GeneralProvider())
+                  // CustomStaticButton(
+                  //   title: confirmButtonText ?? 'ACEPTAR',
+                  //   isPrimaryColor: true,
+                  //   isOutline: false,
+                  //   fontSize: 14,
+                  //   onTap: actionSuccess,
+                  //   paddingHorizontal: 0,
+                  // )
+                ]
+              : <Widget>[
+                  CustomButton(
+                      title: cancelButtonText ?? 'CANCELAR',
+                      isPrimaryColor: false,
+                      isOutline: false,
+                      isText: true,
+                      onTap: closeAction ?? () => Navigator.pop(context, false),
+                      provider: GeneralProvider()),
+                  // TextButton(
+                  //   style: FilledButton.styleFrom(
+                  //     shape: RoundedRectangleBorder(
+                  //       borderRadius:
+                  //           BorderRadius.circular(buttonBorderRadiusValue),
+                  //     ),
+                  //   ),
+                  //   onPressed:
+                  //       closeAction ?? () => Navigator.pop(context, false),
+                  //   child: Text(
+                  //     cancelButtonText ?? 'CANCELAR',
+                  //     style: const TextStyle(
+                  //       fontSize: 12,
+                  //     ),
+                  //   ),
+                  // ),
+                  CustomButton(
+                      title: confirmButtonText ?? 'CONFIRMAR',
+                      isPrimaryColor: false,
+                      isOutline: false,
+                      onTap: actionSuccess,
+                      provider: GeneralProvider()),
+                  // FilledButton(
+                  //   style: FilledButton.styleFrom(
+                  //     shape: RoundedRectangleBorder(
+                  //       borderRadius:
+                  //           BorderRadius.circular(buttonBorderRadiusValue),
+                  //     ),
+                  //   ),
+                  //   onPressed: actionSuccess,
+                  //   child: Text(
+                  //     confirmButtonText ?? 'CONFIRMAR',
+                  //     style: const TextStyle(
+                  //       fontWeight: FontWeight.bold,
+                  //       fontSize: 10,
+                  //     ),
+                  //   ),
+                  // )
+                ]
+          : null,
+    );
+  }
+
+  /// Dialogo que se muestra si no hay conexión a internet agregada
+  static connectivityDialog(BuildContext context) {
+    final themeProvider = context.watch<ThemeProvider>();
+
+    return AlertDialog(
+      backgroundColor:
+          themeProvider.isDarkModeEnabled ? darkColor : primaryScaffoldColor,
+      title: Text(
+        'No hay conexión a internet',
+        style: TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      content: Text('Intenta conectarte a una red wifi o móvil'),
+    );
+  }
+
+  static spinKitLoader(BuildContext context,
+      {bool isDismissible = false, String? loadingText}) {
+    return WillPopScope(
+      onWillPop: () async => isDismissible,
+      child: AlertDialog(
+        contentPadding: EdgeInsets.zero,
+        content: Container(
+          decoration: BoxDecoration(
+            // color: Colors.white,
+            borderRadius: BorderRadius.circular(5),
+          ),
+          height: 75,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              const SpinKitFadingCircle(
+                color: Color(0xFF6A9CF3),
+                size: 30,
+              ),
+              const SizedBox(
+                width: 10,
+              ),
+              Text(
+                loadingText ?? 'Cargando...',
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  static logoutDialog(BuildContext context) {
+    final themeProvider = context.watch<ThemeProvider>();
+
+    return AlertDialog(
+      backgroundColor:
+          themeProvider.isDarkModeEnabled ? darkColor : primaryScaffoldColor,
+      title: Text(
+        'Cerrar sesión',
+        style: fontStyle,
+        textAlign: TextAlign.center,
+      ),
+      content: const Text(
+        '¿Estás seguro que deseas cerrar tu sesión?',
+        textAlign: TextAlign.center,
+      ),
+      actionsAlignment: MainAxisAlignment.center,
+      actions: <Widget>[
+        TextButton(
+          style: FilledButton.styleFrom(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(BorderRadiusValue),
+            ),
+          ),
+          onPressed: () => Navigator.pop(context),
+          child: const Text(
+            'CANCELAR',
+            style: TextStyle(
+              fontSize: 12,
+            ),
+          ),
+        ),
+        FilledButton(
+          style: FilledButton.styleFrom(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(BorderRadiusValue),
+            ),
+          ),
+          onPressed: () async {
+            SecureStorageService()
+              ..deleteValue('userData')
+              ..deleteValue('timeExpiration');
+
+            AppProviders.disposeAllProviders(
+              context,
+            );
+
+            context.read<SessionProvider>().destroySession(
+                  haveModalAction: false,
+                );
+            
+            // context.read<SessionProvider>().cancelTimer(
+            //       haveModalAction: false,
+            //     );
+
+            // Navigator.popUntil(
+            //   context,
+            //   (route) => route.isFirst,
+            // );
+
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              firstLoginScreen,
+              (route) => false,
+            );
+
+            Snackbars.customSnackbar(
+              context,
+              title: '¡Vuelva Pronto!',
+              message:
+                  'Su sesión ha sido cerrada exitosamente. Gracias por preferirnos.',
+            );
+          },
+          child: const Text(
+            'CONFIRMAR',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 12,
+            ),
+          ),
+        )
+      ],
+    );
+  }
+}

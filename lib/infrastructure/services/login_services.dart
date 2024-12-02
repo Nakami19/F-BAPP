@@ -37,14 +37,11 @@ if (recaptcha == null || recaptcha.isEmpty) {
 }
 
   //Envía todas las credenciales para loguearse y recibe el token
-  Future<Response> postLogin(String member, String password) async {
+  Future<Response> postLogin(Map<String, dynamic> data) async {
     try {
       final response = await dio.post(
         Enviroment.CC_FBUS_GATEWAY +'/v1/auth/business/login',
-        data: {
-          'member': member,
-          'password': password,
-        },
+        data: data,
         options: Options(headers: {
           'recaptcha': Enviroment.recaptcha,
           'Content-Type': 'application/json',

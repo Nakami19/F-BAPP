@@ -1,7 +1,7 @@
 name: f_bapp
 description: Chinchin Business App flutter 
 publish_to: 'none'
-version: 1.0.0+1
+version: 1.0.0+4
 
 environment:
   sdk: ^3.5.3
@@ -24,6 +24,9 @@ dependencies:
   another_flushbar: ^1.12.30
   shared_preferences: ^2.3.3
   local_auth: ^2.3.0
+  local_auth_android: ^1.0.46
+  flutter_spinkit: ^5.2.1
+  dropdown_button2: ^2.3.9
 
 dev_dependencies:
   flutter_test:
@@ -37,5 +40,7 @@ flutter:
 
   assets:
     - .env
+    - assets/chinchin/
     - assets/images/
+    - assets/modules/
   

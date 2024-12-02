@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:f_bapp/common/assets/theme/app_theme.dart';
 import 'package:f_bapp/common/widgets/buttons/custom_button.dart';
 import 'package:f_bapp/common/widgets/inputs/custom_text_form_field.dart';
+import 'package:f_bapp/common/widgets/others/dialogs.dart';
 import 'package:f_bapp/common/widgets/others/info_chinchin_popup.dart';
 import 'package:f_bapp/common/widgets/others/terms_condition_button.dart';
 import 'package:f_bapp/config/data_constants/data_constants.dart';
@@ -11,7 +14,10 @@ import 'package:f_bapp/presentation/providers/shared/session_provider.dart';
 import 'package:f_bapp/common/providers/theme_provider.dart';
 import 'package:f_bapp/common/widgets/others/error_box.dart';
 import 'package:f_bapp/presentation/providers/user/privileges_provider.dart';
+import 'package:f_bapp/presentation/widgets/shared/app_dialogs.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:local_auth/local_auth.dart';
 import 'package:provider/provider.dart';
 
 class SecondLoginScreen extends StatefulWidget {
@@ -75,8 +81,8 @@ class _SecondLoginScreenState extends State<SecondLoginScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Image.asset(
-                    '${DataConstant.images}/chinchin-logo-business-black.png',
+                  SvgPicture.asset(
+                    '${DataConstant.images_chinchin}/chinchin-logo-business-base.svg',
                     width: 220, 
                     fit: BoxFit.contain, 
                   ),
@@ -138,12 +144,20 @@ class _SecondLoginScreenState extends State<SecondLoginScreen> {
                     paddingH: 0,
                     onTap: () async{
                       if (secondLoginForm.currentState!.validate()) {
-                        final loginResp = await loginProvider.login1(loginProvider.userLogin!,Base64Encoder.encodeBase64(loginProvider.password!,));
+                        final loginData = {
+                          'member': loginProvider.userLogin!,
+                          'password': Base64Encoder.encodeBase64(loginProvider.password!),
+                        };
+                        final loginResp = await loginProvider.login1(loginData);
                         // print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
                         // print(loginResp);
                         if(loginResp!=null) {
                           final privileges = loginResp['privileges'] as List<Privilege>;
                           privilegesProvider.Setprivileges = privileges; 
+                        }
+
+                        if (loginProvider.statusCode != HttpStatus.ok) {
+                        return;
                         }
                         
                         loginProvider.disposeValues();
@@ -152,12 +166,32 @@ class _SecondLoginScreenState extends State<SecondLoginScreen> {
             
                         context.read<SessionProvider>().authenticateUser();
                         final sessionProvider = context.read<SessionProvider>();
+
+                         final LocalAuthentication auth = LocalAuthentication();
+                         // Variable que indica que el dispositivo Para verificar si hay autenticación local disponible en este dispositivo
+                          var deviceHasBiometricOptions = await auth.canCheckBiometrics;
+                          final bool isDeviceSupported = await auth.isDeviceSupported();
+
+                          // Si no tiene biometria le pongo el popup
+                        if (!loginProvider.enabledBiometric &&
+                            deviceHasBiometricOptions == true && isDeviceSupported == true) {
+                          await showDialog(
+                            barrierDismissible: false,
+                            context: context,
+                            builder: (context) => AppDialogs.biometricDialog(
+                              context,
+                              loginData,
+                            ),
+                          );
+                        }
             
-                        sessionProvider.startSessionTimer(150000);
+                        // sessionProvider.startSessionTimer(150000);
+
+                        if (!mounted) return;
             
                         Navigator.pushReplacementNamed(
                             context,
-                            '/home1',
+                            '/tabsScreen',
                           );
                         
             

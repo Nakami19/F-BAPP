@@ -22,7 +22,7 @@ class SessionProvider with ChangeNotifier {
 
   void setMaintenanceMode(bool value) {
     _isMaintenanceMode = value;
-    notifyListeners(); // Notifica a los oyentes si estás usando un ChangeNotifier
+    notifyListeners(); 
   }
 
   void startSessionTimer(int time) {

@@ -18,6 +18,7 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = context.watch<ThemeProvider>();
     return MultiProvider(
       providers: AppProviders.providers,
       child: MaterialApp(
@@ -29,6 +30,8 @@ class App extends StatelessWidget {
         title: FlavorConfig.flavorValues.environmentName,
         theme: AppTheme.themeLight(),
        darkTheme:AppTheme.themeDark(primaryColor),
+       themeMode:
+            themeProvider.isDarkModeEnabled ? ThemeMode.dark : ThemeMode.light,
          
       ),
     );

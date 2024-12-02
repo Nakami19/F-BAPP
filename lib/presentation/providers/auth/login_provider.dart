@@ -88,13 +88,13 @@ class LoginProvider extends GeneralProvider {
   }
 
   /// Realiza el login
-  Future<Map<String, dynamic>?> login1(String username, String password, {bool isFromBiometric =false}) async {
+  Future<Map<String, dynamic>?> login1(Map<String, dynamic> userdata, {bool isFromBiometric =false}) async {
     super.setLoadingStatus(true);
     notifyListeners();
 
     try {
       
-      final response = await loginService.postLogin(username, password);
+      final response = await loginService.postLogin(userdata);
       final data = jsonDecode(response.toString());
       // print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
       // print(response.data);

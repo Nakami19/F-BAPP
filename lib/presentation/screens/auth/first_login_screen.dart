@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:f_bapp/common/assets/theme/app_theme.dart';
@@ -7,11 +8,15 @@ import 'package:f_bapp/common/widgets/others/app_banner_version.dart';
 import 'package:f_bapp/config/data_constants/data_constants.dart';
 import 'package:f_bapp/config/router/routes.dart';
 import 'package:f_bapp/flavors.dart';
+import 'package:f_bapp/infrastructure/services/secure_storage_service.dart';
+import 'package:f_bapp/infrastructure/services/storage_service_impl.dart';
 import 'package:f_bapp/presentation/providers/auth/login_provider.dart';
 import 'package:f_bapp/common/widgets/others/error_box.dart';
 import 'package:f_bapp/presentation/providers/shared/session_provider.dart';
 import 'package:f_bapp/presentation/providers/shared/utils_provider.dart';
+import 'package:f_bapp/presentation/widgets/auth/login_fingerprint_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import '../../../common/widgets/others/info_chinchin_popup.dart';
 import '../../../common/widgets/others/terms_condition_button.dart';
@@ -25,7 +30,6 @@ class FirstLoginScreen extends StatefulWidget {
 }
 
 class _FirstLoginScreenState extends State<FirstLoginScreen> {
-
   final userLoginController = TextEditingController();
   final firstLoginForm = GlobalKey<FormState>();
   dynamic decodedBiometricData;
@@ -35,6 +39,8 @@ class _FirstLoginScreenState extends State<FirstLoginScreen> {
   bool enabledBiometric = false;
   bool useAnotherAccount = false;
   FocusNode _focusNode = FocusNode();
+  final normalStorage = StorageService();
+  final storageService = SecureStorageService();
 
   @override
   void initState() {
@@ -42,8 +48,41 @@ class _FirstLoginScreenState extends State<FirstLoginScreen> {
 
     final loginProvider = context.read<LoginProvider>();
     final sessionProvider = context.read<SessionProvider>();
-    
+
+    Future.microtask(() async {
+      var enabledBiometricValue =
+          await normalStorage.getValue<String>('enabledBiometric');
+      var encodedUserData =
+          await normalStorage.getValue<String>('userCompleteName');
+
+      if (encodedUserData != '' && encodedUserData != null) {
+        existUserData = true;
+        decodedUserData = json.decode(encodedUserData);
+      }
+
+      enabledBiometric = enabledBiometricValue == "true" ? true : false;
+
+      loginProvider.changeBiometricStatus(enabledBiometric);
+
+      // Voy a obtener la biometria
+
+      final biometricData = await storageService.getValue('userLoginData');
+
+      // Si existe la biometria entonces la decodifico
+      if (biometricData != '' &&
+          biometricData != null &&
+          enabledBiometric == true) {
+            setState(() {
+              existBiometricData = true;
+        decodedBiometricData = json.decode(biometricData);
+            });
+        print(decodedBiometricData);
+      } else {
+        existBiometricData = false;
+      }
+    });
   }
+
   @override
   void dispose() {
     userLoginController.dispose();
@@ -78,47 +117,60 @@ class _FirstLoginScreenState extends State<FirstLoginScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Image.asset(
-                    '${DataConstant.images}/chinchin-logo-business-black.png',
-                    width: 220, 
-                    fit: BoxFit.contain, 
+                  SvgPicture.asset(
+                    '${DataConstant.images_chinchin}/chinchin-logo-business-base.svg',
+                    width: 220,
+                    fit: BoxFit.contain,
                   ),
 
                   const SizedBox(height: 30),
 
-                  if (enabledBiometric ==false && existBiometricData == false || useAnotherAccount)
+                  if (enabledBiometric == false &&
+                          existBiometricData == false ||
+                      useAnotherAccount)
                     Text(
                       'Iniciar sesión',
                       style: textTheme!.copyWith(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w500,
-                      color: themeProvider.isDarkModeEnabled ? primaryColor : null
-                      ),
+                          fontSize: 24,
+                          fontWeight: FontWeight.w500,
+                          color: themeProvider.isDarkModeEnabled
+                              ? primaryColor
+                              : null),
                     ),
 
                   // Tengo biometria texto con el username
-                  if (enabledBiometric == true && existBiometricData == true && existUserData == false && useAnotherAccount == false)
+                  if (enabledBiometric == true &&
+                      existBiometricData == true &&
+                      existUserData == false &&
+                      useAnotherAccount == false)
                     Text(
                       '¡Hola, ${decodedBiometricData['member']}!',
                       textAlign: TextAlign.center,
                       style: textTheme!.copyWith(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w500,
-                      color:
-                        themeProvider.isDarkModeEnabled ? primaryColor : null,
+                        fontSize: 24,
+                        fontWeight: FontWeight.w500,
+                        color: themeProvider.isDarkModeEnabled
+                            ? primaryColor
+                            : null,
                       ),
                     ),
 
-                    // Tengo biometria texto con el nombre y apellido
-                  if (enabledBiometric == true && existUserData == true && useAnotherAccount == false && decodedUserData != null && decodedUserData['personName'] != null && decodedUserData['personLastName'] != null)
+                  // Tengo biometria texto con el nombre y apellido
+                  if (enabledBiometric == true &&
+                      existUserData == true &&
+                      useAnotherAccount == false &&
+                      decodedUserData != null &&
+                      decodedUserData['personName'] != null &&
+                      decodedUserData['personLastName'] != null)
                     Text(
                       '¡Hola, ${decodedUserData['personName'] == 'Usuario' && decodedUserData['personLastName'] == 'Chinchin' ? decodedBiometricData['member'] : '${utilsProvider.capitalize(decodedUserData['personName'])} ${utilsProvider.capitalize(decodedUserData['personLastName'])}'}!',
                       textAlign: TextAlign.center,
                       style: textTheme!.copyWith(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w500,
-                      color:
-                        themeProvider.isDarkModeEnabled ? primaryColor : null,
+                        fontSize: 24,
+                        fontWeight: FontWeight.w500,
+                        color: themeProvider.isDarkModeEnabled
+                            ? primaryColor
+                            : null,
                       ),
                     ),
 
@@ -127,117 +179,137 @@ class _FirstLoginScreenState extends State<FirstLoginScreen> {
                   ),
 
                   if (loginProvider.actionWithUser) ...[
-                // No tengo biometria
-                if (enabledBiometric == false && existBiometricData == false ||
-                    useAnotherAccount)
-                  CustomTextFormField(
-                    controller: userLoginController,
-                    node: _focusNode,
-                    paddingV: 20,
-                    paddingH: 25,
-                    inputType: TextInputType.text,
-                    label: 'Usuario o correo electrónico *',
-                    hintText: 'ej: Victor.45',
-                    maxLength: 254,
-                    onChanged: (val) => loginProvider.userLogin = val,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Campo requerido';
-                        }
-              
-                      if (value.contains(' ')) {
-                        return 'El campo no permite espacios';
-                        }
-              
-                      if (value.length < 6) {
-                        return 'Su usuario o correo debe tener mínimo 6 caracteres.';
-                        }
-              
-                      if (value.length > 254) {
-                        return 'Máximo 254 caracteres';
-                        }
-              
-                        return null;
-                      },
-                    ),
-              ],
+                    // No tengo biometria
+                    if (enabledBiometric == false &&
+                            existBiometricData == false ||
+                        useAnotherAccount)
+                      CustomTextFormField(
+                        controller: userLoginController,
+                        node: _focusNode,
+                        paddingV: 20,
+                        paddingH: 25,
+                        inputType: TextInputType.text,
+                        label: 'Usuario o correo electrónico *',
+                        hintText: 'ej: Victor.45',
+                        maxLength: 254,
+                        onChanged: (val) => loginProvider.userLogin = val,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Campo requerido';
+                          }
 
-                  //No tengo biometria
-                  if (enabledBiometric ==false && existBiometricData == false || useAnotherAccount)
-                    CustomButton(
-                      provider: loginProvider,
-                      title: 'Siguiente', 
-                      isPrimaryColor: true, 
-                      isOutline: false, 
-                      paddingH: 0,
-                      onTap: () async {
-                      if (firstLoginForm.currentState!.validate()) {
-                  
-                        loginProvider.disposeValues();
-                       final verifyUserResp = await loginProvider.verifyUser(userLoginController.text);
-                  
-                       if (loginProvider.statusCode != HttpStatus.ok) {
-                        return;
-                        }
-                  
-                       if (loginProvider.existUser==true) {
-                        Navigator.pushNamed(
-                              context,
-                              secondLoginScreen,
-                            );
-                  
-                       }
-                      } else {
-                        print('Formulario inválido');
-                      }
-                    }
-                    ),
+                          if (value.contains(' ')) {
+                            return 'El campo no permite espacios';
+                          }
 
-                  if (enabledBiometric && useAnotherAccount == false) ...[
+                          if (value.length < 6) {
+                            return 'Su usuario o correo debe tener mínimo 6 caracteres.';
+                          }
 
+                          if (value.length > 254) {
+                            return 'Máximo 254 caracteres';
+                          }
+
+                          return null;
+                        },
+                      ),
                   ],
 
-                    ErrorBox(
+                  //No tengo biometria
+                  if (enabledBiometric == false &&
+                          existBiometricData == false ||
+                      useAnotherAccount)
+                    CustomButton(
+                        provider: loginProvider,
+                        title: 'Siguiente',
+                        isPrimaryColor: true,
+                        isOutline: false,
+                        paddingH: 0,
+                        onTap: () async {
+                          if (firstLoginForm.currentState!.validate()) {
+                            loginProvider.disposeValues();
+                            final verifyUserResp = await loginProvider
+                                .verifyUser(userLoginController.text);
+
+                            if (loginProvider.statusCode != HttpStatus.ok) {
+                              return;
+                            }
+
+                            if (loginProvider.existUser == true) {
+                              Navigator.pushNamed(
+                                context,
+                                secondLoginScreen,
+                              );
+                            }
+                          } else {
+                            print('Formulario inválido');
+                          }
+                        }),
+
+                  if (enabledBiometric && useAnotherAccount == false) ...[
+                    const FingerPrintAuthButton()
+                  ],
+
+                  ErrorBox(
                     provider: loginProvider,
                     paddingH: 25,
                   ),
                   CustomButton(
-                    provider: Provider.of<LoginProvider>(context, listen: false),
-                    title: '¿Olvidó su contraseña?', 
-                    isPrimaryColor: false, 
-                    isOutline: false, 
-                    isText: true,
-                    styleText: textStyle.labelLarge,
-                    paddingV: 10,
-                    height: 35,
-                    onTap: () {}),
+                      provider:
+                          Provider.of<LoginProvider>(context, listen: false),
+                      title: '¿Olvidó su contraseña?',
+                      isPrimaryColor: false,
+                      isOutline: false,
+                      isText: true,
+                      styleText: textStyle.labelLarge,
+                      paddingV: 5,
+                      height: 35,
+                      onTap: () {}),
+
+                  if (enabledBiometric && 
+                  existBiometricData && 
+                  !useAnotherAccount)
+                    TextButton(
+                      onPressed: () {
+                        setState(() {
+                          useAnotherAccount = true;
+
+                          // Marco que si vengo desde otra cuenta nueva
+                          loginProvider.changeIsFromAnotherAccount(true);
+                        });
+                      },
+                      child: Text(
+                        'No es mi cuenta',
+                        style: textStyle.labelLarge,
+                      ),
+                    ),
                 ],
               ),
             ),
           ),
         ),
         bottomNavigationBar: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                color: themeProvider.isDarkModeEnabled
-                    ? darkColor
-                    : primaryScaffoldColor,
-                padding: const EdgeInsets.fromLTRB(0, 2, 0, 15),
-                child: const Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    //  Icono info con popup chinchin
-                    InfoChinchinPopup(),
-      
-                    // Terminos y conidiciones
-                    TermsConditionsButton(),
-                  ],
-                ),
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              color: themeProvider.isDarkModeEnabled
+                  ? darkColor
+                  : primaryScaffoldColor,
+              padding: const EdgeInsets.fromLTRB(0, 2, 0, 15),
+              child: const Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  //  Icono info con popup chinchin
+                  InfoChinchinPopup(),
+
+                  // Terminos y conidiciones
+                  TermsConditionsButton(),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
+        ),
       ),
     );
   }

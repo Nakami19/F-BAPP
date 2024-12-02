@@ -15,19 +15,7 @@ class UtilsProvider extends GeneralProvider {
   // Usuario
   String? userText;
 
-  // Tipo de moneda
-  String? currencyText;
 
-  // Seleccionar cuenta bancaria
-  String? bankAccountText;
-
-  // Monto
-
-  // Descripción
-  String? descriptionText;
-
-  // Monto
-  String? mountText;
 
     Future<void> getUserPreferences() async {
     // late ApiResponse<ProfileAccountInfo> resp;
@@ -128,29 +116,9 @@ class UtilsProvider extends GeneralProvider {
     super.disposeValues();
     super.isActionWithUser(true);
     userText = null;
-    currencyText = null;
-    bankAccountText = null;
-    mountText = null;
-    descriptionText = null;
   }
 
-  @override
-  void resetValues(
-      {bool? cleanCurrencyAndBanks = true, bool? clearUseFundsOptions = true}) {
-
-    if (cleanCurrencyAndBanks!) {
-      currencyText = null;
-    }
-
-    mountText = null;
-    descriptionText = null;
-
-  }
-
-  void returnValues({bool? cleanCurrencyAndBanks = false}) {
-    mountText = null;
-
-  }
+ 
 
   
 }
