@@ -7,15 +7,19 @@ class SmallCard extends StatefulWidget {
     super.key,
     required this.image,
     required this.title,
-    required this.height,
-    required this.width,
-    this.imageHeight
+    this.height,
+     this.width,
+    this.imageHeight,
+    this.textStyle,
+    this.onTap
     });
   final String image;
   final String title;
-  final double height;
-  final double width;
+  final double? height;
+  final double? width;
   final double? imageHeight;
+  final TextStyle? textStyle;
+  final VoidCallback? onTap;
 
   @override
   State<SmallCard> createState() => _SmallCardState();
@@ -24,34 +28,41 @@ class SmallCard extends StatefulWidget {
 class _SmallCardState extends State<SmallCard> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: widget.height,
-      width: widget.width,
-      padding: EdgeInsets.all(13),
-      decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(BorderRadiusValue),
-      color: Colors.white,
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black.withOpacity(0.2),
-          spreadRadius: 3,
-          blurRadius: 5,
-          offset: Offset(0, 5),
-        ),
-      ],
-    ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        SvgPicture.asset(
-          widget.image,
-          height: widget.imageHeight!,
-          color: primaryColor,
+    return InkWell(
+      onTap: widget.onTap ?? ()=>{},
+      child: Container(
+        height: widget.height??20,
+        width: widget.width??20,
+        padding: EdgeInsets.all(13),
+        decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(BorderRadiusValue),
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.15),
+            spreadRadius: 3,
+            blurRadius: 5,
+            offset: Offset(0, 5),
           ),
-        Text(widget.title)
-      ],
-    ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SvgPicture.asset(
+            widget.image,
+            height: widget.imageHeight ?? 50,
+            color: primaryColor,
+            ),
+          Text(
+            widget.title,
+            style: widget.textStyle,
+            textAlign: TextAlign.center,
+            )
+        ],
+      ),
+      ),
     );
   }
 }

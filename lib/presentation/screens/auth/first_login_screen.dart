@@ -76,7 +76,6 @@ class _FirstLoginScreenState extends State<FirstLoginScreen> {
               existBiometricData = true;
         decodedBiometricData = json.decode(biometricData);
             });
-        print(decodedBiometricData);
       } else {
         existBiometricData = false;
       }

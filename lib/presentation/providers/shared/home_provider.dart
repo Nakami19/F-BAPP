@@ -2,6 +2,7 @@ import 'package:f_bapp/common/providers/general_provider.dart';
 import 'package:f_bapp/config/data_constants/data_constants.dart';
 import 'package:f_bapp/presentation/screens/auth/first_login_screen.dart';
 import 'package:f_bapp/presentation/screens/home_screen.dart';
+import 'package:f_bapp/presentation/screens/profile/profile_screen.dart';
 import 'package:flutter/material.dart';
 
 class HomeProvider extends GeneralProvider {
@@ -21,10 +22,7 @@ class HomeProvider extends GeneralProvider {
       case Views.Home:
         return const HomeScreen();
       case Views.Profile:
-        return Scaffold(
-        appBar: AppBar(title: Text('Profile')),
-        body: Center(child: Text("Profile Screen")),
-      );
+        return const ProfileScreen();
 
     }
   }

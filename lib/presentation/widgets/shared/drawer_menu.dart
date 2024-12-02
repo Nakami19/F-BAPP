@@ -23,6 +23,9 @@ class _DrawerMenuState extends State<DrawerMenu> {
     final utilsProvider = context.read<UtilsProvider>();
     final homeProvider = context.read<HomeProvider>();
     final themeProvider = context.watch<ThemeProvider>();
+
+    String userNameCapitalize =
+        '${utilsProvider.personName} ${utilsProvider.personLastName}';
     return SizedBox(
       width: MediaQuery.of(context).size.width / 1.5,
       child: Drawer(
@@ -53,7 +56,7 @@ class _DrawerMenuState extends State<DrawerMenu> {
                     height: 30,
                   ),
                   Text(
-                    'Pedro Perez\n@usuario-14',
+                    '${userNameCapitalize}\n${utilsProvider.userName}',
                     // style: textStyle.titleSmall,
                   ),
                   SizedBox(
@@ -140,6 +143,3 @@ class _DrawerMenuState extends State<DrawerMenu> {
   }
 }
 
-Future<String> loadSvg(String assetPath) async {
-  return await rootBundle.loadString(assetPath);
-}

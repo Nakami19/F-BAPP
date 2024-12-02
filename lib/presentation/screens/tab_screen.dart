@@ -3,6 +3,7 @@ import 'package:f_bapp/common/providers/theme_provider.dart';
 import 'package:f_bapp/config/data_constants/data_constants.dart';
 import 'package:f_bapp/presentation/providers/shared/home_provider.dart';
 import 'package:f_bapp/presentation/providers/shared/utils_provider.dart';
+import 'package:f_bapp/presentation/widgets/shared/bottom_sheet.dart';
 import 'package:f_bapp/presentation/widgets/shared/drawer_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -100,6 +101,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
               selectedIndex: homeProvider.selectedScreen.index,
               onDestinationSelected: (int index) => {
                 if (index ==2) {
+                  _showBottomSheet()
             
                 } else {
                   homeProvider.changeScreen(Views.values[index])
@@ -116,12 +118,12 @@ class _BottomNavBarState extends State<BottomNavBar> {
                 NavigationDestination(
                   icon: Icon(Icons.person_outline),
                   selectedIcon: Icon(Icons.person_outline),
-                  label: 'Profile',
+                  label: 'Perfil',
                 ),
                       NavigationDestination(
                   icon: Icon(Icons.dashboard_outlined),
                   selectedIcon: Icon(Icons.dashboard),
-                  label: 'Modules',
+                  label: 'Módulos',
                 ),
               ],
             ),
@@ -132,5 +134,14 @@ class _BottomNavBarState extends State<BottomNavBar> {
       ),
     );
 
+  }
+
+    void _showBottomSheet() {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return BottomSheetModules();
+      },
+    );
   }
 }

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:f_bapp/common/data/enviroment.dart';
 import 'package:f_bapp/common/providers/general_provider.dart';
 import 'package:f_bapp/config/network/api_error.dart';
 import 'package:f_bapp/config/network/api_response.dart';
@@ -15,17 +16,16 @@ class UtilsProvider extends GeneralProvider {
   // Usuario
   String? userText;
 
+  String? userName = '';
+  String? personName = '';
+  String? personLastName = '';
 
 
-    Future<void> getUserPreferences() async {
+
+    Future<void> getUserinfo() async {
     // late ApiResponse<ProfileAccountInfo> resp;
     try {
       super.setLoadingStatus(true);
-
-      final req = await dio.get('/v1/profile/accounts');
-
-      super.setStatusCode(req.statusCode!);
-
       // resp = ApiResponse<ProfileAccountInfo>.fromJson(
       //   req.data,
       //   (json) => ProfileAccountInfo.fromJson(json),
@@ -36,8 +36,13 @@ class UtilsProvider extends GeneralProvider {
         'userData',
       );
 
+      // print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+      // print(userData);
       final decodedData = jsonDecode(userData!);
 
+      userName = decodedData['userName'];
+      personName = decodedData['personName'];
+      personLastName = decodedData['personLastName'];
 
       final userCompleteNameJson = jsonEncode({
         'personName': decodedData['personName'],
@@ -63,6 +68,8 @@ class UtilsProvider extends GeneralProvider {
           userCompleteNameJson,
         );
       }
+
+      notifyListeners();
 
 
       // return resp;

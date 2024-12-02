@@ -77,7 +77,10 @@ class LoginProvider extends GeneralProvider {
           trackingCode: json['trackingCode'],
         ),
       );
+
       super.setErrorMessage(resp.message);
+      super.setSimpleError(true);
+      
       super.setTrackingCode(resp.trackingCode);
       super.setUserExist(false);
       rethrow;

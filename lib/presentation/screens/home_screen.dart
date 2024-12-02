@@ -25,10 +25,57 @@ class _HomeScreenState extends State<HomeScreen> {
   final keyValueStorageService = SecureStorageService();
   final homeKey = GlobalKey<ScaffoldState>();
 
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+    final utilsProvider = context.read<UtilsProvider>();
+    
+    if (!utilsProvider.isLoading) {
+      final res = await utilsProvider.getUserinfo(); 
+    }
+
+    if (mounted) {
+      setState(() {});
+    }
+  });
+    
+  }
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   WidgetsBinding.instance.addPostFrameCallback(
+  //     (_) async {
+  //       final utilsProvider = context.read<UtilsProvider>();
+  //       // final homeProvider = context.read<HomeProvider>();
+
+  //       if (!utilsProvider.isLoading) {
+  //         final res = await utilsProvider.getUserinfo();
+
+  //       }
+
+  //       if (utilsProvider.statusCode != HttpStatus.ok) {
+  //         return;
+  //       }
+
+  //       if (!mounted) return; 
+
+  //     }
+  //     );
+  // }
+
 
   @override
   Widget build(BuildContext context) {
     final textStyle = Theme.of(context).textTheme;
+    final utilsProvider = context.read<UtilsProvider>();
+    final themeProvider = context.watch<ThemeProvider>();
+
+
+    String userNameCapitalize =
+        '${utilsProvider.personName} ${utilsProvider.personLastName}';
+
 
     return Scaffold(
       // key: homeKey,
@@ -97,7 +144,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   SizedBox(width: 10,),
                   Text(
-                    'Pedro Perez\n@usuario-14',
+                    '${userNameCapitalize}\n${utilsProvider.userName}',
                     style: textStyle.titleSmall,
                   ),
                 ],
@@ -139,7 +186,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 imageHeight: 70,
               ),
               SmallCard(
-                image: '${DataConstant.images_modules}/onboarding-white.svg',
+                image: '${DataConstant.images_modules}/onboarding.svg',
                 title: 'Merchant',
                 height: 120,
                 width: 120,
