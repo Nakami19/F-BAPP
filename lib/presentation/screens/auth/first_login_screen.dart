@@ -118,6 +118,7 @@ class _FirstLoginScreenState extends State<FirstLoginScreen> {
                 children: <Widget>[
                   SvgPicture.asset(
                     '${DataConstant.images_chinchin}/chinchin-logo-business-base.svg',
+                    // '${DataConstant.images_profile}/change_password.svg',
                     width: 220,
                     fit: BoxFit.contain,
                   ),
@@ -217,33 +218,69 @@ class _FirstLoginScreenState extends State<FirstLoginScreen> {
                   //No tengo biometria
                   if (enabledBiometric == false &&
                           existBiometricData == false ||
-                      useAnotherAccount)
-                    CustomButton(
-                        provider: loginProvider,
-                        title: 'Siguiente',
-                        isPrimaryColor: true,
-                        isOutline: false,
-                        paddingH: 0,
-                        onTap: () async {
-                          if (firstLoginForm.currentState!.validate()) {
-                            loginProvider.disposeValues();
-                            final verifyUserResp = await loginProvider
-                                .verifyUser(userLoginController.text);
+                      useAnotherAccount) 
+                    Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: CustomButton(
+                              provider: loginProvider,
+                              title: 'Siguiente',
+                              isPrimaryColor: true,
+                              isOutline: false,
+                              paddingH: 0,
+                              onTap: () async {
+                                if (firstLoginForm.currentState!.validate()) {
+                                  loginProvider.disposeValues();
+                                  final verifyUserResp = await loginProvider
+                                      .verifyUser(userLoginController.text);
+                          
+                                  if (loginProvider.statusCode != HttpStatus.ok) {
+                                    return;
+                                  }
+                          
+                                  if (loginProvider.existUser == true) {
+                                    Navigator.pushNamed(
+                                      context,
+                                      secondLoginScreen,
+                                    );
+                                  }
+                                } else {
+                                  print('Formulario inválido');
+                                }
+                              }),
+                        ),
+                            CustomButton(
+                          provider:
+                              Provider.of<LoginProvider>(context, listen: false),
+                          title: '¿Olvidó su contraseña?',
+                          isPrimaryColor: false,
+                          isOutline: false,
+                          isText: true,
+                          styleText: textStyle.labelLarge,
+                          paddingV: 5,
+                          height: 35,
+                          onTap: () {}),
+                      ],
+                    ),
 
-                            if (loginProvider.statusCode != HttpStatus.ok) {
-                              return;
-                            }
+                    if (enabledBiometric == true &&
+                          existBiometricData == true &&
+                      useAnotherAccount) 
+                      TextButton(
+                      onPressed: () {
+                        setState(() {
+                          useAnotherAccount = false;
 
-                            if (loginProvider.existUser == true) {
-                              Navigator.pushNamed(
-                                context,
-                                secondLoginScreen,
-                              );
-                            }
-                          } else {
-                            print('Formulario inválido');
-                          }
-                        }),
+                          // Marco que si vengo desde otra cuenta nueva
+                          loginProvider.changeIsFromAnotherAccount(false);
+                        });
+                      },
+                      child: Text(
+                        'Volver a biometría',
+                        style: textStyle.labelLarge,
+                      ),
+                    ),
 
                   if (enabledBiometric && useAnotherAccount == false) ...[
                     const FingerPrintAuthButton()
@@ -253,18 +290,8 @@ class _FirstLoginScreenState extends State<FirstLoginScreen> {
                     provider: loginProvider,
                     paddingH: 25,
                   ),
-                  CustomButton(
-                      provider:
-                          Provider.of<LoginProvider>(context, listen: false),
-                      title: '¿Olvidó su contraseña?',
-                      isPrimaryColor: false,
-                      isOutline: false,
-                      isText: true,
-                      styleText: textStyle.labelLarge,
-                      paddingV: 5,
-                      height: 35,
-                      onTap: () {}),
-
+                
+                //si tiene biometria
                   if (enabledBiometric && 
                   existBiometricData && 
                   !useAnotherAccount)

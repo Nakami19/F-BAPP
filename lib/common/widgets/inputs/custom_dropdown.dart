@@ -4,22 +4,35 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 
 
-class CustomDropdown extends StatefulWidget {
+class CustomDropdown<T> extends StatefulWidget {
   const CustomDropdown({
     required this.options,
     required this.onChanged,
     required this.showError,
     required this.errorText,
     required this.title,
+    required this.itemValueMapper, 
+    required this.itemLabelMapper, 
+    this.selectedValue,
     this.label,
     super.key
     });
-  final List<String> options;
+  // final List<dynamic> options;  
   final ValueChanged<String?> onChanged;
+  final List<T> options;
   final String? errorText;
   final bool showError;
   final String? label;
   final String title;
+  final String? selectedValue;
+
+  // final String Function(T option) itemValueMapper;
+  
+  // /// Función que mapea el texto que se muestra en el dropdown.
+  // final String Function(T option) itemLabelMapper;
+
+  final String Function(dynamic option) itemValueMapper;
+  final String Function(dynamic option) itemLabelMapper;
 
 
   @override
@@ -27,12 +40,15 @@ class CustomDropdown extends StatefulWidget {
 }
 
 class _CustomDropdownState extends State<CustomDropdown> {
-  String? selectedValue;
+  String? value;
 
   @override
   void initState() {
     super.initState();
-    selectedValue = widget.options.isNotEmpty ? widget.options[0] : null;  
+    // selectedValue = widget.options.isNotEmpty ? widget.options[0] : null;  
+    if (widget.options.isNotEmpty) {
+    value = widget.itemValueMapper(widget.options.first); // Toma el primer elemento si no hay valor seleccionado
+  }
   }
 
   @override
@@ -63,23 +79,32 @@ class _CustomDropdownState extends State<CustomDropdown> {
             padding: const EdgeInsets.symmetric(horizontal: 8),
             child: DropdownButtonHideUnderline(
               child: DropdownButton2(
+                
                 isExpanded: true,
-                value: selectedValue,
+                value: value,
                 // icon: Icon(Icons.keyboard_arrow_down),
-                items: widget.options.map((String option) {
+                items: widget.options.map((option) {
                   return DropdownMenuItem<String>(
-                    value: option,
-                    child: Text(option),
+                    value: widget.itemValueMapper(option),
+                    child: Text(
+                    widget.itemLabelMapper(option),
+                    style: TextStyle(
+                      fontWeight: value == widget.itemValueMapper(option)
+                          ? FontWeight.w600 // Estilo especial solo en el menú desplegable
+                          : FontWeight.normal,
+                    ),
+                    )
                   );
                 }).toList(),
                 onChanged: (String? newValue) {
                   setState(() {
-                    selectedValue = newValue!;
+                    value= newValue!;
                   });
                   widget.onChanged(newValue);
 
                   },
                 dropdownStyleData: DropdownStyleData(
+                  maxHeight: MediaQuery.of(context).size.height / 3,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(BorderRadiusValue)
                   )

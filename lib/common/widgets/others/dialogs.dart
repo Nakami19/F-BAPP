@@ -24,6 +24,7 @@ class Dialogs {
       required VoidCallback actionSuccess,
       VoidCallback? closeAction}) {
     final themeProvider = context.watch<ThemeProvider>();
+    final textStyle = Theme.of(context).textTheme.bodySmall;
 
     return AlertDialog(
       backgroundColor:
@@ -54,13 +55,55 @@ class Dialogs {
                   // )
                 ]
               : <Widget>[
-                  CustomButton(
-                      title: cancelButtonText ?? 'CANCELAR',
-                      isPrimaryColor: false,
-                      isOutline: false,
-                      isText: true,
-                      onTap: closeAction ?? () => Navigator.pop(context, false),
-                      provider: GeneralProvider()),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 5),
+                          child: CustomButton(
+                              title: cancelButtonText ?? 'CANCELAR',
+                              isPrimaryColor: false,
+                              isOutline: false,
+                              isText: true,
+                              width: 90,
+                              paddingH: 0,
+                              styleText: textStyle!.copyWith(
+                                color: Color.fromRGBO(252, 198, 20, 100),
+                                fontSize: 11,
+                              ),
+                              styleTextButton: TextButton.styleFrom(
+                                side: BorderSide(
+                                  color: Color.fromRGBO(252, 198, 20,
+                                      100), // Cambia a tu color deseado
+                                  width: 2, // Grosor del borde
+                                ),
+                              ),
+                              onTap: closeAction ??
+                                  () => Navigator.pop(context, false),
+                              provider: GeneralProvider()),
+                        ),
+                      ),
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 5),
+                          child: CustomButton(
+                              title: confirmButtonText ?? 'CONFIRMAR',
+                              isPrimaryColor: true,
+                              isOutline: false,
+                              width: 90,
+                              paddingH: 0,
+                              onTap: actionSuccess,
+                              styleText: textStyle!.copyWith(
+                                color: Colors.white,
+                                fontSize: 11,
+                              ),
+                              provider: GeneralProvider()),
+                        ),
+                      ),
+                    ],
+                  )
+
                   // TextButton(
                   //   style: FilledButton.styleFrom(
                   //     shape: RoundedRectangleBorder(
@@ -77,12 +120,7 @@ class Dialogs {
                   //     ),
                   //   ),
                   // ),
-                  CustomButton(
-                      title: confirmButtonText ?? 'CONFIRMAR',
-                      isPrimaryColor: false,
-                      isOutline: false,
-                      onTap: actionSuccess,
-                      provider: GeneralProvider()),
+
                   // FilledButton(
                   //   style: FilledButton.styleFrom(
                   //     shape: RoundedRectangleBorder(
@@ -204,15 +242,6 @@ class Dialogs {
             context.read<SessionProvider>().destroySession(
                   haveModalAction: false,
                 );
-            
-            // context.read<SessionProvider>().cancelTimer(
-            //       haveModalAction: false,
-            //     );
-
-            // Navigator.popUntil(
-            //   context,
-            //   (route) => route.isFirst,
-            // );
 
             Navigator.pushNamedAndRemoveUntil(
               context,
@@ -223,8 +252,7 @@ class Dialogs {
             Snackbars.customSnackbar(
               context,
               title: '¡Vuelva Pronto!',
-              message:
-                  'Su sesión ha sido cerrada exitosamente. Gracias por preferirnos.',
+              message: 'Su sesión ha sido cerrada exitosamente.',
             );
           },
           child: const Text(

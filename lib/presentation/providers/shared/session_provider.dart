@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:f_bapp/common/widgets/others/dialogs.dart';
+import 'package:f_bapp/presentation/providers/shared/home_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -41,48 +43,48 @@ class SessionProvider with ChangeNotifier {
 
       if (_timer != null) {
         if (time <= 30000 && !_isDialogOpen) {
-          // if (time <= 5000 && !_isDialogOpen) {
-          // _isDialogOpen = true;
-          // await showDialog(
-          //   context: context,
-          //   barrierDismissible: false,
-          //   builder: (context) => WillPopScope(
-          //     onWillPop: () async => false,
-          //     child: Dialogs.customDialog(
-          //       context,
-          //       title: 'Refrescar sesión',
-          //       content: const Text('¿Deseas extender el tiempo de tu sesión?'),
-          //       cancelButtonText: 'CERRAR',
-          //       closeAction: () {
-          //         timer.cancel();
-          //         destroySession();
-          //       },
-          //       actionSuccess: () async {
-          //         if (!isActionSuccessClicked) {
-          //           isActionSuccessClicked = true;
+          if (time <= 10000 && !_isDialogOpen) {
+          _isDialogOpen = true;
+          await showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (context) => WillPopScope(
+              onWillPop: () async => false,
+              child: Dialogs.customDialog(
+                context,
+                title: 'Refrescar sesión',
+                content: const Text('¿Deseas extender el tiempo de tu sesión?'),
+                cancelButtonText: 'CERRAR',
+                closeAction: () {
+                  timer.cancel();
+                  destroySession();
+                },
+                actionSuccess: () async {
+                  if (!isActionSuccessClicked) {
+                    isActionSuccessClicked = true;
 
-          //           final homeProvider = context.read<HomeProvider>();
-          //           await homeProvider.refreshSession().then(
-          //             (value) {
-          //               if (homeProvider.statusCode == HttpStatus.ok) {
-          //                 Navigator.pop(context, true);
-          //               }
-          //             },
-          //           );
+                    final homeProvider = context.read<HomeProvider>();
+                    await homeProvider.refreshSession().then(
+                      (value) {
+                        if (homeProvider.statusCode == HttpStatus.ok) {
+                          Navigator.pop(context, true);
+                        }
+                      },
+                    );
 
-          //           if (homeProvider.statusCode != HttpStatus.ok) {
-          //             return;
-          //           }
+                    if (homeProvider.statusCode != HttpStatus.ok) {
+                      return;
+                    }
 
-          //           _isDialogOpen = false;
-          //           _timer?.cancel();
-          //           timer.cancel();
-          //           resetSessionTimer();
-          //         }
-          //       },
-          //     ),
-          //   ),
-          // );
+                    _isDialogOpen = false;
+                    _timer?.cancel();
+                    timer.cancel();
+                    resetSessionTimer();
+                  }
+                },
+              ),
+            ),
+          );
         }
       }
 
@@ -91,7 +93,7 @@ class SessionProvider with ChangeNotifier {
         _timer?.cancel();
         destroySession();
       }
-    });
+    }});
   }
 
   void resetSessionTimer() {

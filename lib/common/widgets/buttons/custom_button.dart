@@ -43,57 +43,54 @@ class CustomButton extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme.titleLarge;
     return Padding(
       padding: EdgeInsets.symmetric(
-        horizontal: paddingH ?? 20,
-        vertical: paddingV ?? 10,
+        horizontal: paddingH ?? 5,
+        vertical: paddingV ?? 5,
       ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 50),
-        child: SizedBox(
-          width: width ?? double.infinity,
-          height: height?? 55,
-          child: isText ?
-                TextButton(
-                  style: styleTextButton?? styleTextButton,
-                  onPressed: () => {},
-                  child: Text(title,
-                  style: styleText??styleText,
+      child: SizedBox(
+        width: width ?? double.infinity,
+        height: height?? 55,
+        child: isText ?
+              TextButton(
+                style: styleTextButton?? styleTextButton,
+                onPressed: () => {},
+                child: Text(title,
+                style: styleText??styleText,
+                ),
+              )
+         : isOutline
+            ? OutlinedButton(
+                style: OutlinedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(borderRadius),
                   ),
-                )
-           : isOutline
-              ? OutlinedButton(
-                  style: OutlinedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(borderRadius),
-                    ),
-                    side: BorderSide(
-                      color: isPrimaryColor ? primaryColor : secondaryColor,
-                    ),
-                    foregroundColor:
-                        isPrimaryColor ? primaryColor : secondaryColor,
+                  side: BorderSide(
+                    color: isPrimaryColor ? primaryColor : secondaryColor,
                   ),
-                  onPressed: !provider.isLoading ? () => onTap() : null,
-                  child: LoadingButtonText(
-                    text: title,
-                    provider: provider,
-                    styleText: styleText,
-                  ),
-                )
-              : FilledButton(
-                  style: FilledButton.styleFrom(
-                    backgroundColor:
-                        isPrimaryColor ? primaryColor : secondaryColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(borderRadius),
-                    ),
-                  ),
-                  onPressed: !provider.isLoading ? () => onTap() : null,
-                  child: LoadingButtonText(
-                    text: title,
-                    provider: provider,
-                    styleText: styleText,
+                  foregroundColor:
+                      isPrimaryColor ? primaryColor : secondaryColor,
+                ),
+                onPressed: !provider.isLoading ? () => onTap() : null,
+                child: LoadingButtonText(
+                  text: title,
+                  provider: provider,
+                  styleText: styleText,
+                ),
+              )
+            : FilledButton(
+                style: FilledButton.styleFrom(
+                  backgroundColor:
+                      isPrimaryColor ? primaryColor : secondaryColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(borderRadius),
                   ),
                 ),
-        ),
+                onPressed: !provider.isLoading ? () => onTap() : null,
+                child: LoadingButtonText(
+                  text: title,
+                  provider: provider,
+                  styleText: styleText,
+                ),
+              ),
       ),
     );
   }

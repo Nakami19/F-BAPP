@@ -8,12 +8,13 @@ import 'package:f_bapp/common/widgets/others/info_chinchin_popup.dart';
 import 'package:f_bapp/common/widgets/others/terms_condition_button.dart';
 import 'package:f_bapp/config/data_constants/data_constants.dart';
 import 'package:f_bapp/config/helpers/base64_coder.dart';
+import 'package:f_bapp/config/router/routes.dart';
 import 'package:f_bapp/infrastructure/auth/privileges.dart';
 import 'package:f_bapp/presentation/providers/auth/login_provider.dart';
 import 'package:f_bapp/presentation/providers/shared/session_provider.dart';
 import 'package:f_bapp/common/providers/theme_provider.dart';
 import 'package:f_bapp/common/widgets/others/error_box.dart';
-import 'package:f_bapp/presentation/providers/user/privileges_provider.dart';
+import 'package:f_bapp/presentation/providers/user/user_provider.dart';
 import 'package:f_bapp/presentation/widgets/shared/app_dialogs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -40,7 +41,7 @@ class _SecondLoginScreenState extends State<SecondLoginScreen> {
   
   @override
   Widget build(BuildContext context) {
-    final privilegesProvider = context.read<PrivilegesProvider>();
+    final userProvider = context.read<UserProvider>();
     final themeProvider = context.read<ThemeProvider>();
     final loginProvider = context.watch<LoginProvider>();
     final textTheme = Theme.of(context).textTheme;
@@ -136,71 +137,74 @@ class _SecondLoginScreenState extends State<SecondLoginScreen> {
                     },
                   ),
             
-                  CustomButton(
-                    provider: loginProvider,
-                    title: "Ingresar", 
-                    isPrimaryColor: true, 
-                    isOutline: false, 
-                    paddingH: 0,
-                    onTap: () async{
-                      if (secondLoginForm.currentState!.validate()) {
-                        final loginData = {
-                          'member': loginProvider.userLogin!,
-                          'password': Base64Encoder.encodeBase64(loginProvider.password!),
-                        };
-                        final loginResp = await loginProvider.login1(loginData);
-                        // print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-                        // print(loginResp);
-                        if(loginResp!=null) {
-                          final privileges = loginResp['privileges'] as List<Privilege>;
-                          privilegesProvider.Setprivileges = privileges; 
-                        }
-
-                        if (loginProvider.statusCode != HttpStatus.ok) {
-                        return;
-                        }
-                        
-                        loginProvider.disposeValues();
-                        
-                        if (!mounted) return;
-            
-                        context.read<SessionProvider>().authenticateUser();
-                        final sessionProvider = context.read<SessionProvider>();
-
-                         final LocalAuthentication auth = LocalAuthentication();
-                         // Variable que indica que el dispositivo Para verificar si hay autenticación local disponible en este dispositivo
-                          var deviceHasBiometricOptions = await auth.canCheckBiometrics;
-                          final bool isDeviceSupported = await auth.isDeviceSupported();
-
-                          // Si no tiene biometria le pongo el popup
-                        if (!loginProvider.enabledBiometric &&
-                            deviceHasBiometricOptions == true && isDeviceSupported == true) {
-                          await showDialog(
-                            barrierDismissible: false,
-                            context: context,
-                            builder: (context) => AppDialogs.biometricDialog(
-                              context,
-                              loginData,
-                            ),
-                          );
-                        }
-            
-                        // sessionProvider.startSessionTimer(150000);
-
-                        if (!mounted) return;
-            
-                        Navigator.pushReplacementNamed(
-                            context,
-                            '/tabsScreen',
-                          );
-                        
-            
-                        loginProvider.resetValues();
-            
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: CustomButton(
+                      provider: loginProvider,
+                      title: "Ingresar", 
+                      isPrimaryColor: true, 
+                      isOutline: false, 
+                      paddingH: 0,
+                      onTap: () async{
+                        if (secondLoginForm.currentState!.validate()) {
+                          final loginData = {
+                            'member': loginProvider.userLogin!,
+                            'password': Base64Encoder.encodeBase64(loginProvider.password!),
+                          };
+                          final loginResp = await loginProvider.login1(loginData);
+                          // final memberResp = await userProvider.getMemberlist(loginProvider.userLogin!);
                           
+                          // if(loginResp!=null) {
+                          //   final privileges = loginResp['privileges'] as List<Privilege>;
+                          //   userProvider.Setprivileges = privileges; 
+                          // }
+                    
+                          if (loginProvider.statusCode != HttpStatus.ok) {
+                          return;
+                          }
+                          
+                          loginProvider.disposeValues();
+                          
+                          if (!mounted) return;
+                                
+                          context.read<SessionProvider>().authenticateUser();
+                          final sessionProvider = context.read<SessionProvider>();
+                    
+                           final LocalAuthentication auth = LocalAuthentication();
+                           // Variable que indica que el dispositivo Para verificar si hay autenticación local disponible en este dispositivo
+                            var deviceHasBiometricOptions = await auth.canCheckBiometrics;
+                            final bool isDeviceSupported = await auth.isDeviceSupported();
+                    
+                            // Si no tiene biometria le pongo el popup
+                          if (!loginProvider.enabledBiometric &&
+                              deviceHasBiometricOptions == true && isDeviceSupported == true) {
+                            await showDialog(
+                              barrierDismissible: false,
+                              context: context,
+                              builder: (context) => AppDialogs.biometricDialog(
+                                context,
+                                loginData,
+                              ),
+                            );
+                          }
+                                
+                          sessionProvider.startSessionTimer(150000);
+                    
+                          if (!mounted) return;
+                                
+                          Navigator.pushReplacementNamed(
+                              context,
+                              homeScreen,
+                            );
+                          
+                                
+                          loginProvider.resetValues();
+                                
+                            
+                        }
                       }
-                    }
-                    ),
+                      ),
+                  ),
                     ErrorBox(provider: loginProvider, paddingH: 25),
                     CustomButton(
                     provider:loginProvider ,

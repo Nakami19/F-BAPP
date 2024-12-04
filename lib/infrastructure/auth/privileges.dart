@@ -23,37 +23,10 @@ class Privilege {
       page: json['page'],
       icon: json['icon'],
       actions: (json['actions'] as List)
-          .map((action) => Action.fromJson(action))
+          .map((actionJson) => Action.fromJson(actionJson))
           .toList(),
     );
   }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'moduleName': moduleName,
-      'description': description,
-      'status': status,
-      'page': page,
-      'icon': icon,
-      'actions': actions.map((action) => action.toJson()).toList(),
-    };
-  }
-
-  @override
-  String toString() {
-    return '''
-      Privilege(
-      moduleName: $moduleName,
-      description: $description,
-      status: $status,
-      page: $page,
-      icon: $icon,
-      actions: [
-        ${actions.map((action) => action.toString()).join(',\n      ')}
-      ]
-    )
-    ''';
-}
 }
 
 class Action {
@@ -61,10 +34,9 @@ class Action {
   final String key;
   final String description;
   final String status;
-  final String tagStatus;
   final String page;
   final String image;
-  final bool hideAction;
+  final bool showInMenu;
   final List<String> apis;
 
   Action({
@@ -72,10 +44,9 @@ class Action {
     required this.key,
     required this.description,
     required this.status,
-    required this.tagStatus,
     required this.page,
     required this.image,
-    required this.hideAction,
+    required this.showInMenu,
     required this.apis,
   });
 
@@ -85,42 +56,10 @@ class Action {
       key: json['key'],
       description: json['description'],
       status: json['status'],
-      tagStatus: json['tag_status'],
       page: json['page'],
       image: json['image'],
-      hideAction: json['hideAction'],
+      showInMenu: json['showInMenu'],
       apis: List<String>.from(json['apis']),
     );
   }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'actionName': actionName,
-      'key': key,
-      'description': description,
-      'status': status,
-      'tag_status': tagStatus,
-      'page': page,
-      'image': image,
-      'hideAction': hideAction,
-      'apis': apis,
-    };
-  }
-
-@override
-  String toString() { 
-    return '''
-      Action(
-      actionName: $actionName,
-      key: $key,
-      description: $description,
-      status: $status,
-      tagStatus: $tagStatus,
-      page: $page,
-      image: $image,
-      hideAction: $hideAction,
-      apis: $apis
-    )
-  ''';
-}
 }

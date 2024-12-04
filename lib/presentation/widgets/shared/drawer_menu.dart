@@ -4,6 +4,7 @@ import 'package:f_bapp/common/widgets/others/dialogs.dart';
 import 'package:f_bapp/config/data_constants/data_constants.dart';
 import 'package:f_bapp/presentation/providers/shared/home_provider.dart';
 import 'package:f_bapp/presentation/providers/shared/utils_provider.dart';
+import 'package:f_bapp/presentation/widgets/shared/user_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
@@ -17,15 +18,11 @@ class DrawerMenu extends StatefulWidget {
 }
 
 class _DrawerMenuState extends State<DrawerMenu> {
-  
   @override
   Widget build(BuildContext context) {
-    final utilsProvider = context.read<UtilsProvider>();
     final homeProvider = context.read<HomeProvider>();
     final themeProvider = context.watch<ThemeProvider>();
 
-    String userNameCapitalize =
-        '${utilsProvider.personName} ${utilsProvider.personLastName}';
     return SizedBox(
       width: MediaQuery.of(context).size.width / 1.5,
       child: Drawer(
@@ -45,7 +42,7 @@ class _DrawerMenuState extends State<DrawerMenu> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(
-                    height: 80,
+                    height: 50,
                   ),
                   SvgPicture.asset(
                     '${DataConstant.images_chinchin}/chinchin-logo-business-base.svg',
@@ -55,12 +52,9 @@ class _DrawerMenuState extends State<DrawerMenu> {
                   SizedBox(
                     height: 30,
                   ),
-                  Text(
-                    '${userNameCapitalize}\n${utilsProvider.userName}',
-                    // style: textStyle.titleSmall,
-                  ),
+                  UserData(),
                   SizedBox(
-                    height: 30,
+                    height: 40,
                   ),
                   Container(
                     height: MediaQuery.of(context).size.height / 2,
@@ -71,16 +65,17 @@ class _DrawerMenuState extends State<DrawerMenu> {
                             SvgPicture.asset(
                               '${DataConstant.images_modules}/onboarding.svg',
                               height: 40,
-                              // color: primaryColor,
-                              color: null
+                              color: primaryColor,
                             ),
                             SizedBox(
                               width: 10,
                             ),
-                            Text("Mechant")
+                            Text("Onboarding")
                           ],
                         ),
-                        Spacer(),
+                        SizedBox(
+                          height: 40,
+                        ),
                         Row(
                           children: [
                             SvgPicture.asset(
@@ -94,44 +89,50 @@ class _DrawerMenuState extends State<DrawerMenu> {
                             Text("Administracion")
                           ],
                         ),
-                        Spacer(),
-                        Row(
-                          children: [
-                            SvgPicture.asset(
-                              '${DataConstant.images_modules}/operations-on.svg',
-                              height: 40,
-                              // color: primaryColor,
-                              colorFilter: null,
-                              
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Text("Mechant")
-                          ],
+                        SizedBox(
+                          height: 40,
                         ),
-                        Spacer(),
-                        Row(
-                          children: [
-                            IconButton(
-                              onPressed: () => {
-                                showDialog(
-                                    context: context,
-                                    builder: (context) =>
-                                        Dialogs.logoutDialog(context))
-                              },
-                              icon:const Icon(
-                                Icons.logout,
-                                size:29 ,
-                                color: primaryColor,
+                        GestureDetector(
+                          onTap: () => {},
+                          child: Row(
+                            children: [
+                              SvgPicture.asset(
+                                '${DataConstant.images_modules}/operations-on.svg',
+                                height: 40,
+                                // color: primaryColor,
+                                colorFilter: null,
                               ),
-                            ),
-                            SizedBox(
-                              width: 3,
-                            ),
-                            Text("Cerrar Sesión")
-                          ],
-                        )
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Text("Operaciones")
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: 40,
+                        ),
+                      ],
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      showDialog(
+                          context: context,
+                          builder: (context) => Dialogs.logoutDialog(context));
+                    },
+                    child: const Row(
+                      children: [
+                        SizedBox(width: 5,),
+                        Icon(
+                          Icons.logout,
+                          size: 29,
+                          color: primaryColor,
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text("Cerrar Sesión")
                       ],
                     ),
                   )
@@ -142,4 +143,3 @@ class _DrawerMenuState extends State<DrawerMenu> {
     );
   }
 }
-

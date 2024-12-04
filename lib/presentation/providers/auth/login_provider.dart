@@ -8,7 +8,7 @@ import 'package:f_bapp/infrastructure/auth/privileges.dart';
 import 'package:f_bapp/infrastructure/auth/user.dart';
 import 'package:f_bapp/infrastructure/services/login_services.dart';
 import 'package:f_bapp/infrastructure/services/secure_storage_service.dart';
-import 'package:f_bapp/presentation/providers/user/privileges_provider.dart';
+import 'package:f_bapp/presentation/providers/user/user_provider.dart';
 
 import '../../../common/providers/general_provider.dart';
 
@@ -110,15 +110,15 @@ class LoginProvider extends GeneralProvider {
       );
 
     final userDataJson = jsonEncode(resp.data?.toJson());
-    final List<Privilege> privileges = (resp.privileges as List<dynamic>)
-    .map((privilege) => Privilege.fromJson(privilege as Map<String, dynamic>))
-    .toList();
+//     final List<Privilege> privileges = (resp.privileges as List<dynamic>)
+//     .map((privilege) => Privilege.fromJson(privilege as Map<String, dynamic>))
+//     .toList();
 
-    final privilegesJson = jsonEncode(
-  (resp.privileges as List<dynamic>)
-      .map((privilege) => Privilege.fromJson(privilege as Map<String, dynamic>).toJson())
-      .toList(),
-);
+//     final privilegesJson = jsonEncode(
+//   (resp.privileges as List<dynamic>)
+//       .map((privilege) => Privilege.fromJson(privilege as Map<String, dynamic>).toJson())
+//       .toList(),
+// );
 
     // print("SERAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
     // print(resp);
@@ -141,7 +141,7 @@ class LoginProvider extends GeneralProvider {
 
       return {
       'resp': resp,
-      'privileges': privileges,
+      // 'privileges': privileges,
     };
     } on DioError catch (error) {
       _token = null; // Limpia el token si ocurre un error
@@ -163,7 +163,7 @@ class LoginProvider extends GeneralProvider {
       super.setErrorMessage(resp.message);
       super.setTrackingCode(resp.trackingCode);
     } finally {
-      super.setLoadingStatus(false);;
+      super.setLoadingStatus(false);
       notifyListeners();
     }
   }

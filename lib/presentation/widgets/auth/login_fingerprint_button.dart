@@ -8,6 +8,7 @@ import 'package:f_bapp/infrastructure/services/secure_storage_service.dart';
 import 'package:f_bapp/presentation/providers/auth/login_provider.dart';
 import 'package:f_bapp/presentation/providers/shared/home_provider.dart';
 import 'package:f_bapp/presentation/providers/shared/session_provider.dart';
+import 'package:f_bapp/presentation/providers/user/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';
@@ -29,6 +30,8 @@ class _FingerPrintAuthButtonState extends State<FingerPrintAuthButton> {
   Widget build(BuildContext context) {
     final keyValueStorageServicer = SecureStorageService();
     final loginProvider = context.watch<LoginProvider>();
+    final userProvider = context.read<UserProvider>();
+
     final textStyle = Theme.of(context).textTheme;
 
     return Padding(
@@ -97,14 +100,23 @@ class _FingerPrintAuthButtonState extends State<FingerPrintAuthButton> {
                       // llamo al metodo authenticateUser para declarar como true el valor de la autenticación
                       context.read<SessionProvider>().authenticateUser();
 
-                      // PENDIENTE CON ESTO CAMBIAR COMO ANTES POR SI ACASO
                       final sessionProvider = context.read<SessionProvider>();
+
+          
+                      print(decodedBiometricData);
+
+                      final memberResp = await userProvider.getMemberlist(decodedBiometricData['member']);
+
+                      // print("AAAAAAAAAAAAAAAAAAAAAAA");
+
 
                       // Pongo el timer de la sesion
                       sessionProvider.startSessionTimer(
                         // loginResp!.data!.timeExpiration,
                         150000,
                       );
+
+                      // print("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
 
                      
                         loginProvider.disposeValues();
@@ -113,7 +125,7 @@ class _FingerPrintAuthButtonState extends State<FingerPrintAuthButton> {
 
                         final result = await Navigator.pushNamed(
                           context,
-                          tabsScreen,
+                          homeScreen,
                         );
 
                         if (!mounted) return;
