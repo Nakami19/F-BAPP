@@ -36,18 +36,6 @@ class HomeProvider extends GeneralProvider {
     }
   }
 
-  // Segundos restantes contador regresivo
-  int seconds = maxSeconds;
-
-  // Timer para contador regresivo
-  Timer? timer;
-
-  void resetTimer() {
-    timer?.cancel();
-
-    seconds = maxSeconds;
-  }
-
 
     Future<void> refreshSession() async {
     try {

@@ -13,6 +13,8 @@ import '../../../config/router/routes.dart';
 import '../../../infrastructure/services/secure_storage_service.dart';
 import '../app_providers.dart';
 
+//no se movieron a general provider ya que en otros providers no son necesarios estos metodos
+
 class SessionProvider with ChangeNotifier {
   final storage = SecureStorageService();
   bool _isAuthenticated = false;
@@ -40,6 +42,7 @@ class SessionProvider with ChangeNotifier {
 
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) async {
       time -= 1000;
+      print(time);
 
       if (_timer != null) {
         if (time <= 30000 && !_isDialogOpen) {

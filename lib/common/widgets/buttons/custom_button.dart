@@ -52,7 +52,7 @@ class CustomButton extends StatelessWidget {
         child: isText ?
               TextButton(
                 style: styleTextButton?? styleTextButton,
-                onPressed: () => {},
+                onPressed: !provider.isLoading ? () => onTap() : null,
                 child: Text(title,
                 style: styleText??styleText,
                 ),

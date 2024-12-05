@@ -24,7 +24,7 @@ class Dialogs {
       required VoidCallback actionSuccess,
       VoidCallback? closeAction}) {
     final themeProvider = context.watch<ThemeProvider>();
-    final textStyle = Theme.of(context).textTheme.bodySmall;
+    final textStyle = Theme.of(context).textTheme.labelMedium;
 
     return AlertDialog(
       backgroundColor:
@@ -44,6 +44,7 @@ class Dialogs {
                       isPrimaryColor: true,
                       isOutline: false,
                       onTap: actionSuccess,
+                      height: 50,
                       provider: GeneralProvider())
                   // CustomStaticButton(
                   //   title: confirmButtonText ?? 'ACEPTAR',
@@ -67,10 +68,11 @@ class Dialogs {
                               isOutline: false,
                               isText: true,
                               width: 90,
+                              height: 50,
                               paddingH: 0,
                               styleText: textStyle!.copyWith(
                                 color: Color.fromRGBO(252, 198, 20, 100),
-                                fontSize: 11,
+                                fontSize: 12,
                               ),
                               styleTextButton: TextButton.styleFrom(
                                 side: BorderSide(
@@ -93,10 +95,11 @@ class Dialogs {
                               isOutline: false,
                               width: 90,
                               paddingH: 0,
+                              height: 50,
                               onTap: actionSuccess,
                               styleText: textStyle!.copyWith(
                                 color: Colors.white,
-                                fontSize: 11,
+                                fontSize: 12,
                               ),
                               provider: GeneralProvider()),
                         ),
@@ -193,77 +196,5 @@ class Dialogs {
     );
   }
 
-  static logoutDialog(BuildContext context) {
-    final themeProvider = context.watch<ThemeProvider>();
 
-    return AlertDialog(
-      backgroundColor:
-          themeProvider.isDarkModeEnabled ? darkColor : primaryScaffoldColor,
-      title: Text(
-        'Cerrar sesión',
-        style: fontStyle,
-        textAlign: TextAlign.center,
-      ),
-      content: const Text(
-        '¿Estás seguro que deseas cerrar tu sesión?',
-        textAlign: TextAlign.center,
-      ),
-      actionsAlignment: MainAxisAlignment.center,
-      actions: <Widget>[
-        TextButton(
-          style: FilledButton.styleFrom(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(BorderRadiusValue),
-            ),
-          ),
-          onPressed: () => Navigator.pop(context),
-          child: const Text(
-            'CANCELAR',
-            style: TextStyle(
-              fontSize: 12,
-            ),
-          ),
-        ),
-        FilledButton(
-          style: FilledButton.styleFrom(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(BorderRadiusValue),
-            ),
-          ),
-          onPressed: () async {
-            SecureStorageService()
-              ..deleteValue('userData')
-              ..deleteValue('timeExpiration');
-
-            AppProviders.disposeAllProviders(
-              context,
-            );
-
-            context.read<SessionProvider>().destroySession(
-                  haveModalAction: false,
-                );
-
-            Navigator.pushNamedAndRemoveUntil(
-              context,
-              firstLoginScreen,
-              (route) => false,
-            );
-
-            Snackbars.customSnackbar(
-              context,
-              title: '¡Vuelva Pronto!',
-              message: 'Su sesión ha sido cerrada exitosamente.',
-            );
-          },
-          child: const Text(
-            'CONFIRMAR',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 12,
-            ),
-          ),
-        )
-      ],
-    );
-  }
 }

@@ -72,7 +72,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               // physics: NeverScrollableScrollPhysics(), 
               children: [
                 SmallCard(
-                  image: '${DataConstant.images_profile}/change_password-on.svg',
+                  image: '${DataConstant.images_profile}/change_password.svg',
                   title: 'Cambiar clave',
                   height: 120,
                   width: 120,

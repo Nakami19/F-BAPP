@@ -5,6 +5,7 @@ import 'package:f_bapp/common/providers/general_provider.dart';
 import 'package:f_bapp/common/providers/theme_provider.dart';
 import 'package:f_bapp/common/widgets/buttons/custom_button.dart';
 import 'package:f_bapp/common/widgets/others/snackbars.dart';
+import 'package:f_bapp/config/router/routes.dart';
 import 'package:f_bapp/infrastructure/services/secure_storage_service.dart';
 import 'package:f_bapp/infrastructure/services/storage_service_impl.dart';
 import 'package:f_bapp/presentation/providers/app_providers.dart';
@@ -21,8 +22,9 @@ class AppDialogs {
   static TextStyle fontStyle = const TextStyle(fontSize: 18);
   
     /// Cerrar sesión
-  static logoutDialog(BuildContext context, String firstLoginScreen) {
+    static logoutDialog(BuildContext context) {
     final themeProvider = context.watch<ThemeProvider>();
+    final textStyle = Theme.of(context).textTheme.labelMedium;
 
     return AlertDialog(
       backgroundColor:
@@ -38,50 +40,84 @@ class AppDialogs {
       ),
       actionsAlignment: MainAxisAlignment.center,
       actions: <Widget>[
-        CustomButton(
-          title: 'CANCELAR', 
-          isPrimaryColor: true, 
-          isOutline: false, 
-          isText: true,
-          styleTextButton: TextButton.styleFrom(
-            foregroundColor: Color.fromRGBO(252, 198, 20, 100),
-            backgroundColor: Color.fromRGBO(252, 198, 20, 100),
-          ),
-          onTap: () => Navigator.pop(context), 
-          provider: GeneralProvider()
-          ),
-        CustomButton(
-          title: 'CONFIRMAR', 
-          isPrimaryColor: true, 
-          isOutline: false, 
-          onTap: () async {
-            SecureStorageService()
-              ..deleteValue('userData')
-              ..deleteValue('timeExpiration');
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 5),
+                child: CustomButton(
+                    title: 'CANCELAR',
+                    isPrimaryColor: false,
+                    isOutline: false,
+                    isText: true,
+                    width: 90,
+                    paddingH: 0,
+                    height: 50,
+                    styleText: textStyle!.copyWith(
+                      color: Color.fromRGBO(252, 198, 20, 100),
+                      fontSize: 12,
+                    ),
+                    styleTextButton: TextButton.styleFrom(
+                      side: BorderSide(
+                        color: Color.fromRGBO(
+                            252, 198, 20, 100), // Cambia a tu color deseado
+                        width: 2, // Grosor del borde
+                      ),
+                    ),
+                    onTap: () {Navigator.pop(context);},
+                    provider: GeneralProvider()),
+              ),
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 5),
+                child: CustomButton(
+                    title: 'CONFIRMAR',
+                    isPrimaryColor: true,
+                    isOutline: false,
+                    width: 90,
+                    paddingH: 0,
+                    height: 50,
+                    onTap: () async {
+                      SecureStorageService()
+                        ..deleteValue('userData')
+                        ..deleteValue('timeExpiration');
 
-            AppProviders.disposeAllProviders(
-              context,
-            );
+                      AppProviders.disposeAllProviders(
+                        context,
+                      );
 
-            context.read<SessionProvider>().destroySession(
-                  haveModalAction: false,
-                );
+                      context.read<SessionProvider>().destroySession(
+                            haveModalAction: false,
+                          );
 
-            Navigator.pushNamedAndRemoveUntil(
-              context,
-              firstLoginScreen,
-              (route) => false,
-            );
+                      context.read<SessionProvider>().cancelTimer(
+                            haveModalAction: false,
+                          );
+                      
+                      Navigator.pushNamedAndRemoveUntil(
+                        context,
+                        firstLoginScreen,
+                        (route) => false,
+                      );
 
-            Snackbars.customSnackbar(
-              context,
-              title: '¡Vuelva Pronto!',
-              message:
-                  'Su sesión ha sido cerrada exitosamente. Gracias por preferirnos.',
-            );
-          }, 
-          provider:GeneralProvider()),
-
+                      Snackbars.customSnackbar(
+                        context,
+                        title: '¡Vuelva Pronto!',
+                        message: 'Su sesión ha sido cerrada exitosamente.',
+                      );
+                    },
+                    styleText: textStyle!.copyWith(
+                      color: Colors.white,
+                      fontSize: 12,
+                    ),
+                    provider: GeneralProvider()),
+              ),
+            ),
+          ],
+        ),
+    
       ],
     );
   }
