@@ -152,7 +152,7 @@ class _SecondLoginScreenState extends State<SecondLoginScreen> {
                             'password': Base64Encoder.encodeBase64(loginProvider.password!),
                           };
                           final loginResp = await loginProvider.login1(loginData);
-                          // final memberResp = await userProvider.getMemberlist(loginProvider.userLogin!);
+                          final memberResp = await userProvider.getMemberlist(loginProvider.userLogin!);
                           
                           // if(loginResp!=null) {
                           //   final privileges = loginResp['privileges'] as List<Privilege>;

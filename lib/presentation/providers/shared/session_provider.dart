@@ -41,8 +41,8 @@ class SessionProvider with ChangeNotifier {
         navigatorKey.currentContext ?? navigatorKey.currentState!.context;
 
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) async {
-      time -= 1000;
       print(time);
+      time -= 1000;
 
       if (_timer != null) {
         if (time <= 30000 && !_isDialogOpen) {
@@ -172,8 +172,10 @@ class SessionProvider with ChangeNotifier {
 
   void destroySession({bool? haveModalAction = true}) {
     _timer?.cancel();
+    _timer = null;
     _isDialogOpen = false;
     _isAuthenticated = false;
+
 
     storage
       ..deleteValue(

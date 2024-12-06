@@ -99,8 +99,6 @@ class LoginProvider extends GeneralProvider {
       
       final response = await loginService.postLogin(userdata);
       final data = jsonDecode(response.toString());
-      // print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-      // print(response.data);
 
       super.setStatusCode(response.statusCode!);
       final resp = ApiResponse<User>.fromJson(
@@ -120,20 +118,17 @@ class LoginProvider extends GeneralProvider {
 //       .toList(),
 // );
 
-    // print("SERAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-    // print(resp);
+
 
       _token = data['token'];
       await storageService.setKeyValue('token', _token!);
-      //       print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-      // print(userDataJson);
-      // print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA PRIVILEGIOS");
-      // print(resp.privileges);
+
       storageService
         .setKeyValue(
           'userData',
           userDataJson,
         );
+
       
 
 
@@ -141,6 +136,7 @@ class LoginProvider extends GeneralProvider {
 
       return {
       'resp': resp,
+      'userdata': userdata
       // 'privileges': privileges,
     };
     } on DioError catch (error) {

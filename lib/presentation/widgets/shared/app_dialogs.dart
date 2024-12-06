@@ -80,6 +80,7 @@ class AppDialogs {
                     paddingH: 0,
                     height: 50,
                     onTap: () async {
+                      
                       SecureStorageService()
                         ..deleteValue('userData')
                         ..deleteValue('timeExpiration');
@@ -92,9 +93,11 @@ class AppDialogs {
                             haveModalAction: false,
                           );
 
-                      context.read<SessionProvider>().cancelTimer(
-                            haveModalAction: false,
-                          );
+                      // context.read<SessionProvider>().cancelTimer(
+                      //       haveModalAction: false,
+                      //     );
+
+                      
                       
                       Navigator.pushNamedAndRemoveUntil(
                         context,

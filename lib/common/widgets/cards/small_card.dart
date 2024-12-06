@@ -31,8 +31,8 @@ class _SmallCardState extends State<SmallCard> {
     return InkWell(
       onTap: widget.onTap ?? ()=>{},
       child: Container(
-        height: widget.height??20,
-        width: widget.width??20,
+        height: widget.height ?? double.infinity,
+        width: widget.width ?? double.infinity,
         padding: EdgeInsets.all(13),
         decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(BorderRadiusValue),

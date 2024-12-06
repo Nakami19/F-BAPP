@@ -12,14 +12,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
-class DrawerMenu extends StatefulWidget {
-  const DrawerMenu({super.key});
+class DrawerMenu extends StatelessWidget {
 
-  @override
-  State<DrawerMenu> createState() => _DrawerMenuState();
-}
-
-class _DrawerMenuState extends State<DrawerMenu> {
   @override
   Widget build(BuildContext context) {
     final homeProvider = context.read<HomeProvider>();
@@ -63,77 +57,23 @@ class _DrawerMenuState extends State<DrawerMenu> {
                     height: MediaQuery.of(context).size.height / 2,
                     child: Column(
                         children: userProvider.privileges!.map((privilege) {
-                      return Row(
-                        children: [
-                          SvgPicture.asset(
-                            '${DataConstant.images_modules}/${privilege.icon}.svg',
-                            height: 40,
-                            color: primaryColor,
-                          ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Text(privilege.moduleName)
-                        ],
+                      return SizedBox(
+                        height: 65,
+                        child: Row(
+                          children: [
+                            SvgPicture.asset(
+                              '${DataConstant.images_modules}/${privilege.icon}.svg',
+                              height: 40,
+                              color: primaryColor,
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Text(privilege.moduleName)
+                          ],
+                        ),
                       );
                     }).toList()
-
-                        // [
-                        //   Row(
-                        //     children:
-
-                        //     [
-                        //       SvgPicture.asset(
-                        //         '${DataConstant.images_modules}/onboarding.svg',
-                        //         height: 40,
-                        //         color: primaryColor,
-                        //       ),
-                        //       SizedBox(
-                        //         width: 10,
-                        //       ),
-                        //       Text("Onboarding")
-                        //     ],
-                        //   ),
-                        //   SizedBox(
-                        //     height: 40,
-                        //   ),
-                        //   Row(
-                        //     children: [
-                        //       SvgPicture.asset(
-                        //         '${DataConstant.images_modules}/administration.svg',
-                        //         height: 40,
-                        //         color: primaryColor,
-                        //       ),
-                        //       SizedBox(
-                        //         width: 10,
-                        //       ),
-                        //       Text("Administracion")
-                        //     ],
-                        //   ),
-                        //   SizedBox(
-                        //     height: 40,
-                        //   ),
-                        //   GestureDetector(
-                        //     onTap: () => {},
-                        //     child: Row(
-                        //       children: [
-                        //         SvgPicture.asset(
-                        //           '${DataConstant.images_modules}/operations-on.svg',
-                        //           height: 40,
-                        //           // color: primaryColor,
-                        //           colorFilter: null,
-                        //         ),
-                        //         SizedBox(
-                        //           width: 10,
-                        //         ),
-                        //         Text("Operaciones")
-                        //       ],
-                        //     ),
-                        //   ),
-                        //   SizedBox(
-                        //     height: 40,
-                        //   ),
-                        // ],
                         ),
                   ),
                   GestureDetector(

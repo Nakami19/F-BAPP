@@ -1,14 +1,13 @@
 import 'package:f_bapp/config/data_constants/data_constants.dart';
+import 'package:f_bapp/presentation/providers/user/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
 
 class Customappbar extends StatefulWidget {
-  const Customappbar({
-    super.key,
-    required this.screenkey
-    });
+  const Customappbar({super.key, required this.screenKey});
 
-  final screenkey;
+  final GlobalKey<ScaffoldState> screenKey;
 
   @override
   State<Customappbar> createState() => _CustomappbarState();
@@ -17,6 +16,8 @@ class Customappbar extends StatefulWidget {
 class _CustomappbarState extends State<Customappbar> {
   @override
   Widget build(BuildContext context) {
+    final userProvider = context.watch<UserProvider>();
+
     return AppBar(
       backgroundColor: Colors.transparent,
       automaticallyImplyLeading: false,
@@ -28,33 +29,37 @@ class _CustomappbarState extends State<Customappbar> {
             // fit: BoxFit.cover,
           ),
           Positioned(
-      left: 0,
-      right: 0,
-      top: 50, 
-      child: Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 16), // Separación lateral
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        SvgPicture.asset(
-          '${DataConstant.images_chinchin}/chinchin-logo-business-base.svg',
-          height: 40, 
-          fit: BoxFit.contain,
-        ),
-        IconButton(
-          tooltip: 'Menú',
-          icon: Icon(
-            Icons.menu, color: Colors.black,
-            size: 30,
+            left: 0,
+            right: 0,
+            top: 50,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                  horizontal: 16), // Separación lateral
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  SvgPicture.asset(
+                    '${DataConstant.images_chinchin}/chinchin-logo-business-base.svg',
+                    height: 40,
+                    fit: BoxFit.contain,
+                  ),
+                  IconButton(
+                    tooltip: 'Menú',
+                    icon: Icon(
+                      Icons.menu,
+                      color: Colors.black,
+                      size: 30,
+                    ),
+                    onPressed: () {
+                      if (!userProvider.isLoading) {
+                        widget.screenKey.currentState!.openDrawer();
+                      }
+                    },
+                  ),
+                ],
+              ),
             ),
-          onPressed: () {
-            widget.screenkey.currentState!.openDrawer();            
-          },
-        ),
-      ],
-    ),
-      ),
-    ),
+          ),
         ],
       ),
     );

@@ -4,9 +4,12 @@ import 'package:f_bapp/common/assets/theme/app_theme.dart';
 import 'package:f_bapp/common/providers/theme_provider.dart';
 import 'package:f_bapp/common/widgets/cards/small_card.dart';
 import 'package:f_bapp/common/widgets/inputs/custom_dropdown.dart';
+import 'package:f_bapp/common/widgets/others/custom_skeleton.dart';
 import 'package:f_bapp/common/widgets/others/snackbars.dart';
 import 'package:f_bapp/config/data_constants/data_constants.dart';
 import 'package:f_bapp/infrastructure/services/secure_storage_service.dart';
+import 'package:f_bapp/presentation/providers/auth/login_provider.dart';
+import 'package:f_bapp/presentation/providers/shared/home_provider.dart';
 import 'package:f_bapp/presentation/providers/shared/navigation_provider.dart';
 import 'package:f_bapp/presentation/providers/shared/utils_provider.dart';
 import 'package:f_bapp/presentation/providers/user/user_provider.dart';
@@ -28,20 +31,20 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final keyValueStorageService = SecureStorageService();
-  final homeKey = GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _homeScaffoldKey = GlobalKey<ScaffoldState>();
+  String? selectedCompany;
 
   @override
   void initState() {
     super.initState();
-  
+
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final utilsProvider = context.read<UtilsProvider>();
       final userProvider = context.read<UserProvider>();
+      context.read<NavigationProvider>().updateIndex(0);
 
-    print(userProvider.privileges);
-
-      print(utilsProvider.haveErrors);
-      print("IIIIIIIIIIIIIIIIIIIIIIIIIIIIII");
+      selectedCompany =
+          userProvider.memberlist![0]['idParentRelation'].toString();
 
       if (!utilsProvider.isLoading) {
         final res = await utilsProvider.getUserinfo();
@@ -56,11 +59,9 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final textStyle = Theme.of(context).textTheme;
-    final utilsProvider = context.read<UtilsProvider>();
-    final themeProvider = context.watch<ThemeProvider>();
     final userProvider = context.watch<UserProvider>();
     final navProvider = context.watch<NavigationProvider>();
-
+    final loginProvider = context.read<LoginProvider>();
 
     if (userProvider.shouldShowError) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -77,12 +78,14 @@ class _HomeScreenState extends State<HomeScreen> {
         return false;
       },
       child: Scaffold(
-        key: homeKey,
+        key: _homeScaffoldKey,
         drawer: DrawerMenu(),
         extendBodyBehindAppBar: true,
         appBar: PreferredSize(
             preferredSize: Size.fromHeight(150),
-            child: Customappbar(screenkey: homeKey)),
+            child: Customappbar(
+              screenKey: _homeScaffoldKey,
+            )),
         body: Padding(
           padding: const EdgeInsets.all(30),
           child: Column(
@@ -92,52 +95,112 @@ class _HomeScreenState extends State<HomeScreen> {
                 height: 110,
               ),
               UserData(),
-              CustomDropdown(
-                  title: 'Seleccione una compañia *',
-                  options: userProvider.memberlist!,
-                  selectedValue:
-                      userProvider.memberlist![0]['idParentRelation'].toString(),
-                  itemValueMapper: (option) =>
-                      option['idParentRelation'].toString(),
-                  itemLabelMapper: (option) => option['name'].toString(),
-                  onChanged: (value) {
-                    print(value);
-                  },
-                  showError: true,
-                  errorText: 'error'),
+
+              // esta cargando/no ha cargado
+              if (userProvider.isLoading) ...[
+                SizedBox(
+                  height: 10,
+                  width: double.infinity,
+                ),
+                CustomSkeleton(height: 60),
+                SizedBox(
+                  height: 10,
+                  width: double.infinity,
+                ),
+              ],
+
+              //ya cargo
+              if (!userProvider.isLoading)
+                CustomDropdown(
+                    title: 'Seleccione una compañia *',
+                    options: userProvider.memberlist!,
+                    selectedValue: selectedCompany,
+                    itemValueMapper: (option) =>
+                        option['idParentRelation'].toString(),
+                    itemLabelMapper: (option) => option['name'].toString(),
+                    onChanged: (value) {
+                      setState(() {
+                        selectedCompany = value; // Actualizar el estado local.
+                      });
+                      userProvider.getMemberTypeChangeList(
+                          value!, loginProvider.userLogin!);
+                    },
+                    showError: true,
+                    errorText: 'error'),
               SizedBox(
                 height: 20,
               ),
-              Flexible(
-                flex: 2,
-                child: GridView.count(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 20,
-                  crossAxisSpacing: 20,
-                  padding: EdgeInsets.all(10),
-                  shrinkWrap: true,
-                  // physics: NeverScrollableScrollPhysics(),
-                  children: userProvider.privileges!.map((privilege) {
-                    return SmallCard(
-                      image: '${DataConstant.images_modules}/${privilege.icon}.svg',
-                      title: privilege.moduleName,
-                      height: 120,
-                      width: 130,
-                      imageHeight: 70,
-                      );
-      
-                  }).toList(),
+              // userProvider.isLoading
+              //   ? Container( height: MediaQuery.of(context).size.height/2.5,  child: Center(child: CircularProgressIndicator()))
+              //   :
+
+              if (userProvider.isLoading) ...[
+                const Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        CustomSkeleton(height: 150, width: 140,),
+                        SizedBox(
+                          width: 20,
+                          height: 20,
+                        ),
+                        CustomSkeleton(height: 150, width: 140,),
+                      ],
+                    ),
+                    SizedBox(height: 20,),
+                     Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        CustomSkeleton(height: 150, width: 140,),
+                        SizedBox(
+                          width: 20,
+                          height: 20,
+                        ),
+                        CustomSkeleton(height: 150, width: 140,),
+                      ],
+                    ),
+                  ],
                 ),
-              ),
+              ],
+
+              if (!userProvider.isLoading)
+                Flexible(
+                  flex: 2,
+                  child: GridView.count(
+                    crossAxisCount: 2,
+                    mainAxisSpacing: 20,
+                    crossAxisSpacing: 20,
+                    padding: EdgeInsets.all(10),
+                    shrinkWrap: true,
+                    // physics: NeverScrollableScrollPhysics(),
+                    children: userProvider.privileges!.map((privilege) {
+                      return SmallCard(
+                        image:
+                            '${DataConstant.images_modules}/${privilege.icon}.svg',
+                        title: privilege.moduleName,
+                        height: 120,
+                        width: 130,
+                        imageHeight: 70,
+                        onTap: () {
+                          Navigator.pushNamed(
+                              context, '/${privilege.moduleName}Screen');
+                        },
+                      );
+                    }).toList(),
+                  ),
+                ),
             ],
           ),
         ),
-         bottomNavigationBar: Customnavbar(
+        bottomNavigationBar: Customnavbar(
           selectedIndex: navProvider.selectedIndex,
           onDestinationSelected: (index) {
             navProvider.updateIndex(index);
           },
-         ),
+        ),
       ),
     );
   }

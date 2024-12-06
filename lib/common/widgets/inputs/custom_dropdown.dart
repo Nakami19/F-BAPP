@@ -3,21 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 
-
 class CustomDropdown<T> extends StatefulWidget {
-  const CustomDropdown({
-    required this.options,
-    required this.onChanged,
-    required this.showError,
-    required this.errorText,
-    required this.title,
-    required this.itemValueMapper, 
-    required this.itemLabelMapper, 
-    this.selectedValue,
-    this.label,
-    super.key
-    });
-  // final List<dynamic> options;  
+  const CustomDropdown(
+      {required this.options,
+      required this.onChanged,
+      required this.showError,
+      required this.errorText,
+      required this.title,
+      required this.itemValueMapper,
+      required this.itemLabelMapper,
+      this.selectedValue,
+      this.label,
+      super.key});
+  // final List<dynamic> options;
   final ValueChanged<String?> onChanged;
   final List<T> options;
   final String? errorText;
@@ -27,13 +25,12 @@ class CustomDropdown<T> extends StatefulWidget {
   final String? selectedValue;
 
   // final String Function(T option) itemValueMapper;
-  
+
   // /// Función que mapea el texto que se muestra en el dropdown.
   // final String Function(T option) itemLabelMapper;
 
   final String Function(dynamic option) itemValueMapper;
   final String Function(dynamic option) itemLabelMapper;
-
 
   @override
   State<CustomDropdown> createState() => _CustomDropdownState();
@@ -45,16 +42,34 @@ class _CustomDropdownState extends State<CustomDropdown> {
   @override
   void initState() {
     super.initState();
-    // selectedValue = widget.options.isNotEmpty ? widget.options[0] : null;  
-    if (widget.options.isNotEmpty) {
-    value = widget.itemValueMapper(widget.options.first); // Toma el primer elemento si no hay valor seleccionado
+    // selectedValue = widget.options.isNotEmpty ? widget.options[0] : null;
+    //   if (widget.options.isNotEmpty) {
+    //   value = widget.itemValueMapper(widget.options.first); // Toma el primer elemento si no hay valor seleccionado
+    // }
+
+    if (widget.selectedValue != null) {
+      value = widget.selectedValue;
+    } else if (widget.options.isNotEmpty) {
+      value = widget.itemValueMapper(widget.options.first);
+    }
   }
+
+    @override
+  void didUpdateWidget(covariant CustomDropdown oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    // Si el valor seleccionado ha cambiado, actualiza el estado.
+    if (widget.selectedValue != oldWidget.selectedValue && widget.selectedValue != value) {
+      setState(() {
+        value = widget.selectedValue;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-  Size size = MediaQuery.of(context).size;
-  final textStyle = Theme.of(context).textTheme;
+    Size size = MediaQuery.of(context).size;
+    final textStyle = Theme.of(context).textTheme;
 
     return Column(
       children: [
@@ -79,43 +94,40 @@ class _CustomDropdownState extends State<CustomDropdown> {
             padding: const EdgeInsets.symmetric(horizontal: 8),
             child: DropdownButtonHideUnderline(
               child: DropdownButton2(
-                
                 isExpanded: true,
                 value: value,
                 // icon: Icon(Icons.keyboard_arrow_down),
                 items: widget.options.map((option) {
                   return DropdownMenuItem<String>(
-                    value: widget.itemValueMapper(option),
-                    child: Text(
-                    widget.itemLabelMapper(option),
-                    style: TextStyle(
-                      fontWeight: value == widget.itemValueMapper(option)
-                          ? FontWeight.w600 // Estilo especial solo en el menú desplegable
-                          : FontWeight.normal,
-                    ),
-                    )
-                  );
+                      value: widget.itemValueMapper(option),
+                      child: Text(
+                        widget.itemLabelMapper(option),
+                        style: TextStyle(
+                          fontWeight: value == widget.itemValueMapper(option)
+                              ? FontWeight
+                                  .w600 // Estilo especial solo en el menú desplegable
+                              : FontWeight.normal,
+                        ),
+                      ));
                 }).toList(),
                 onChanged: (String? newValue) {
-                  setState(() {
-                    value= newValue!;
-                  });
-                  widget.onChanged(newValue);
-
-                  },
+                  if (newValue != null && newValue != value) {
+                    setState(() {
+                      value = newValue;
+                    });
+                    widget.onChanged(newValue); 
+                  }
+                },
                 dropdownStyleData: DropdownStyleData(
-                  maxHeight: MediaQuery.of(context).size.height / 3,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(BorderRadiusValue)
-                  )
-                ),
-                  
-                  )
-                ,
+                    maxHeight: MediaQuery.of(context).size.height / 3,
+                    decoration: BoxDecoration(
+                        borderRadius:
+                            BorderRadius.circular(BorderRadiusValue))),
               ),
             ),
           ),
+        ),
       ],
-    ) ;
+    );
   }
 }

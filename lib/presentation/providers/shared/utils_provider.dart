@@ -36,8 +36,7 @@ class UtilsProvider extends GeneralProvider {
         'userData',
       );
 
-      // print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-      // print(userData);
+
       final decodedData = jsonDecode(userData!);
 
       userName = decodedData['userName'];

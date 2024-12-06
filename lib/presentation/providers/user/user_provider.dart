@@ -53,9 +53,7 @@ class UserProvider extends GeneralProvider {
     Setprivileges = privilegeList;
       // // memberlist=response.data["data"];
 
-      // print(data["privileges"]);
       // if (data.containsKey('privileges')) {
-      //   print("JAJAJAJAJAJAJJAJAJAJ");
       //   final privilegesData = data['privileges'];
       //   if (privilegesData is List) {
       //     privileges = privilegesData
@@ -65,8 +63,7 @@ class UserProvider extends GeneralProvider {
       //   } else {
       //     privileges = [];
       //   }
-      //   print("JJOJOJOJOJOJOJOJ");
-      //   print(privileges);
+
       // } else {
       //   privileges = [];
       // }
@@ -109,4 +106,81 @@ class UserProvider extends GeneralProvider {
       notifyListeners();
     }
   }
+
+  Future<void> getMemberTypeChangeList(String idParentRelation, String member) async {
+    print(idParentRelation);
+    print("EEEEEEEEEEEEEEEEEEEEEEEEEEE");
+
+    super.setLoadingStatus(true);
+
+     try {
+    final response = await loginService.getMemberTypeChange(idPrivileges: idParentRelation);
+    final response2 = await loginService.getMemberTypes(member: member);
+    final data = jsonDecode(response.toString());
+    final data2 = jsonDecode(response2.toString());
+
+    print("AAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+    print(data);
+
+    // Procesamiento de datos según el formato esperado
+    if (data2.containsKey('privileges')) {
+      final privilegesData = data2['privileges'] as List;
+      final privilegeList = privilegesData.map((privilegeJson) => Privilege.fromJson(privilegeJson)).toList();
+      
+      // Asignar lista de privilegios
+      Setprivileges = privilegeList;
+    }
+    
+    notifyListeners();
+  } on DioError catch (error) {
+    final response = error.response;
+    final data = response?.data as Map<String, dynamic>;
+
+    // Manejo de errores personalizado
+    final resp = ApiResponse.fromJson(
+      data,
+      (json) => json['data'],
+      (json) => ApiError(
+        message: json['message'],
+        value: json['value'],
+        trackingCode: json['trackingCode'],
+      ),
+    );
+
+    super.setErrorMessage(resp.message);
+    super.setSimpleError(true);
+    super.setTrackingCode(resp.trackingCode);
+    notifyListeners();
+  } catch (error) {
+    print('Unexpected error: $error');
+    super.setErrors(true);
+    super.setErrorMessage("Ocurrió un error inesperado");
+    super.setTrackingCode(error.toString());
+    notifyListeners();
+  } finally {
+    setLoadingStatus(false);
+  }
+
+  }
+
+
+  //   /**
+  //  * Llama al API de cambiar de miembro
+  //  * @param idParentRelation
+  //  * @returns
+  //  */
+  // getMemberTypeChange(idPrivileges: string) {
+  //   let params = {
+  //     idPrivileges
+  //   }
+  //   return this.http.get(
+  //     environment.CC_GATEWAY_URL + '/v1/auth/business/change',{
+  //       headers: new HttpHeaders({
+  //         'Content-Type': 'application/json',
+  //       }),
+  //       observe: 'response',
+  //       params,
+  //     }
+  //   )
+  // }
 }

@@ -1,6 +1,7 @@
 import 'package:f_bapp/common/assets/theme/app_theme.dart';
 import 'package:f_bapp/config/router/routes.dart';
 import 'package:f_bapp/presentation/providers/shared/navigation_provider.dart';
+import 'package:f_bapp/presentation/providers/user/user_provider.dart';
 import 'package:f_bapp/presentation/screens/home_screen.dart';
 import 'package:f_bapp/presentation/screens/profile/profile_screen.dart';
 import 'package:f_bapp/presentation/widgets/shared/bottom_sheet.dart';
@@ -49,13 +50,12 @@ class _CustomnavbarState extends State<Customnavbar> {
               indicatorShape: CircleBorder(eccentricity: 0.2),
               selectedIndex: widget.selectedIndex,
               onDestinationSelected: (index) {
-                if (index==2) {
-                   _navigateToPage(index, context);
+                if (index == 2) {
+                  _navigateToPage(index, context);
                 } else {
-                widget.onDestinationSelected(index);
-                _navigateToPage(index, context);
+                  widget.onDestinationSelected(index);
+                  _navigateToPage(index, context);
                 }
-               
               },
               backgroundColor: Colors.white,
               destinations: const [
@@ -90,6 +90,8 @@ class _CustomnavbarState extends State<Customnavbar> {
   }
 
   void _navigateToPage(int index, BuildContext context) {
+    final userProvider = context.read<UserProvider>();
+
     switch (index) {
       case 0:
         Navigator.pushReplacementNamed(
@@ -104,12 +106,14 @@ class _CustomnavbarState extends State<Customnavbar> {
         );
         break;
       case 2:
-        showModalBottomSheet(
-          context: context,
-          builder: (context) {
-            return BottomSheetModules();
-          },
-        );
+        if (!userProvider.isLoading) {
+          showModalBottomSheet(
+            context: context,
+            builder: (context) {
+              return BottomSheetModules();
+            },
+          );
+        }
 
         break;
     }

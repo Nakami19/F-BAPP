@@ -3,11 +3,13 @@ import 'package:f_bapp/common/providers/theme_provider.dart';
 import 'package:f_bapp/common/widgets/cards/small_card.dart';
 import 'package:f_bapp/common/widgets/inputs/custom_dropdown.dart';
 import 'package:f_bapp/config/data_constants/data_constants.dart';
+import 'package:f_bapp/presentation/providers/shared/home_provider.dart';
 import 'package:f_bapp/presentation/providers/shared/navigation_provider.dart';
 import 'package:f_bapp/presentation/providers/shared/utils_provider.dart';
 import 'package:f_bapp/presentation/providers/user/user_provider.dart';
 import 'package:f_bapp/presentation/widgets/shared/customNavbar.dart';
 import 'package:f_bapp/presentation/widgets/shared/customappbar.dart';
+import 'package:f_bapp/presentation/widgets/shared/drawer_menu.dart';
 import 'package:f_bapp/presentation/widgets/shared/user_data.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -21,7 +23,8 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
 
-  final homeKey = GlobalKey<ScaffoldState>();
+  // final homeKey = GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _profileScaffoldKey = GlobalKey<ScaffoldState>();
   
   @override
   Widget build(BuildContext context) {
@@ -30,16 +33,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final themeProvider = context.watch<ThemeProvider>();
     final userProvider = context.read<UserProvider>();
     final navProvider = context.watch<NavigationProvider>();
-
+    final homeKey = context.read<HomeProvider>();
     return WillPopScope(
       onWillPop: () async {
         return false;
       },
       child: Scaffold(
+        key: _profileScaffoldKey,
+        drawer: DrawerMenu(),
         extendBodyBehindAppBar: true,
         appBar: PreferredSize(
             preferredSize: Size.fromHeight(150),
-            child: Customappbar(screenkey: homeKey)),
+            child: Customappbar(screenKey: _profileScaffoldKey,)),
         body:  Padding(
          padding: const EdgeInsets.all(30),
          child: Column(

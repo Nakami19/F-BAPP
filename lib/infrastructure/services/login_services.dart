@@ -57,7 +57,7 @@ if (recaptcha == null || recaptcha.isEmpty) {
   Future<Response> getMemberTypes({String? member}) async {
     try {
       final response = await dio.get(
-        Enviroment.CC_FBUS_GATEWAY +'/v1/profile/business/parent',
+        '${Enviroment.CC_FBUS_GATEWAY}/v1/profile/business/parent',
         queryParameters: {'member': member},
       );
       return response;
@@ -65,6 +65,19 @@ if (recaptcha == null || recaptcha.isEmpty) {
       rethrow;
     }
   }
+
+  //Llama al API de cambiar de miembro
+  Future<Response> getMemberTypeChange({required String idPrivileges}) async {
+  try {
+    final response = await dio.get(
+      '${Enviroment.CC_FBUS_GATEWAY}/v1/auth/business/change',
+      queryParameters: {'idPrivileges': idPrivileges},
+    );
+    return response;
+  } catch (e) {
+    rethrow;
+  }
+}
 
   // Llama al API para refrescar sesión
   Future<Response> refreshSession() async {

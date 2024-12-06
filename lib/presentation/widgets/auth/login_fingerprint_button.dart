@@ -96,6 +96,22 @@ class _FingerPrintAuthButtonState extends State<FingerPrintAuthButton> {
                     final loginResp = await loginProvider
                         .login1(decodedBiometricData, isFromBiometric: true);
 
+
+                    print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+                    print(loginResp!['userdata']);
+                    loginProvider.userLogin = loginResp['userdata']['member'];
+
+                    print(loginProvider.userLogin!);
+
+                    
+
+                    // final loginData = {
+                    //         'member': loginProvider.userLogin!,
+                    //         'password': Base64Encoder.encodeBase64(loginProvider.password!),
+                    //       };
+
+                    keyValueStorageServicer.setKeyValue('userLoginData', loginResp['userdata']);
+
                     if (loginProvider.statusCode == HttpStatus.ok) {
                       // llamo al metodo authenticateUser para declarar como true el valor de la autenticación
                       context.read<SessionProvider>().authenticateUser();
@@ -103,11 +119,9 @@ class _FingerPrintAuthButtonState extends State<FingerPrintAuthButton> {
                       final sessionProvider = context.read<SessionProvider>();
 
           
-                      print(decodedBiometricData);
 
                       final memberResp = await userProvider.getMemberlist(decodedBiometricData['member']);
 
-                      // print("AAAAAAAAAAAAAAAAAAAAAAA");
 
 
                       // Pongo el timer de la sesion
@@ -115,9 +129,6 @@ class _FingerPrintAuthButtonState extends State<FingerPrintAuthButton> {
                         // loginResp!.data!.timeExpiration,
                         150000,
                       );
-
-                      // print("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
-
                      
                         loginProvider.disposeValues();
 

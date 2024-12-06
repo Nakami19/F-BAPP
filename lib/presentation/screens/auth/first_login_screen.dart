@@ -49,6 +49,7 @@ class _FirstLoginScreenState extends State<FirstLoginScreen> {
     final loginProvider = context.read<LoginProvider>();
     final sessionProvider = context.read<SessionProvider>();
 
+
     Future.microtask(() async {
       var enabledBiometricValue =
           await normalStorage.getValue<String>('enabledBiometric');

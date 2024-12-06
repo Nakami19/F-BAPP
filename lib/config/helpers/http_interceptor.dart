@@ -93,7 +93,7 @@ class HttpInterceptor extends Interceptor {
     if (response.statusCode == HttpStatus.ok) {
       isNoInternetPopupShown = false; // Restablece la variable
     }
-    // Lo de mantenimiento, ya esta listo solo hay que descomentar algo en first login screen
+    // Lo de mantenimiento
     if (response.data['maintenance'] != null) {
       final maintenance = response.data['maintenance'];
       if (maintenance) {
