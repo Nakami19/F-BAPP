@@ -4,7 +4,7 @@ class Privilege {
   final String status;
   final String page;
   final String icon;
-  final List<Action> actions;
+  final List<PrivilegesActions> actions;
 
   Privilege({
     required this.moduleName,
@@ -23,13 +23,13 @@ class Privilege {
       page: json['page'],
       icon: json['icon'],
       actions: (json['actions'] as List)
-          .map((actionJson) => Action.fromJson(actionJson))
+          .map((actionJson) => PrivilegesActions.fromJson(actionJson))
           .toList(),
     );
   }
 }
 
-class Action {
+class PrivilegesActions {
   final String actionName;
   final String key;
   final String description;
@@ -39,7 +39,7 @@ class Action {
   final bool showInMenu;
   final List<String> apis;
 
-  Action({
+  PrivilegesActions({
     required this.actionName,
     required this.key,
     required this.description,
@@ -50,8 +50,8 @@ class Action {
     required this.apis,
   });
 
-  factory Action.fromJson(Map<String, dynamic> json) {
-    return Action(
+  factory PrivilegesActions.fromJson(Map<String, dynamic> json) {
+    return PrivilegesActions(
       actionName: json['actionName'],
       key: json['key'],
       description: json['description'],

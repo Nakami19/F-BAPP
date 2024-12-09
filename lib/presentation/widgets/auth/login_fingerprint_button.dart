@@ -7,6 +7,7 @@ import 'package:f_bapp/config/router/routes.dart';
 import 'package:f_bapp/infrastructure/services/secure_storage_service.dart';
 import 'package:f_bapp/presentation/providers/auth/login_provider.dart';
 import 'package:f_bapp/presentation/providers/shared/home_provider.dart';
+import 'package:f_bapp/presentation/providers/shared/navigation_provider.dart';
 import 'package:f_bapp/presentation/providers/shared/session_provider.dart';
 import 'package:f_bapp/presentation/providers/user/user_provider.dart';
 import 'package:flutter/material.dart';
@@ -133,6 +134,10 @@ class _FingerPrintAuthButtonState extends State<FingerPrintAuthButton> {
                         loginProvider.disposeValues();
 
                         context.read<HomeProvider>().changeScreen(Views.Home);
+
+                      //selecciono la primera compañia para el dropdown
+                        context.read<NavigationProvider>().updateCompany(userProvider.memberlist![0]['idParentRelation'].toString());
+
 
                         final result = await Navigator.pushNamed(
                           context,

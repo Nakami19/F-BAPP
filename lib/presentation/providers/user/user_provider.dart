@@ -11,14 +11,24 @@ import 'package:flutter/material.dart';
 class UserProvider extends GeneralProvider {
   final loginService = LoginServices();
 
-  //se guardan datos del usuario, sus privilegios y el listado de miembros
+  //se guardan datos del usuario, sus privilegios, las acciones de un privilegio seleccionado y el listado de miembros
   List<Privilege>? privileges;
 
   List<Map<String, dynamic>>? memberlist;
 
-  List<Privilege>? get _privilege => privileges;
+  List<Privilege>? get privilege => privileges;
 
-  set Setprivileges(List<Privilege>? newPrivilege) {
+  List<PrivilegesActions> actions = [];
+
+  List<PrivilegesActions> get privilegeActions => actions;
+
+  //se guardan las acciones del privilegio al que se va a acceder
+  void setActions(List<PrivilegesActions> newActions) {
+    actions = newActions;
+    notifyListeners();
+  }
+
+  set setprivileges(List<Privilege>? newPrivilege) {
     privileges = newPrivilege;
     notifyListeners();
   }
@@ -50,7 +60,7 @@ class UserProvider extends GeneralProvider {
 
     final privilegesData = data['privileges'] as List;
     final privilegeList = privilegesData.map((privilegeJson) => Privilege.fromJson(privilegeJson)).toList();
-    Setprivileges = privilegeList;
+    setprivileges = privilegeList;
       // // memberlist=response.data["data"];
 
       // if (data.containsKey('privileges')) {
@@ -128,7 +138,7 @@ class UserProvider extends GeneralProvider {
       final privilegeList = privilegesData.map((privilegeJson) => Privilege.fromJson(privilegeJson)).toList();
       
       // Asignar lista de privilegios
-      Setprivileges = privilegeList;
+      setprivileges = privilegeList;
     }
     
     notifyListeners();

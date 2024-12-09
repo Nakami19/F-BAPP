@@ -41,7 +41,7 @@ class SessionProvider with ChangeNotifier {
         navigatorKey.currentContext ?? navigatorKey.currentState!.context;
 
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) async {
-      print(time);
+      // print(time);
       time -= 1000;
 
       if (_timer != null) {

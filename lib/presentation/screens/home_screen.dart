@@ -15,7 +15,7 @@ import 'package:f_bapp/presentation/providers/shared/utils_provider.dart';
 import 'package:f_bapp/presentation/providers/user/user_provider.dart';
 import 'package:f_bapp/presentation/screens/tab_screen.dart';
 import 'package:f_bapp/presentation/widgets/shared/customNavbar.dart';
-import 'package:f_bapp/presentation/widgets/shared/customappbar.dart';
+import 'package:f_bapp/presentation/widgets/shared/dashboardAppbar.dart';
 import 'package:f_bapp/presentation/widgets/shared/drawer_menu.dart';
 import 'package:f_bapp/presentation/widgets/shared/user_data.dart';
 import 'package:flutter/material.dart';
@@ -43,9 +43,9 @@ class _HomeScreenState extends State<HomeScreen> {
       final userProvider = context.read<UserProvider>();
       context.read<NavigationProvider>().updateIndex(0);
 
-      selectedCompany =
-          userProvider.memberlist![0]['idParentRelation'].toString();
+      // selectedCompany = userProvider.memberlist![0]['idParentRelation'].toString();
 
+      //se obtiene la informacion del usuario
       if (!utilsProvider.isLoading) {
         final res = await utilsProvider.getUserinfo();
       }
@@ -83,7 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
         extendBodyBehindAppBar: true,
         appBar: PreferredSize(
             preferredSize: Size.fromHeight(150),
-            child: Customappbar(
+            child: DashboardAppbar(
               screenKey: _homeScaffoldKey,
             )),
         body: Padding(
@@ -114,13 +114,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 CustomDropdown(
                     title: 'Seleccione una compañia *',
                     options: userProvider.memberlist!,
-                    selectedValue: selectedCompany,
+                    selectedValue: navProvider.selectedCompany,
                     itemValueMapper: (option) =>
                         option['idParentRelation'].toString(),
                     itemLabelMapper: (option) => option['name'].toString(),
                     onChanged: (value) {
                       setState(() {
-                        selectedCompany = value; // Actualizar el estado local.
+                        navProvider.updateCompany(
+                            value!); // Actualizar el valor seleccionado.
                       });
                       userProvider.getMemberTypeChangeList(
                           value!, loginProvider.userLogin!);
@@ -141,25 +142,39 @@ class _HomeScreenState extends State<HomeScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        CustomSkeleton(height: 150, width: 140,),
+                        CustomSkeleton(
+                          height: 150,
+                          width: 140,
+                        ),
                         SizedBox(
                           width: 20,
                           height: 20,
                         ),
-                        CustomSkeleton(height: 150, width: 140,),
+                        CustomSkeleton(
+                          height: 150,
+                          width: 140,
+                        ),
                       ],
                     ),
-                    SizedBox(height: 20,),
-                     Row(
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        CustomSkeleton(height: 150, width: 140,),
+                        CustomSkeleton(
+                          height: 150,
+                          width: 140,
+                        ),
                         SizedBox(
                           width: 20,
                           height: 20,
                         ),
-                        CustomSkeleton(height: 150, width: 140,),
+                        CustomSkeleton(
+                          height: 150,
+                          width: 140,
+                        ),
                       ],
                     ),
                   ],
@@ -179,12 +194,14 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: userProvider.privileges!.map((privilege) {
                       return SmallCard(
                         image:
-                            '${DataConstant.images_modules}/${privilege.icon}.svg',
+                            '${DataConstant.images_modules}/${privilege.icon}-on.svg',
                         title: privilege.moduleName,
                         height: 120,
                         width: 130,
                         imageHeight: 70,
                         onTap: () {
+                          final privilegeActions = privilege.actions; // Acciones del privilegio
+                          context.read<UserProvider>().setActions(privilegeActions);
                           Navigator.pushNamed(
                               context, '/${privilege.moduleName}Screen');
                         },

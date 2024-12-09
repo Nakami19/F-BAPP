@@ -4,16 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
-class Customappbar extends StatefulWidget {
-  const Customappbar({super.key, required this.screenKey});
+class DashboardAppbar extends StatefulWidget {
+  const DashboardAppbar ({super.key, required this.screenKey});
 
   final GlobalKey<ScaffoldState> screenKey;
 
   @override
-  State<Customappbar> createState() => _CustomappbarState();
+  State<DashboardAppbar> createState() => _DashboardAppbarState();
 }
 
-class _CustomappbarState extends State<Customappbar> {
+class _DashboardAppbarState extends State<DashboardAppbar> {
   @override
   Widget build(BuildContext context) {
     final userProvider = context.watch<UserProvider>();

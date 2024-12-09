@@ -7,13 +7,15 @@ class SmallCard extends StatefulWidget {
     super.key,
     required this.image,
     required this.title,
+    this.placeholder,
     this.height,
-     this.width,
+    this.width,
     this.imageHeight,
     this.textStyle,
     this.onTap
     });
   final String image;
+  final String? placeholder;
   final String title;
   final double? height;
   final double? width;
@@ -31,7 +33,7 @@ class _SmallCardState extends State<SmallCard> {
     return InkWell(
       onTap: widget.onTap ?? ()=>{},
       child: Container(
-        height: widget.height ?? double.infinity,
+        // height: widget.height ?? double.infinity,
         width: widget.width ?? double.infinity,
         padding: EdgeInsets.all(13),
         decoration: BoxDecoration(
@@ -47,18 +49,27 @@ class _SmallCardState extends State<SmallCard> {
         ],
       ),
       child: Column(
+        // mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           SvgPicture.asset(
             widget.image,
             height: widget.imageHeight ?? 50,
-            color: primaryColor,
+            placeholderBuilder: (context) => 
+            SvgPicture.asset(
+              widget.placeholder??"",
+              height: widget.imageHeight ?? 50,
+              ),
+            // color: primaryColor,
             ),
+            SizedBox(height: 10,),
           Text(
             widget.title,
             style: widget.textStyle,
             textAlign: TextAlign.center,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 2,
             )
         ],
       ),

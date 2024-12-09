@@ -8,3 +8,5 @@ const String operationsScreen = '/OperacionesScreen';
 const String merchantScreen = '/MerchantScreen';
 const String onboardingScreen = '/OnboardingScreen';
 const String onboardingV1Screen = '/Onboarding v1Screen';
+const String administrationScreen = '/AdministraciónScreen';
+const String ldapScreen = '/LdapScreen';

@@ -32,6 +32,15 @@ class App extends StatelessWidget {
        darkTheme:AppTheme.themeDark(primaryColor),
        themeMode:
             themeProvider.isDarkModeEnabled ? ThemeMode.dark : ThemeMode.light,
+
+      // Esto permite que no se modifique el tamano de la app, aunque si se modifique el del dispositivo
+        builder: (context, child) {
+          return MediaQuery(
+            data: MediaQuery.of(context)
+                .copyWith(textScaler: const TextScaler.linear(1.0)),
+            child: child!,
+          );
+        },
          
       ),
     );

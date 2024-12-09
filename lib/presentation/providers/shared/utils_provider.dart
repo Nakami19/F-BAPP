@@ -23,14 +23,8 @@ class UtilsProvider extends GeneralProvider {
 
 
     Future<void> getUserinfo() async {
-    // late ApiResponse<ProfileAccountInfo> resp;
     try {
       super.setLoadingStatus(true);
-      // resp = ApiResponse<ProfileAccountInfo>.fromJson(
-      //   req.data,
-      //   (json) => ProfileAccountInfo.fromJson(json),
-      //   (json) => null,
-      // );
 
       final userData = await storage.getValue(
         'userData',
@@ -98,8 +92,8 @@ class UtilsProvider extends GeneralProvider {
 
 
       super.setErrors(true);
-      // super.setErrorMessage(resp.message);
-      // super.setTrackingCode(resp.trackingCode);
+      // super.setErrorMessage(error.message);
+      super.setTrackingCode(error.toString());
     } finally {
       super.setLoadingStatus(false);
     }

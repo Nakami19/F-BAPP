@@ -85,7 +85,7 @@ class _BottomSheetModulesState extends State<BottomSheetModules> {
                           ),
                         ),
                       ),
-                      // Grid con las acciones del privilegio
+                      // las acciones del privilegio
                       GridView.builder(
                         physics: const NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
@@ -99,12 +99,16 @@ class _BottomSheetModulesState extends State<BottomSheetModules> {
                         itemBuilder: (context, index) {
                           final action = privilege.actions[index];
                           return SmallCard(
-                            image: '${DataConstant.images_modules}/${action.key}_operations.svg',
+                            image: '${DataConstant.images_modules}/${action.key}_${privilege.icon}-on.svg',
+                            placeholder:'${DataConstant.images_modules}/${privilege.icon}-on.svg' ,
                             title: action.actionName,
-                            imageHeight: 40,
+                            imageHeight: 43,
                             // height: 200,
                             // width: 100,
-                            textStyle: textStyle.labelSmall,
+                            textStyle: textStyle.labelSmall!.copyWith(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 11,
+                            ),
                             onTap: () {
                               // Acción al presionar la tarjeta
                               Navigator.pop(context);

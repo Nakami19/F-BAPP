@@ -3,6 +3,8 @@ import 'package:f_bapp/config/router/routes.dart';
 import 'package:f_bapp/presentation/screens/auth/first_login_screen.dart';
 import 'package:f_bapp/presentation/screens/auth/second_login_screen.dart';
 import 'package:f_bapp/presentation/screens/home_screen.dart';
+import 'package:f_bapp/presentation/screens/modules/administration/administration_screen.dart';
+import 'package:f_bapp/presentation/screens/modules/ldap/ldap_screen.dart';
 import 'package:f_bapp/presentation/screens/modules/merchant/merchant_screen.dart';
 import 'package:f_bapp/presentation/screens/modules/onboarding/onboarding_screen.dart';
 import 'package:f_bapp/presentation/screens/modules/onboardingV1/onboardingv1_screen.dart';
@@ -49,6 +51,12 @@ class AppRouter {
       case onboardingV1Screen:
         return FadePageTransition(builder: (_) => const Onboardingv1Screen());
       
+      case administrationScreen:
+        return FadePageTransition(builder: (_) => const AdministrationScreen());
+      
+      case ldapScreen:
+        return FadePageTransition(builder: (_) => const LdapScreen());
+
       default:
         return FadePageTransition(
           builder: (_) => Scaffold(

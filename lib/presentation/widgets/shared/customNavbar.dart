@@ -49,6 +49,7 @@ class _CustomnavbarState extends State<Customnavbar> {
               indicatorColor: primaryColor,
               indicatorShape: CircleBorder(eccentricity: 0.2),
               selectedIndex: widget.selectedIndex,
+              // indicatorColor: Colors.transparent,
               onDestinationSelected: (index) {
                 if (index == 2) {
                   _navigateToPage(index, context);
@@ -100,6 +101,7 @@ class _CustomnavbarState extends State<Customnavbar> {
         );
         break;
       case 1:
+    
         Navigator.pushReplacementNamed(
           context,
           profileScreen,

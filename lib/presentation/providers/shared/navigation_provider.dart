@@ -5,8 +5,17 @@ class NavigationProvider with ChangeNotifier {
 
   int get selectedIndex => _selectedIndex;
 
+  String _selectedCompany = "";
+
+  String get selectedCompany => _selectedCompany;
+
   void updateIndex(int newIndex) {
     _selectedIndex = newIndex;
+    notifyListeners();
+  }
+
+  void updateCompany (String newCompany) {
+    _selectedCompany = newCompany;
     notifyListeners();
   }
 }

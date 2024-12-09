@@ -119,7 +119,7 @@ class _FirstLoginScreenState extends State<FirstLoginScreen> {
                 children: <Widget>[
                   SvgPicture.asset(
                     '${DataConstant.images_chinchin}/chinchin-logo-business-base.svg',
-                    // '${DataConstant.images_profile}/change_password.svg',
+                    // '${DataConstant.images_modules}/list_merchant_devolutions_merchant-on.svg',
                     width: 220,
                     fit: BoxFit.contain,
                   ),

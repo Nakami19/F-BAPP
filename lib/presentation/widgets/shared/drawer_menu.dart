@@ -57,20 +57,25 @@ class DrawerMenu extends StatelessWidget {
                     height: MediaQuery.of(context).size.height / 2,
                     child: Column(
                         children: userProvider.privileges!.map((privilege) {
-                      return SizedBox(
-                        height: 65,
-                        child: Row(
-                          children: [
-                            SvgPicture.asset(
-                              '${DataConstant.images_modules}/${privilege.icon}.svg',
-                              height: 40,
-                              color: primaryColor,
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Text(privilege.moduleName)
-                          ],
+                      return GestureDetector(
+                        onTap:() {
+                          Navigator.pushNamed(
+                              context, '/${privilege.moduleName}Screen');
+                        } ,
+                        child: SizedBox(
+                          height: 65,
+                          child: Row(
+                            children: [
+                              SvgPicture.asset(
+                                '${DataConstant.images_modules}/${privilege.icon}-on.svg',
+                                height: 40,
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Text(privilege.moduleName)
+                            ],
+                          ),
                         ),
                       );
                     }).toList()

@@ -11,6 +11,7 @@ class UserData extends StatefulWidget {
 }
 
 class _UserDataState extends State<UserData> {
+
   @override
   Widget build(BuildContext context) {
     final utilsProvider = context.read<UtilsProvider>();
