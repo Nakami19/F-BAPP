@@ -47,7 +47,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final userProvider = context.read<UserProvider>();
+    final userProvider = context.watch<UserProvider>();
     final navProvider = context.watch<NavigationProvider>();
     final loginProvider = context.read<LoginProvider>();
     final textStyle = Theme.of(context).textTheme;

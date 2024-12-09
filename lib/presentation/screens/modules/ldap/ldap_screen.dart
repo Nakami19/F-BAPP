@@ -1,5 +1,8 @@
+import 'package:f_bapp/common/widgets/cards/large_card.dart';
+import 'package:f_bapp/config/data_constants/data_constants.dart';
 import 'package:f_bapp/config/router/routes.dart';
 import 'package:f_bapp/presentation/providers/shared/navigation_provider.dart';
+import 'package:f_bapp/presentation/providers/user/user_provider.dart';
 import 'package:f_bapp/presentation/widgets/shared/customNavbar.dart';
 import 'package:f_bapp/presentation/widgets/shared/drawer_menu.dart';
 import 'package:f_bapp/presentation/widgets/shared/screensAppbar.dart';
@@ -14,26 +17,57 @@ class LdapScreen extends StatefulWidget {
 }
 
 class _LdapScreenState extends State<LdapScreen> {
-  final GlobalKey<ScaffoldState> _ldapScaffoldKey =
-      GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _ldapScaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
+    final userProvider = context.watch<UserProvider>();
     final navProvider = context.watch<NavigationProvider>();
-
+    final textStyle = Theme.of(context).textTheme;
     return Scaffold(
       drawer: DrawerMenu(),
       key: _ldapScaffoldKey,
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(110),
-        child: Screensappbar(title: 'Ldap', screenKey: _ldapScaffoldKey, poproute: homeScreen)
+          preferredSize: Size.fromHeight(110),
+          child: Screensappbar(
+              title: 'Ldap',
+              screenKey: _ldapScaffoldKey,
+              poproute: homeScreen)),
+      body: Padding(
+        padding: const EdgeInsets.only(bottom: 30),
+        child: Container(
+          height: MediaQuery.of(context).size.height,
+          child: ListView.builder(
+              itemCount: userProvider.actions.length,
+              itemBuilder: (context, index) {
+                final action = userProvider.actions[index];
+                return GestureDetector(
+                  onTap: () {},
+                  child: SizedBox(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 25, vertical: 10),
+                      child: LargeCard(
+                        image:
+                            '${DataConstant.images_modules}/${action.key}_ldap-on.svg',
+                        placeholder:
+                            '${DataConstant.images_modules}/cmer-create_order_merchant-on.svg',
+                        title: action.actionName,
+                        height: 85,
+                        textStyle: textStyle.bodyMedium!.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              }),
+        ),
       ),
-
-      bottomNavigationBar:Customnavbar(
-        selectedIndex: 2, 
-        onDestinationSelected:(index) {
-          navProvider.updateIndex(index);
-        } ),
-
+      bottomNavigationBar: Customnavbar(
+          selectedIndex: 2,
+          onDestinationSelected: (index) {
+            navProvider.updateIndex(index);
+          }),
     );
   }
 }

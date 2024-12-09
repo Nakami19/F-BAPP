@@ -72,7 +72,7 @@ class Dialogs {
                               paddingH: 0,
                               styleText: textStyle!.copyWith(
                                 color: Color.fromRGBO(252, 198, 20, 100),
-                                fontSize: 12,
+                                fontSize: 10,
                               ),
                               styleTextButton: TextButton.styleFrom(
                                 side: BorderSide(
@@ -99,7 +99,7 @@ class Dialogs {
                               onTap: actionSuccess,
                               styleText: textStyle!.copyWith(
                                 color: Colors.white,
-                                fontSize: 12,
+                                fontSize: 10,
                               ),
                               provider: GeneralProvider()),
                         ),

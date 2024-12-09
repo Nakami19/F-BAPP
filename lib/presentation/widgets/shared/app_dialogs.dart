@@ -56,7 +56,7 @@ class AppDialogs {
                     height: 50,
                     styleText: textStyle!.copyWith(
                       color: Color.fromRGBO(252, 198, 20, 100),
-                      fontSize: 12,
+                      fontSize: 10,
                     ),
                     styleTextButton: TextButton.styleFrom(
                       side: BorderSide(
@@ -113,7 +113,7 @@ class AppDialogs {
                     },
                     styleText: textStyle!.copyWith(
                       color: Colors.white,
-                      fontSize: 12,
+                      fontSize: 10,
                     ),
                     provider: GeneralProvider()),
               ),
