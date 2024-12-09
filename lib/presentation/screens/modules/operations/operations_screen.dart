@@ -1,3 +1,4 @@
+import 'package:f_bapp/config/router/routes.dart';
 import 'package:f_bapp/presentation/providers/shared/navigation_provider.dart';
 import 'package:f_bapp/presentation/widgets/shared/customNavbar.dart';
 import 'package:f_bapp/presentation/widgets/shared/drawer_menu.dart';
@@ -23,7 +24,7 @@ class _OperationsScreenState extends State<OperationsScreen> {
       key: _operationsScaffoldKey,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(110),
-        child: Screensappbar(title: 'Operaciones', screenKey: _operationsScaffoldKey)
+        child: Screensappbar(title: 'Operaciones', screenKey: _operationsScaffoldKey, poproute: homeScreen)
       ),
 
       bottomNavigationBar:Customnavbar(

@@ -1,5 +1,6 @@
 import 'package:f_bapp/common/widgets/cards/large_card.dart';
 import 'package:f_bapp/config/data_constants/data_constants.dart';
+import 'package:f_bapp/config/router/routes.dart';
 import 'package:f_bapp/presentation/providers/shared/navigation_provider.dart';
 import 'package:f_bapp/presentation/providers/user/user_provider.dart';
 import 'package:f_bapp/presentation/widgets/shared/screensAppbar.dart';
@@ -33,7 +34,7 @@ class _MerchantScreenState extends State<MerchantScreen> {
       appBar: PreferredSize(
           preferredSize: Size.fromHeight(110),
           child: Screensappbar(
-              title: 'Merchant', screenKey: _merchantScaffoldKey)),
+              title: 'Merchant', screenKey: _merchantScaffoldKey, poproute: homeScreen,)),
       body: Padding(
         padding: const EdgeInsets.only(bottom: 30),
         child: Container(

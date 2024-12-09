@@ -13,7 +13,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
 class DrawerMenu extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     final homeProvider = context.read<HomeProvider>();
@@ -58,10 +57,16 @@ class DrawerMenu extends StatelessWidget {
                     child: Column(
                         children: userProvider.privileges!.map((privilege) {
                       return GestureDetector(
-                        onTap:() {
+                        onTap: () {
+                          if (Navigator.canPop(context)) {
+                            Navigator.pop(
+                                context); // Cerrar el Drawer si está abierto
+                          }
+                          final privilegeActions = privilege.actions; // Acciones del privilegio
+                          context.read<UserProvider>().setActions(privilegeActions);
                           Navigator.pushNamed(
                               context, '/${privilege.moduleName}Screen');
-                        } ,
+                        },
                         child: SizedBox(
                           height: 65,
                           child: Row(
@@ -78,14 +83,14 @@ class DrawerMenu extends StatelessWidget {
                           ),
                         ),
                       );
-                    }).toList()
-                        ),
+                    }).toList()),
                   ),
                   GestureDetector(
                     onTap: () {
                       showDialog(
                           context: context,
-                          builder: (context) => AppDialogs.logoutDialog(context));
+                          builder: (context) =>
+                              AppDialogs.logoutDialog(context));
                     },
                     child: const Row(
                       children: [

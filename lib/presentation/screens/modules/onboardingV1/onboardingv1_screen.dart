@@ -1,3 +1,4 @@
+import 'package:f_bapp/config/router/routes.dart';
 import 'package:f_bapp/presentation/providers/shared/navigation_provider.dart';
 import 'package:f_bapp/presentation/widgets/shared/customNavbar.dart';
 import 'package:f_bapp/presentation/widgets/shared/drawer_menu.dart';
@@ -23,7 +24,7 @@ class _Onboardingv1ScreenState extends State<Onboardingv1Screen> {
       key: _onboardingV1ScaffoldKey,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(110),
-        child: Screensappbar(title: 'Onboarding v1', screenKey: _onboardingV1ScaffoldKey)
+        child: Screensappbar(title: 'Onboarding v1', screenKey: _onboardingV1ScaffoldKey, poproute: homeScreen)
       ),
 
       bottomNavigationBar:Customnavbar(

@@ -188,7 +188,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     crossAxisCount: 2,
                     mainAxisSpacing: 20,
                     crossAxisSpacing: 20,
-                    padding: EdgeInsets.all(10),
+                    padding: EdgeInsets.only(bottom: 10, left: 8, right: 8), //el padding hace que no muestren al final de la pantalla
                     shrinkWrap: true,
                     // physics: NeverScrollableScrollPhysics(),
                     children: userProvider.privileges!.map((privilege) {
@@ -199,6 +199,10 @@ class _HomeScreenState extends State<HomeScreen> {
                         height: 120,
                         width: 130,
                         imageHeight: 70,
+                        textStyle: textStyle.bodyMedium!.copyWith(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold
+                        ),
                         onTap: () {
                           final privilegeActions = privilege.actions; // Acciones del privilegio
                           context.read<UserProvider>().setActions(privilegeActions);

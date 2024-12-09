@@ -5,14 +5,15 @@ import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
 class Screensappbar extends StatefulWidget {
-  const Screensappbar({
-    required this.title,
-    required this.screenKey,
-    super.key
-    });
+  const Screensappbar(
+      {required this.title,
+      required this.screenKey,
+      required this.poproute,
+      super.key});
 
-    final String title;
-     final GlobalKey<ScaffoldState> screenKey;
+  final String title;
+  final String poproute;
+  final GlobalKey<ScaffoldState> screenKey;
 
   @override
   State<Screensappbar> createState() => _ScreensappbarState();
@@ -23,82 +24,90 @@ class _ScreensappbarState extends State<Screensappbar> {
   Widget build(BuildContext context) {
     final userProvider = context.watch<UserProvider>();
     return AppBar(
-          backgroundColor: Colors.transparent,
-          automaticallyImplyLeading:
-              false, // Para personalizar completamente la flecha.
-          flexibleSpace: Stack(
-            children: [
-              // Imagen de fondo
-              Image.asset(
-                '${DataConstant.images}/background.png',
-                fit: BoxFit.cover,
-                width: double.infinity,
-                height: 110,
-              ),
-              Positioned(
-                left: 0,
-                right: 0,
-                top: 50,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
+      backgroundColor: Colors.transparent,
+      automaticallyImplyLeading:
+          false, // Para personalizar completamente la flecha.
+      flexibleSpace: Stack(
+        children: [
+          // Imagen de fondo
+          Image.asset(
+            '${DataConstant.images}/background.png',
+            fit: BoxFit.cover,
+            width: double.infinity,
+            height: 110,
+          ),
+          Positioned(
+            left: 0,
+            right: 0,
+            top: 50,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  //parte izquieda
+                  Row(
                     children: [
-                      //parte izquieda
-                      Row(
-                        
-                        children: [
-                          IconButton(
-                            tooltip: 'Atrás',
-                            icon: Icon(
-                              Icons.arrow_back,
-                              color: Colors.black,
-                              size: 20,
-                            ),
-                            onPressed: () {
-                              Navigator.pop(context); // Acción de la flecha.
-                            },
-                          ),
-                          Text(
-                            widget.title,
-                            style: TextStyle(
-                              fontSize: 15,
-                              // fontWeight: FontWeight.bold,
-                              color: Colors.black,
-                            ),
-                          ),
-                        ],
+                      IconButton(
+                        tooltip: 'Atrás',
+                        icon: Icon(
+                          Icons.arrow_back,
+                          color: Colors.black,
+                          size: 20,
+                        ),
+                        onPressed: () {
+                          // Navigator.pop(context); // Acción de la flecha.
+                          // Navigator.of(context).popUntil((route) {
+                          //   return route.settings.name == widget.poproute;
+                          // });
+                          Navigator.pushNamedAndRemoveUntil(
+                            context,
+                            widget.poproute, // Ruta destino
+                            (route) =>
+                                false, // Esto elimina todas las rutas previas
+                          );
+                        },
                       ),
-                      //parte derecha
-                      Row(
-                        children: [
-                          SvgPicture.asset(
-                            '${DataConstant.images_chinchin}/chinchin-logo-business-base.svg',
-                            height: 27,
-                            fit: BoxFit.contain,
-                          ),
-                          IconButton(
-                            tooltip: 'Menú',
-                            icon: Icon(
-                              Icons.menu,
-                              color: Colors.black,
-                              size: 25,
-                            ),
-                            onPressed: () {
-                              if (!userProvider.isLoading) {
-                                widget.screenKey.currentState!.openDrawer();
-                              }
-                            },
-                          ),
-                        ],
+                      Text(
+                        widget.title,
+                        style: TextStyle(
+                          fontSize: 15,
+                          // fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
                       ),
                     ],
                   ),
-                ),
+                  //parte derecha
+                  Row(
+                    children: [
+                      SvgPicture.asset(
+                        '${DataConstant.images_chinchin}/chinchin-logo-business-base.svg',
+                        height: 27,
+                        fit: BoxFit.contain,
+                      ),
+                      IconButton(
+                        tooltip: 'Menú',
+                        icon: Icon(
+                          Icons.menu,
+                          color: Colors.black,
+                          size: 25,
+                        ),
+                        onPressed: () {
+                          if (!userProvider.isLoading) {
+                            widget.screenKey.currentState!.openDrawer();
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
-        );
+        ],
+      ),
+    );
   }
 }

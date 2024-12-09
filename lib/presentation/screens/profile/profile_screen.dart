@@ -50,6 +50,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final userProvider = context.read<UserProvider>();
     final navProvider = context.watch<NavigationProvider>();
     final loginProvider = context.read<LoginProvider>();
+    final textStyle = Theme.of(context).textTheme;
 
     return WillPopScope(
       onWillPop: () async {
@@ -150,34 +151,39 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ],
               if (!userProvider.isLoading)
-                Flexible(
-                  flex: 2,
-                  child: GridView.count(
-                    crossAxisCount: 2,
-                    mainAxisSpacing: 20,
-                    crossAxisSpacing: 20,
-                    padding: EdgeInsets.all(10),
-                    shrinkWrap: true,
-                    // physics: NeverScrollableScrollPhysics(),
-                    children: [
-                      SmallCard(
-                        image:
-                            '${DataConstant.images_profile}/change_password-on.svg',
-                        title: 'Cambiar clave',
-                        height: 120,
-                        width: 120,
-                        imageHeight: 70,
+                GridView.count(
+                  crossAxisCount: 2,
+                  mainAxisSpacing: 20,
+                  crossAxisSpacing: 20,
+                  padding: EdgeInsets.only(bottom: 10, left: 8, right: 8),
+                  shrinkWrap: true,
+                  // physics: NeverScrollableScrollPhysics(),
+                  children: [
+                    SmallCard(
+                      image:
+                          '${DataConstant.images_profile}/change_password-on.svg',
+                      title: 'Cambiar clave',
+                      // height: 120,
+                      width: 120,
+                      imageHeight: 70,
+                      textStyle: textStyle.bodyMedium!.copyWith(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold
                       ),
-                      SmallCard(
-                        image:
-                            '${DataConstant.images_profile}/security_questions-on.svg',
-                        title: 'Preguntas de seguridad',
-                        height: 120,
-                        width: 120,
-                        imageHeight: 70,
+                    ),
+                    SmallCard(
+                      image:
+                          '${DataConstant.images_profile}/security_questions-on.svg',
+                      title: 'Preguntas de seguridad',
+                      // height: 120,
+                      width: 120,
+                      imageHeight: 70,
+                      textStyle: textStyle.bodyMedium!.copyWith(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
             ],
           ),
