@@ -87,9 +87,11 @@ class _HomeScreenState extends State<HomeScreen> {
               screenKey: _homeScaffoldKey,
             )),
         body: Padding(
-          padding: const EdgeInsets.all(30),
+          // padding: const EdgeInsets.all(30),
+          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
           child: Column(
             // mainAxisAlignment: MainAxisAlignment.center
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(
                 height: 110,
@@ -131,10 +133,9 @@ class _HomeScreenState extends State<HomeScreen> {
               SizedBox(
                 height: 20,
               ),
-              // userProvider.isLoading
-              //   ? Container( height: MediaQuery.of(context).size.height/2.5,  child: Center(child: CircularProgressIndicator()))
-              //   :
 
+
+              //cargando de las tarjetas
               if (userProvider.isLoading) ...[
                 const Column(
                   children: [
@@ -181,20 +182,22 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ],
 
+              //se muestran las tarjetas ya cargó
               if (!userProvider.isLoading)
-                Flexible(
-                  flex: 2,
+                Expanded(
+                  
                   child: GridView.count(
                     crossAxisCount: 2,
                     mainAxisSpacing: 20,
                     crossAxisSpacing: 20,
-                    padding: EdgeInsets.only(bottom: 10, left: 8, right: 8), //el padding hace que no muestren al final de la pantalla
+                    padding: EdgeInsets.only(bottom: 10, left: 1, right: 3, top: 5), //el padding hace que no muestren al final de la pantalla
                     shrinkWrap: true,
                     // physics: NeverScrollableScrollPhysics(),
                     children: userProvider.privileges!.map((privilege) {
                       return SmallCard(
                         image:
-                            '${DataConstant.images_modules}/${privilege.icon}-on.svg',
+                            '${DataConstant.images_modules}/${privilege.icon}-on.svg', 
+                        placeholder:'${DataConstant.images_modules}/${privilege.icon}-on.svg' ,
                         title: privilege.moduleName,
                         height: 120,
                         width: 130,

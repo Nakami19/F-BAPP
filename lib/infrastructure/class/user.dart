@@ -1,4 +1,4 @@
-import 'package:f_bapp/infrastructure/auth/privileges.dart';
+import 'package:f_bapp/infrastructure/class/privileges.dart';
 
 class User {
   final String personName;

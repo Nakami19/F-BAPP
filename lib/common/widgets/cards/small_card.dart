@@ -63,7 +63,7 @@ class _SmallCardState extends State<SmallCard> {
               ),
             // color: primaryColor,
             ),
-            SizedBox(height: 10,),
+            SizedBox(height: 5,),
           Text(
             widget.title,
             style: widget.textStyle,

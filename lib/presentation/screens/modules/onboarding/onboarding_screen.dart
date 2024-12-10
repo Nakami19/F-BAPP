@@ -19,6 +19,20 @@ class OnboardingScreen extends StatefulWidget {
 class _OnboardingScreenState extends State<OnboardingScreen> {
   final GlobalKey<ScaffoldState> _onboardingScaffoldKey =
       GlobalKey<ScaffoldState>();
+
+  var showactions=[];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    //se filtran las acciones que deben mostrarse
+    final userProvider = context.read<UserProvider>();
+    showactions = userProvider.actions.where((action) => action.showInMenu == true).toList();
+    
+  }
+
   @override
   Widget build(BuildContext context) {
     final userProvider = context.watch<UserProvider>();
@@ -36,9 +50,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         child: Container(
           height: MediaQuery.of(context).size.height,
           child: ListView.builder(
-              itemCount: userProvider.actions.length,
+              itemCount: showactions.length,
               itemBuilder: (context, index) {
-                final action = userProvider.actions[index];
+                final action = showactions[index];
                 return GestureDetector(
                   onTap: () {},
                   child: SizedBox(
@@ -52,6 +66,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             '${DataConstant.images_modules}/details_onboarding_membership_v2_onboarding-on.svg',
                         title: action.actionName,
                         height: 85,
+                        // imageHeight: 100,
                         textStyle: textStyle.bodyMedium!.copyWith(
                           fontWeight: FontWeight.bold,
                         ),

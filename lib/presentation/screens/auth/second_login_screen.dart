@@ -9,7 +9,7 @@ import 'package:f_bapp/common/widgets/others/terms_condition_button.dart';
 import 'package:f_bapp/config/data_constants/data_constants.dart';
 import 'package:f_bapp/config/helpers/base64_coder.dart';
 import 'package:f_bapp/config/router/routes.dart';
-import 'package:f_bapp/infrastructure/auth/privileges.dart';
+import 'package:f_bapp/infrastructure/class/privileges.dart';
 import 'package:f_bapp/presentation/providers/auth/login_provider.dart';
 import 'package:f_bapp/presentation/providers/shared/navigation_provider.dart';
 import 'package:f_bapp/presentation/providers/shared/session_provider.dart';
@@ -139,7 +139,7 @@ class _SecondLoginScreenState extends State<SecondLoginScreen> {
                   ),
             
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    padding: const EdgeInsets.symmetric(horizontal: 25),
                     child: CustomButton(
                       provider: loginProvider,
                       title: "Ingresar", 
@@ -153,7 +153,7 @@ class _SecondLoginScreenState extends State<SecondLoginScreen> {
                             'password': Base64Encoder.encodeBase64(loginProvider.password!),
                           };
                           final loginResp = await loginProvider.login1(loginData);
-                          final memberResp = await userProvider.getMemberlist(loginProvider.userLogin!);
+                          // final memberResp = await userProvider.getMemberlist(loginProvider.userLogin!);
 
                           
                           // if(loginResp!=null) {
@@ -164,6 +164,8 @@ class _SecondLoginScreenState extends State<SecondLoginScreen> {
                           if (loginProvider.statusCode != HttpStatus.ok) {
                           return;
                           }
+
+                          final memberResp = await userProvider.getMemberlist(loginProvider.userLogin!);
                           
                           loginProvider.disposeValues();
                           

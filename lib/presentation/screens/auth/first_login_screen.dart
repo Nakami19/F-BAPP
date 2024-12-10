@@ -223,7 +223,7 @@ class _FirstLoginScreenState extends State<FirstLoginScreen> {
                     Column(
                       children: [
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          padding: const EdgeInsets.symmetric(horizontal: 25),
                           child: CustomButton(
                               provider: loginProvider,
                               title: 'Siguiente',

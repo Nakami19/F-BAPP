@@ -4,7 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:f_bapp/common/providers/general_provider.dart';
 import 'package:f_bapp/config/network/api_error.dart';
 import 'package:f_bapp/config/network/api_response.dart';
-import 'package:f_bapp/infrastructure/auth/privileges.dart';
+import 'package:f_bapp/infrastructure/class/privileges.dart';
 import 'package:f_bapp/infrastructure/services/login_services.dart';
 import 'package:flutter/material.dart';
 

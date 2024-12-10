@@ -19,6 +19,20 @@ class AdministrationScreen extends StatefulWidget {
 class _AdministrationScreenState extends State<AdministrationScreen> {
   final GlobalKey<ScaffoldState> _administrationScaffoldKey =
       GlobalKey<ScaffoldState>();
+
+  var showactions=[];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    //se filtran las acciones que deben mostrarse
+    final userProvider = context.read<UserProvider>();
+    showactions = userProvider.actions.where((action) => action.showInMenu == true).toList();
+    
+  }
+
   @override
   Widget build(BuildContext context) {
     final userProvider = context.watch<UserProvider>();
@@ -38,9 +52,9 @@ class _AdministrationScreenState extends State<AdministrationScreen> {
         child: Container(
           height: MediaQuery.of(context).size.height,
           child: ListView.builder(
-              itemCount: userProvider.actions.length,
+              itemCount: showactions.length,
               itemBuilder: (context, index) {
-                final action = userProvider.actions[index];
+                final action = showactions[index];
                 return GestureDetector(
                   onTap: () {},
                   child: SizedBox(
