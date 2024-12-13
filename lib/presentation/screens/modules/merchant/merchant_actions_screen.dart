@@ -5,7 +5,6 @@ import 'package:f_bapp/presentation/providers/shared/navigation_provider.dart';
 import 'package:f_bapp/presentation/providers/user/user_provider.dart';
 import 'package:f_bapp/presentation/widgets/shared/screensAppbar.dart';
 import 'package:f_bapp/presentation/widgets/shared/customNavbar.dart';
-import 'package:f_bapp/presentation/widgets/shared/dashboardAppbar.dart';
 import 'package:f_bapp/presentation/widgets/shared/drawer_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -69,6 +68,10 @@ class _MerchantScreenState extends State<MerchantScreen> {
                         textStyle: textStyle.bodyMedium!.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
+                        onTap: () {
+                          Navigator.pushNamed(
+                              context, '/${action.actionName}Screen');
+                        } ,
                       ),
                     ),
                   ),

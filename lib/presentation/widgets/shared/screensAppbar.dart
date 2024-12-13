@@ -47,37 +47,38 @@ class _ScreensappbarState extends State<Screensappbar> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   //parte izquieda
-                  Row(
-                    children: [
-                      IconButton(
-                        tooltip: 'Atrás',
-                        icon: Icon(
-                          Icons.arrow_back,
-                          color: Colors.black,
-                          size: 20,
+                  SizedBox(
+                    width:MediaQuery.of(context).size.width/2,
+                    child: Row(
+                      children: [
+                        IconButton(
+                          tooltip: 'Atrás',
+                          icon: Icon(
+                            Icons.arrow_back,
+                            color: Colors.black,
+                            size: 20,
+                          ),
+                          onPressed: () {
+                            Navigator.pushNamedAndRemoveUntil(
+                              context,
+                              widget.poproute, // Ruta destino
+                              (route) => false, // Esto elimina todas las rutas previas
+                            );
+                          },
                         ),
-                        onPressed: () {
-                          // Navigator.pop(context); // Acción de la flecha.
-                          // Navigator.of(context).popUntil((route) {
-                          //   return route.settings.name == widget.poproute;
-                          // });
-                          Navigator.pushNamedAndRemoveUntil(
-                            context,
-                            widget.poproute, // Ruta destino
-                            (route) =>
-                                false, // Esto elimina todas las rutas previas
-                          );
-                        },
-                      ),
-                      Text(
-                        widget.title,
-                        style: TextStyle(
-                          fontSize: 15,
-                          // fontWeight: FontWeight.bold,
-                          color: Colors.black,
+                        Flexible(
+                          child: Text(
+                            widget.title,
+                            style: TextStyle(
+                              fontSize: 15,
+                              color: Colors.black,
+                            ),
+                            overflow: TextOverflow.visible, // Permitir el salto de línea
+                            softWrap: true, // Habilitar el ajuste de línea
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                   //parte derecha
                   Row(

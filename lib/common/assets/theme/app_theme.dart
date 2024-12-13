@@ -31,7 +31,7 @@ class AppTheme {
   static const lightThemeTextColor = Color.fromARGB(255, 35, 43, 58);
 
   // Variable color de placeholders gris
-  static const hintTextColor = Color(0xDDc9c7c7);
+  static const hintTextColor = Colors.grey;
 
   late Color textColor;
 

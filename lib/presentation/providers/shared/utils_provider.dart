@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:f_bapp/common/data/enviroment.dart';
 import 'package:f_bapp/common/providers/general_provider.dart';
+import 'package:f_bapp/common/widgets/cards/text_card.dart';
 import 'package:f_bapp/config/network/api_error.dart';
 import 'package:f_bapp/config/network/api_response.dart';
 import 'package:f_bapp/config/network/dio_client.dart';
@@ -19,6 +20,52 @@ class UtilsProvider extends GeneralProvider {
   String? userName = '';
   String? personName = '';
   String? personLastName = '';
+
+
+
+  // int _total = 0; // Total de elementos
+  // int _limit = 5; // Límites por página
+  // int _page = 0;   // Página actual
+
+  // List<TextCard> elements=[];
+
+  // List<TextCard> get elementsList => elements;
+
+  // // List<String> get elementsList =>
+  // //     List.generate(_total, (index) => 'Elemento #${index + 1}');
+
+  // int get total => _total;
+  // int get limit => _limit;
+  // int get page => _page;
+
+  // void setTotal(int value) {
+  //     _total = value;
+  //     notifyListeners(); 
+    
+  // }
+
+  // List<TextCard> getCurrentPage() {
+  //   int start = _page * _limit;
+  //   int end = start + _limit;
+  //   if (end > total) end = total;
+  //   return elements.sublist(start, end);
+  // }
+
+  // int getNumPages() => (total / limit).ceil();
+
+  // void nextPage() {
+  //   if ((_page + 1) * limit < total) {
+  //     _page++;
+  //     notifyListeners();
+  //   }
+  // }
+
+  // void previousPage() {
+  //   if (_page > 0) {
+  //     _page--;
+  //     notifyListeners();
+  //   }
+  // }
 
 
 

@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:f_bapp/common/assets/theme/app_theme.dart';
 import 'package:f_bapp/common/widgets/buttons/custom_button.dart';
 import 'package:f_bapp/common/widgets/inputs/custom_text_form_field.dart';
+import 'package:f_bapp/common/widgets/inputs/date_input.dart';
 import 'package:f_bapp/common/widgets/others/app_banner_version.dart';
 import 'package:f_bapp/config/data_constants/data_constants.dart';
 import 'package:f_bapp/config/router/routes.dart';
@@ -110,6 +111,7 @@ class _FirstLoginScreenState extends State<FirstLoginScreen> {
           buildNumber: DataConstant.buildNumber!,
           version: DataConstant.appVersion!,
         ),
+        // body: DateInput(),
         body: Center(
           child: SingleChildScrollView(
             child: Form(

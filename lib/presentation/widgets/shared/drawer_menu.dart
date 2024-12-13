@@ -73,7 +73,7 @@ class DrawerMenu extends StatelessWidget {
                             children: [
                               SvgPicture.asset(
                                 '${DataConstant.images_modules}/${privilege.icon}-on.svg',
-                                height: 40,
+                                height: 42,
                               ),
                               SizedBox(
                                 width: 10,

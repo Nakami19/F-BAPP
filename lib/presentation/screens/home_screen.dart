@@ -14,6 +14,8 @@ import 'package:f_bapp/presentation/providers/shared/navigation_provider.dart';
 import 'package:f_bapp/presentation/providers/shared/utils_provider.dart';
 import 'package:f_bapp/presentation/providers/user/user_provider.dart';
 import 'package:f_bapp/presentation/screens/tab_screen.dart';
+import 'package:f_bapp/presentation/widgets/graphics/graphic.dart';
+import 'package:f_bapp/presentation/widgets/graphics/pie_graphic2.dart';
 import 'package:f_bapp/presentation/widgets/shared/customNavbar.dart';
 import 'package:f_bapp/presentation/widgets/shared/dashboardAppbar.dart';
 import 'package:f_bapp/presentation/widgets/shared/drawer_menu.dart';
@@ -21,6 +23,7 @@ import 'package:f_bapp/presentation/widgets/shared/user_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
+import 'package:fl_chart/fl_chart.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -37,7 +40,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final utilsProvider = context.read<UtilsProvider>();
       final userProvider = context.read<UserProvider>();
@@ -97,7 +99,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 height: 110,
               ),
               UserData(),
-
+        
               // esta cargando/no ha cargado
               if (userProvider.isLoading) ...[
                 SizedBox(
@@ -110,13 +112,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   width: double.infinity,
                 ),
               ],
-
+        
               //ya cargo
               if (!userProvider.isLoading)
                 CustomDropdown(
                     title: 'Seleccione una compañia *',
                     options: userProvider.memberlist!,
                     selectedValue: navProvider.selectedCompany,
+                    autoSelectFirst: true,
                     itemValueMapper: (option) =>
                         option['idParentRelation'].toString(),
                     itemLabelMapper: (option) => option['name'].toString(),
@@ -131,72 +134,55 @@ class _HomeScreenState extends State<HomeScreen> {
                     showError: true,
                     errorText: 'error'),
               SizedBox(
-                height: 20,
+                height: 10,
               ),
 
-
-              //cargando de las tarjetas
               if (userProvider.isLoading) ...[
-                const Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        CustomSkeleton(
-                          height: 150,
-                          width: 140,
-                        ),
-                        SizedBox(
-                          width: 20,
-                          height: 20,
-                        ),
-                        CustomSkeleton(
-                          height: 150,
-                          width: 140,
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        CustomSkeleton(
-                          height: 150,
-                          width: 140,
-                        ),
-                        SizedBox(
-                          width: 20,
-                          height: 20,
-                        ),
-                        CustomSkeleton(
-                          height: 150,
-                          width: 140,
-                        ),
-                      ],
-                    ),
-                  ],
+                SizedBox(
+                  height: 10,
+                  width: double.infinity,
+                ),
+                CustomSkeleton(height: 335),
+                SizedBox(
+                  height: 10,
+                  width: double.infinity,
                 ),
               ],
 
-              //se muestran las tarjetas ya cargó
+              //ya cargo
               if (!userProvider.isLoading)
                 Expanded(
-                  
-                  child: GridView.count(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        Graphic(),
+
+                        SizedBox(height: 10,),
+
+                        PieGraphic2(),
+
+                        // SizedBox(height: 20,),
+
+                        Text("Módulos", 
+                        style: textStyle.bodyMedium!.copyWith(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold
+                        ),
+                        ),
+                        SizedBox(height: 10,),
+
+
+                        GridView.count(
                     crossAxisCount: 2,
                     mainAxisSpacing: 20,
                     crossAxisSpacing: 20,
                     padding: EdgeInsets.only(bottom: 10, left: 1, right: 3, top: 5), //el padding hace que no muestren al final de la pantalla
                     shrinkWrap: true,
-                    // physics: NeverScrollableScrollPhysics(),
+                    physics: NeverScrollableScrollPhysics(),
                     children: userProvider.privileges!.map((privilege) {
                       return SmallCard(
                         image:
-                            '${DataConstant.images_modules}/${privilege.icon}-on.svg', 
+                            '${DataConstant.images_modules}/${privilege.icon}-on.svg',
                         placeholder:'${DataConstant.images_modules}/${privilege.icon}-on.svg' ,
                         title: privilege.moduleName,
                         height: 120,
@@ -215,7 +201,92 @@ class _HomeScreenState extends State<HomeScreen> {
                       );
                     }).toList(),
                   ),
-                ),
+                      ],
+                    )
+                    )
+                  ),
+                                      
+              // //cargando de las tarjetas
+              // if (userProvider.isLoading) ...[
+              //   const Column(
+              //     children: [
+              //       Row(
+              //         mainAxisAlignment: MainAxisAlignment.center,
+              //         crossAxisAlignment: CrossAxisAlignment.center,
+              //         children: [
+              //           CustomSkeleton(
+              //             height: 150,
+              //             width: 140,
+              //           ),
+              //           SizedBox(
+              //             width: 20,
+              //             height: 20,
+              //           ),
+              //           CustomSkeleton(
+              //             height: 150,
+              //             width: 140,
+              //           ),
+              //         ],
+              //       ),
+              //       SizedBox(
+              //         height: 20,
+              //       ),
+              //       Row(
+              //         mainAxisAlignment: MainAxisAlignment.center,
+              //         crossAxisAlignment: CrossAxisAlignment.center,
+              //         children: [
+              //           CustomSkeleton(
+              //             height: 150,
+              //             width: 140,
+              //           ),
+              //           SizedBox(
+              //             width: 20,
+              //             height: 20,
+              //           ),
+              //           CustomSkeleton(
+              //             height: 150,
+              //             width: 140,
+              //           ),
+              //         ],
+              //       ),
+              //     ],
+              //   ),
+              // ],
+        
+              // //se muestran las tarjetas ya cargó
+              // if (!userProvider.isLoading)
+              //   Expanded(
+        
+              //     child: GridView.count(
+              //       crossAxisCount: 2,
+              //       mainAxisSpacing: 20,
+              //       crossAxisSpacing: 20,
+              //       padding: EdgeInsets.only(bottom: 10, left: 1, right: 3, top: 5), //el padding hace que no muestren al final de la pantalla
+              //       shrinkWrap: true,
+              //       physics: NeverScrollableScrollPhysics(),
+              //       children: userProvider.privileges!.map((privilege) {
+              //         return SmallCard(
+              //           image:
+              //               '${DataConstant.images_modules}/${privilege.icon}-on.svg',
+              //           placeholder:'${DataConstant.images_modules}/${privilege.icon}-on.svg' ,
+              //           title: privilege.moduleName,
+              //           height: 120,
+              //           width: 130,
+              //           imageHeight: 70,
+              //           textStyle: textStyle.bodyMedium!.copyWith(
+              //             fontSize: 15,
+              //             fontWeight: FontWeight.bold
+              //           ),
+              //           onTap: () {
+              //             final privilegeActions = privilege.actions; // Acciones del privilegio
+              //             context.read<UserProvider>().setActions(privilegeActions);
+              //             Navigator.pushNamed(
+              //                 context, '/${privilege.moduleName}Screen');
+              //           },
+              //         );
+              //       }).toList(),
+              //     ),
+              //   ),
             ],
           ),
         ),
@@ -228,4 +299,6 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+
+  
 }

@@ -98,8 +98,7 @@ class _BottomSheetModulesState extends State<BottomSheetModules> {
                           itemCount: showactions.length,
                           itemBuilder: (context, index) {
                             final action = showactions[index];
-                            print('${DataConstant.images_modules}/${action.key}_${privilege.icon}-on.svg');
-                            print('${DataConstant.images_modules}/${privilege.icon}-on.svg');
+                           
                               return SmallCard(
                               image: '${DataConstant.images_modules}/${action.key}_${privilege.icon}-on.svg',
                               // placeholder:'${DataConstant.images_modules}/${privilege.icon}-on.svg' ,
@@ -114,8 +113,9 @@ class _BottomSheetModulesState extends State<BottomSheetModules> {
                               onTap: () {
                                 // Acción al presionar la tarjeta
                                 Navigator.pop(context);
-                                print('Navegar a ${action.page}');
-                                Navigator.pushNamed(context, action.page);
+                                final privilegeActions = privilege.actions; // Acciones del privilegio
+                                context.read<UserProvider>().setActions(privilegeActions);
+                                Navigator.pushNamed(context, "/${action.actionName}Screen");
                               },
                             );
                             
