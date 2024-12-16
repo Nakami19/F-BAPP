@@ -74,7 +74,25 @@ class _ListDevolutionsScreenState extends State<ListDevolutionsScreen> {
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 35, vertical: 15),
-            child: Filter(),
+            child: Filter(
+              options: [
+                                {
+                                  "id": 0,
+                                  "nameStatus": "EXITOSA",
+                                  "tagStatus": "STATUS-SUCCESSFUL"
+                                },
+                                {
+                                  "id": 1,
+                                  "nameStatus": "RECHAZADO",
+                                  "tagStatus": "STATUS-REJECTED"
+                                },
+                                {
+                                  "id": 2,
+                                  "nameStatus": "PENDIENTE",
+                                  "tagStatus": "STATUS-PENDING"
+                                }
+                              ],
+            ),
           ),
           Expanded(
             child: ListView.builder(

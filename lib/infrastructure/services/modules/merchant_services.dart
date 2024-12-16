@@ -7,7 +7,7 @@ class MerchantServices {
     try {
       final response = await dio.get(
         '${Enviroment.CC_FBUS_GATEWAY}/v1/list/status',
-        queryParameters: {'member': tag_status},
+        queryParameters: {'tagTypeStatus': tag_status,},
       );
 
       return response;
@@ -15,4 +15,21 @@ class MerchantServices {
       rethrow;
     }
   }
+
+  Future<Response> getOrders(Map<String, dynamic> params) async {
+    try {
+
+      // Realizar la solicitud HTTP
+      final response = await dio.get(
+        '${Enviroment.CC_FBUS_GATEWAY}/v1/list/orders',
+        queryParameters: params, 
+      );
+
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+
 }

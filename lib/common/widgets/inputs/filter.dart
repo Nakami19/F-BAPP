@@ -8,10 +8,13 @@ import 'package:provider/provider.dart';
 
 import '../../providers/pagination_provider.dart';
 
-class Filter extends StatefulWidget {
+class Filter<T> extends StatefulWidget {
   const Filter({
     super.key,
+    required this.options,
   });
+
+  final List<T> options;
 
   @override
   State<Filter> createState() => _FilterState();
@@ -127,23 +130,7 @@ class _FilterState extends State<Filter> {
                       Padding(
                           padding: const EdgeInsets.only(bottom: 12),
                           child: CustomDropdown(
-                              options: [
-                                {
-                                  "id": 0,
-                                  "nameStatus": "EXITOSA",
-                                  "tagStatus": "STATUS-SUCCESSFUL"
-                                },
-                                {
-                                  "id": 1,
-                                  "nameStatus": "RECHAZADO",
-                                  "tagStatus": "STATUS-REJECTED"
-                                },
-                                {
-                                  "id": 2,
-                                  "nameStatus": "PENDIENTE",
-                                  "tagStatus": "STATUS-PENDING"
-                                }
-                              ],
+                              options: widget.options,
                               onChanged: (value) {
                                 setState(() {
                                 _dropdownValue = value;
