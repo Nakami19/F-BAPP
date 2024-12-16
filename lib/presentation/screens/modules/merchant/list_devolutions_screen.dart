@@ -1,6 +1,6 @@
 import 'package:f_bapp/common/data/filterdef.dart';
 import 'package:f_bapp/common/providers/pagination_provider.dart';
-import 'package:f_bapp/common/widgets/cards/text_card.dart';
+import 'package:f_bapp/presentation/widgets/shared/text_card.dart';
 import 'package:f_bapp/common/widgets/inputs/filter.dart';
 import 'package:f_bapp/common/widgets/others/pagination.dart';
 import 'package:f_bapp/config/router/routes.dart';
@@ -39,17 +39,18 @@ class _ListDevolutionsScreenState extends State<ListDevolutionsScreen> {
       int num = 30;
 
       // Generar datos de ejemplo
-      utilsProvider.newElements = List.generate(
-        num,
-        (index) => TextCard(
-          referencia: index.toString(),
-          telefono: index.toString(),
-          banco: 'Banesco',
-          monto: index.toString(),
-        ),
-      );
+      // utilsProvider.newElements = List.generate(
+      //   num,
+      //   (index) => TextCard(
+      //     status: '',
+      //     referencia: index.toString(),
+      //     telefono: index.toString(),
+      //     banco: 'Banesco',
+      //     monto: index.toString(),
+      //   ),
+      // );
 
-      utilsProvider.setTotal(utilsProvider.elements.length);
+      // utilsProvider.setTotal(utilsProvider.elements.length);
     });
   }
 
@@ -57,7 +58,7 @@ class _ListDevolutionsScreenState extends State<ListDevolutionsScreen> {
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<PaginationProvider>();
-    final elements = provider.getCurrentPage();
+    // final elements = provider.getCurrentPage();
     final navProvider = context.watch<NavigationProvider>();
 
     return Scaffold(
@@ -72,39 +73,39 @@ class _ListDevolutionsScreenState extends State<ListDevolutionsScreen> {
           )),
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 35, vertical: 15),
-            child: Filter(
-              options: [
-                                {
-                                  "id": 0,
-                                  "nameStatus": "EXITOSA",
-                                  "tagStatus": "STATUS-SUCCESSFUL"
-                                },
-                                {
-                                  "id": 1,
-                                  "nameStatus": "RECHAZADO",
-                                  "tagStatus": "STATUS-REJECTED"
-                                },
-                                {
-                                  "id": 2,
-                                  "nameStatus": "PENDIENTE",
-                                  "tagStatus": "STATUS-PENDING"
-                                }
-                              ],
-            ),
-          ),
-          Expanded(
-            child: ListView.builder(
-              controller: _scrollController,
-              itemCount: elements.length,
-              itemBuilder: (context, index) => 
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 35),
-                  child: elements[index],
-                )
-            ),
-          ),
+          // Padding(
+          //   padding: const EdgeInsets.symmetric(horizontal: 35, vertical: 15),
+          //   child: Filter(
+          //     options: [
+          //                       {
+          //                         "id": 0,
+          //                         "nameStatus": "EXITOSA",
+          //                         "tagStatus": "STATUS-SUCCESSFUL"
+          //                       },
+          //                       {
+          //                         "id": 1,
+          //                         "nameStatus": "RECHAZADO",
+          //                         "tagStatus": "STATUS-REJECTED"
+          //                       },
+          //                       {
+          //                         "id": 2,
+          //                         "nameStatus": "PENDIENTE",
+          //                         "tagStatus": "STATUS-PENDING"
+          //                       }
+          //                     ],
+          //   ),
+          // ),
+          // Expanded(
+          //   child: ListView.builder(
+          //     controller: _scrollController,
+          //     itemCount: elements.length,
+          //     itemBuilder: (context, index) => 
+          //       Padding(
+          //         padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 35),
+          //         child: elements[index],
+          //       )
+          //   ),
+          // ),
 
           //Paginacion
           Pagination(scrollController: _scrollController)

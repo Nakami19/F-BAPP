@@ -1,5 +1,6 @@
 import 'package:f_bapp/common/assets/theme/app_theme.dart';
 import 'package:f_bapp/common/data/filterdef.dart';
+import 'package:f_bapp/common/widgets/buttons/custom_button.dart';
 import 'package:f_bapp/common/widgets/inputs/custom_dropdown.dart';
 import 'package:f_bapp/common/widgets/inputs/custom_textfield.dart';
 import 'package:f_bapp/common/widgets/inputs/date_input.dart';
@@ -9,24 +10,49 @@ import 'package:provider/provider.dart';
 import '../../providers/pagination_provider.dart';
 
 class Filter<T> extends StatefulWidget {
-  const Filter({
-    super.key,
-    required this.options,
-  });
+  const Filter(
+      {super.key,
+      required this.options,
+      this.getdata,
+      required this.id,
+      required this.date,
+      required this.dropdown,
+      required this.phoneNumber});
 
   final List<T> options;
+  final Future<void> Function(Map<String, dynamic>)? getdata;
+
+  final bool id;
+  final bool date;
+  final bool dropdown;
+  final bool phoneNumber;
 
   @override
   State<Filter> createState() => _FilterState();
 }
 
 class _FilterState extends State<Filter> {
-  final _textController1 = TextEditingController();
-  final _textController2 = TextEditingController();
-  final _textController3 = TextEditingController();
+  late TextEditingController _textController1;
+  late TextEditingController _textController2;
+  late TextEditingController _textController3;
   String? _dropdownValue;
   bool _isFilterVisible = false;
 
+@override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    final provider = context.read<PaginationProvider>();
+
+    _textController1 = TextEditingController(text: provider.idOrder ?? '');
+    _textController2 = TextEditingController(text: provider.idTypeOrder ?? '');
+     _textController3 = TextEditingController(
+    text: (provider.startDate != null && provider.endDate != null)
+        ? '${provider.startDate} - ${provider.endDate}'
+        : '',
+  );
+    _dropdownValue = provider.tagStatus;
+  }
   @override
   void dispose() {
     _textController1.dispose();
@@ -43,6 +69,36 @@ class _FilterState extends State<Filter> {
       _dropdownValue = null; // Reinicia el valor del Dropdown
     });
   }
+
+void _applyFilters() {
+  final provider = context.read<PaginationProvider>();
+
+  // Divide la fecha de rango si existe
+  String? startDate;
+  String? endDate;
+  if (_textController3.text.isNotEmpty) {
+    final dates = _textController3.text.split(' - ');
+    if (dates.length == 2) {
+      startDate = dates[0];
+      endDate = dates[1];
+    }
+  }
+
+  provider.updateFilters({
+    'idOrder': _textController1.text.isNotEmpty ? _textController1.text : null,
+    'idTypeOrder': _textController2.text.isNotEmpty
+        ? _textController2.text
+        : null,
+    'tagStatus': _dropdownValue,
+    'startDate': startDate,
+    'endDate': endDate,
+  });
+
+  // Llamar la función para obtener los datos
+  if (widget.getdata != null) {
+    widget.getdata!(provider.getFilters());
+  }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -107,50 +163,79 @@ class _FilterState extends State<Filter> {
                 ? Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Column(children: [
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 12),
-                        child: CustomTextfield(
-                          hint: 'Buscar nro referencia',
-                          onChanged: (value) {
-                            setState(() {});
-                          },
-                          controller: _textController1,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 12),
-                        child: CustomTextfield(
-                          hint: 'Buscar nro telefono emisor',
-                          onChanged: (value) {
-                            setState(() {});
-                          },
-                        controller: _textController2,
-                        ),
-                      ),
-                      Padding(
+                      if (widget.id==true)
+                        Padding(
                           padding: const EdgeInsets.only(bottom: 12),
-                          child: CustomDropdown(
+                          child: CustomTextfield(
+                            hint: widget.id? 'Buscar id' :'Buscar nro referencia' ,
+                            onChanged: (value) {
+                              setState(() {});
+                            },
+                            controller: _textController1,
+                          ),
+                        ),
+                      if (widget.phoneNumber==true)
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 12),
+                          child: CustomTextfield(
+                            hint: 'Buscar nro telefono emisor',
+                            onChanged: (value) {
+                              setState(() {});
+                            },
+                            controller: _textController2,
+                          ),
+                        ),
+                      if (widget.dropdown==true)
+                        Padding(
+                            padding: const EdgeInsets.only(bottom: 12),
+                            child: CustomDropdown(
                               options: widget.options,
                               onChanged: (value) {
                                 setState(() {
-                                _dropdownValue = value;
-                              });
+                                  _dropdownValue = value;
+                                });
                               },
                               selectedValue: _dropdownValue,
-                              itemValueMapper:(option) => option['nameStatus']!,
-                              itemLabelMapper: (option) => option['nameStatus']!,
+                              itemValueMapper: (option) =>
+                                  option['tagStatus']!,
+                              itemLabelMapper: (option) =>
+                                  option['nameStatus']!,
                               autoSelectFirst: false,
-                              
-                              optionsTextsStyle:textStyle.bodySmall!.copyWith(
-                                fontSize: 14
-                              ),
-                              )
-                              ),
+                              optionsTextsStyle:
+                                  textStyle.bodySmall!.copyWith(fontSize: 14),
+                            )),
+                      if (widget.date==true)
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 12),
+                          child: DateInput(
+                            controller: _textController3,
+                            rangeDate: true,
+                            
+                          ),
+                        ),
 
-                              DateInput(
-                                controller: _textController3, 
-                                rangeDate: true,
-                                )
+
+                      CustomButton(
+                          title: 'Buscar',
+                          isPrimaryColor: true,
+                          isOutline: false,
+                          onTap: () {
+                            if (widget.getdata != null) {
+                              final filters = {
+                                'idOrder': _textController1.text.isNotEmpty
+                                    ? _textController1.text
+                                    : null,
+                                'idTypeOrder': _textController2.text.isNotEmpty
+                                    ? _textController2.text
+                                    : null,
+                                'tagStatus': _dropdownValue,
+                                // Parsear fechas si es necesario
+                              };
+
+                              widget.getdata!(filters);
+                            }
+                          },
+                          provider: provider)
                     ]),
                   )
                 : SizedBox.shrink(),

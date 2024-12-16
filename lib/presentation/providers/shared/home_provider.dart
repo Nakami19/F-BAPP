@@ -40,7 +40,7 @@ class HomeProvider extends GeneralProvider {
     Future<void> refreshSession() async {
     try {
       // super.setLoadingStatus(true);
-      final req = await dio.get(Enviroment.CC_FBUS_GATEWAY+ '/v1/profile/token/refresh');
+      final req = await dio.get( '${Enviroment.CC_FBUS_GATEWAY}/v1/profile/token/refresh');
       // changeLoadingStatus(false);
       super.setStatusCode(req.statusCode!);
 

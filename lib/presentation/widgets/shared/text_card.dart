@@ -2,24 +2,40 @@ import 'package:f_bapp/common/assets/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class TextCard extends StatefulWidget {
-  const TextCard({
-    super.key,
-    this.height,
-    this.width,
-    this.onTap,
-    required this.referencia,   
-    required this.telefono,     
-    required this.banco,        
-    required this.monto,        
-  });
+  const TextCard(
+      {super.key,
+      this.height,
+      this.width,
+      this.onTap,
+      required this.id,
+      required this.status,
+      this.telefono,
+      this.banco,
+      this.monto,
+      this.balance,
+      this.payType,
+      this.sucursal,
+      this.typeOrder,
+      this.refundStatus,
+      this.date,
+      this.statusColor
+      });
 
   final VoidCallback? onTap;
   final double? height;
   final double? width;
-  final String referencia;     
-  final String telefono;      
-  final String banco;          
-  final String monto;         
+  final String id;
+  final String status;
+  final String? telefono;
+  final String? banco;
+  final String? monto;
+  final String? balance;
+  final String? payType;
+  final String? sucursal;
+  final String? typeOrder;
+  final String? refundStatus;
+  final String? date;
+  final Color? statusColor;
 
   @override
   State<TextCard> createState() => _TextCardState();
@@ -133,40 +149,64 @@ class _TextCardState extends State<TextCard> {
           child: Row(
             children: [
               // Textos a la izquierda
-               Expanded(
+              Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'Referencia: ${widget.referencia}',
-                      style: textStyle.bodySmall!.copyWith(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 13
-                      )
-                          
-                    ),
+                    Text('${widget.id}',
+                        style: textStyle.bodySmall!.copyWith(
+                            fontWeight: FontWeight.bold, fontSize: 13)),
                     SizedBox(height: 4), // Espaciado entre textos
-                    Text(
-                      'Teléfono: ${widget.telefono}',
-                      style: textStyle.bodySmall!.copyWith(
-                        fontSize: 13
-                      )
-                    ),
-                    SizedBox(height: 4),
-                    Text(
-                      'Banco: ${widget.banco}',
-                      style:textStyle.bodySmall!.copyWith(
-                        fontSize: 13
-                      )
-                    ),
-                    SizedBox(height: 4),
-                    Text(
-                      'Monto: ${widget.monto},00 BS',
-                      style: textStyle.bodySmall!.copyWith(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 13
-                      )
-                    ),
+
+                    if (widget.date != null) ...[
+                      Text('Fecha: ${widget.date}',
+                          style: textStyle.bodySmall!.copyWith(fontSize: 13)),
+                      SizedBox(height: 4),
+                    ],
+
+                    if (widget.telefono != null) ...[
+                      Text('Teléfono: ${widget.telefono}',
+                          style: textStyle.bodySmall!.copyWith(fontSize: 13)),
+                      SizedBox(height: 4),
+                    ],
+
+                    if (widget.banco != null) ...[
+                      Text('Banco: ${widget.banco}',
+                          style: textStyle.bodySmall!.copyWith(fontSize: 13)),
+                      SizedBox(height: 4),
+                    ],
+
+                    if (widget.sucursal != null) ...[
+                      Text('Sucursal: ${widget.sucursal}',
+                          style: textStyle.bodySmall!.copyWith(fontSize: 13)),
+                      SizedBox(height: 4),
+                    ],
+
+                    if (widget.payType != null) ...[
+                      Text('Tipo de pago: ${widget.payType}',
+                          style: textStyle.bodySmall!.copyWith(fontSize: 13)),
+                      SizedBox(height: 4),
+                    ],
+
+                    if (widget.refundStatus != null) ...[
+                      Text('Estado de reverso: ${widget.refundStatus}',
+                          style: textStyle.bodySmall!.copyWith(fontSize: 13)),
+                      SizedBox(height: 4),
+                    ],
+
+                    if (widget.balance != null) ...[
+                      Text('Balance: ${widget.balance} BS',
+                          style: textStyle.bodySmall!.copyWith(fontSize: 13)),
+                      SizedBox(height: 4),
+                    ],
+
+                    if(widget.monto!=null)...[
+                       Text('Monto: ${widget.monto} BS',
+                        style: textStyle.bodySmall!.copyWith(
+                            fontWeight: FontWeight.bold, fontSize: 13)),
+                    ],
+
+                   
                   ],
                 ),
               ),
@@ -181,12 +221,14 @@ class _TextCardState extends State<TextCard> {
                     color: primaryColor,
                     size: 25,
                   ),
-                  SizedBox(height: 20,),
+                  SizedBox(
+                    height: 20,
+                  ),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.transparent,
                       elevation: 0,
-                      side: BorderSide(color: primaryColor),
+                      side: BorderSide(color: widget.statusColor!=null? widget.statusColor! : primaryColor),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(BorderRadiusValue),
                       ),
@@ -195,12 +237,11 @@ class _TextCardState extends State<TextCard> {
                       // Acción del botón
                     },
                     child: Text(
-                      'Confirmada',
+                      widget.status,
                       style: textStyle.bodySmall!.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: primaryColor,
-                        fontSize: 13
-                      ),
+                          fontWeight: FontWeight.w600,
+                          color: widget.statusColor!=null? widget.statusColor! : primaryColor,
+                          fontSize: 13),
                     ),
                   ),
                 ],

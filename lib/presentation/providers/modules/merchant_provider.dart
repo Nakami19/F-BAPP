@@ -12,7 +12,7 @@ class MerchantProvider extends GeneralProvider {
 
   Map<String, dynamic>? orders;
 
-  Map<String, dynamic>? get _orders => orders;
+  Map<String, dynamic>? get order => orders;
 
   List<dynamic>? status;
 
@@ -105,6 +105,10 @@ class MerchantProvider extends GeneralProvider {
       final response = await merchantService.getOrders(params);
 
       final data = jsonDecode(response.toString());
+      
+      print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+
+      print(data['data']);
 
       setOrders = data['data'];
 

@@ -21,7 +21,7 @@ if (recaptcha == null || recaptcha.isEmpty) {
 
   try {
     final response = await dio.get(
-      Enviroment.CC_FBUS_GATEWAY + '/v1/auth/business/verify/member',
+      '${Enviroment.CC_FBUS_GATEWAY}/v1/auth/business/verify/member',
       queryParameters: {'member': member},
       options: Options(headers: {
         'recaptcha': recaptcha,
@@ -40,7 +40,7 @@ if (recaptcha == null || recaptcha.isEmpty) {
   Future<Response> postLogin(Map<String, dynamic> data) async {
     try {
       final response = await dio.post(
-        Enviroment.CC_FBUS_GATEWAY +'/v1/auth/business/login',
+        '${Enviroment.CC_FBUS_GATEWAY}/v1/auth/business/login',
         data: data,
         options: Options(headers: {
           'recaptcha': Enviroment.recaptcha,
@@ -82,7 +82,7 @@ if (recaptcha == null || recaptcha.isEmpty) {
   // Llama al API para refrescar sesión
   Future<Response> refreshSession() async {
     try {
-      final response = await dio.get(Enviroment.CC_FBUS_GATEWAY +'/v1/profile/token/refresh');
+      final response = await dio.get('${Enviroment.CC_FBUS_GATEWAY}/v1/profile/token/refresh');
       return response;
     } catch (e) {
       rethrow;
@@ -92,7 +92,7 @@ if (recaptcha == null || recaptcha.isEmpty) {
   //Hace el llamado para enviar token de actualización de contraseña
   Future<Response> sendUpdatePasswordToken() async {
     try {
-      final response = await dio.get(Enviroment.CC_FBUS_GATEWAY +'/v1/profile/password/change/token');
+      final response = await dio.get('${Enviroment.CC_FBUS_GATEWAY}/v1/profile/password/change/token');
       return response;
     } catch (e) {
       rethrow;
@@ -103,7 +103,7 @@ if (recaptcha == null || recaptcha.isEmpty) {
   Future<Response> putUpdatePassword(Map<String, dynamic> form) async {
     try {
       final response = await dio.put(
-        Enviroment.CC_FBUS_GATEWAY +'/v1/profile/password/change',
+       '${Enviroment.CC_FBUS_GATEWAY}/v1/profile/password/change',
         data: form,
       );
       return response;
@@ -116,7 +116,7 @@ if (recaptcha == null || recaptcha.isEmpty) {
   Future<Response> getRecoverPasswordToken(String sender, String recaptcha) async {
     try {
       final response = await dio.get(
-        Enviroment.CC_FBUS_GATEWAY +'/v1/auth/business/password/recovery/token',
+       '${Enviroment.CC_FBUS_GATEWAY}/v1/auth/business/password/recovery/token',
         queryParameters: {'sender': sender},
         options: Options(headers: {
           'recaptcha': recaptcha,
@@ -133,7 +133,7 @@ if (recaptcha == null || recaptcha.isEmpty) {
   Future<Response> postRecoverPassword(Map<String, dynamic> form, String recaptcha) async {
     try {
       final response = await dio.post(
-        Enviroment.CC_FBUS_GATEWAY +'/v1/auth/business/password/recovery',
+        '${Enviroment.CC_FBUS_GATEWAY}/v1/auth/business/password/recovery',
         data: form,
         options: Options(headers: {
           'recaptcha': recaptcha,

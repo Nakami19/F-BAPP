@@ -43,5 +43,11 @@ class DateFormatter {
   // Dar formato a fecha devuelta por el datePicker
   static String formatDatePicker(DateTime date, String format) {
     return DateFormat(format).format(date);
+    
+  }
+
+  // Devuelve la fecha en formato yyyy/MM/dd
+  static String formatDate2(DateTime date) {
+    return DateFormat('yyyy/MM/dd').format(date.toLocal());
   }
 }

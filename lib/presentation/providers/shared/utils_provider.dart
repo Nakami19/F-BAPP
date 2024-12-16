@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:f_bapp/common/data/enviroment.dart';
 import 'package:f_bapp/common/providers/general_provider.dart';
-import 'package:f_bapp/common/widgets/cards/text_card.dart';
+import 'package:f_bapp/presentation/widgets/shared/text_card.dart';
 import 'package:f_bapp/config/network/api_error.dart';
 import 'package:f_bapp/config/network/api_response.dart';
 import 'package:f_bapp/config/network/dio_client.dart';

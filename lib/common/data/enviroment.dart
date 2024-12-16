@@ -8,7 +8,7 @@ class Enviroment{
   static String recaptcha = dotenv.env['RECAPTCHA']!;
   static String verificationUrl = dotenv.env['VERIFICATION_URL']!;
   static String liveChatLicense = '12145539';
-  static String CC_FBUS_GATEWAY = 'http://172.16.4.100:4005';
+  static String CC_FBUS_GATEWAY = dotenv.env["QA"]!;
 
 
   static   initEnviroment() async {

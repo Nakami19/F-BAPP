@@ -1,5 +1,7 @@
+import 'package:f_bapp/common/assets/theme/app_theme.dart';
+import 'package:f_bapp/common/data/date_formatter.dart';
+import 'package:f_bapp/common/data/digit_formatter.dart';
 import 'package:f_bapp/common/providers/pagination_provider.dart';
-import 'package:f_bapp/common/widgets/cards/text_card.dart';
 import 'package:f_bapp/common/widgets/inputs/filter.dart';
 import 'package:f_bapp/common/widgets/others/custom_skeleton.dart';
 import 'package:f_bapp/common/widgets/others/pagination.dart';
@@ -11,6 +13,7 @@ import 'package:f_bapp/presentation/providers/shared/navigation_provider.dart';
 import 'package:f_bapp/presentation/widgets/shared/customNavbar.dart';
 import 'package:f_bapp/presentation/widgets/shared/drawer_menu.dart';
 import 'package:f_bapp/presentation/widgets/shared/screensAppbar.dart';
+import 'package:f_bapp/presentation/widgets/shared/text_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -30,48 +33,44 @@ class _ListOrdersScreenState extends State<ListOrdersScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       final merchantProvider = context.read<MerchantProvider>();
-      print('AYUDAAAAAAAAAAAAAAAAAAAAAAAA');
-      print(merchantProvider.isLoading);
-      _initializeData();
-      print('AYUDEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE');
-      print(merchantProvider.isLoading);
-      final utilsProvider = context.read<PaginationProvider>();
+      final paginationProvider = context.read<PaginationProvider>();
+      paginationProvider.resetPagination();
+      await merchantProvider.ListStatus('ORDER');
+      await merchantProvider.Listorders(
+          limit: 5, page: 0, startDate: '2024/12/16', endDate: '2024/12/16');
 
-      int num = 30;
-
-      // Generar datos de ejemplo
-      utilsProvider.newElements = List.generate(
-        num,
-        (index) => TextCard(
-          referencia: index.toString(),
-          telefono: index.toString(),
-          banco: 'Banesco',
-          monto: index.toString(),
-        ),
-      );
-
-      utilsProvider.setTotal(utilsProvider.elements.length);
+      paginationProvider.setTotal(merchantProvider.orders!['count']);
+      paginationProvider.setPageData(merchantProvider.orders!['rows']);
     });
   }
 
   Future<void> _initializeData() async {
     final merchantProvider = context.read<MerchantProvider>();
     await merchantProvider.ListStatus('ORDER');
-    await merchantProvider.Listorders(limit: 10, page: 0);
+    await merchantProvider.Listorders(limit: 5, page: 0);
   }
 
   @override
   Widget build(BuildContext context) {
-    final provider = context.watch<PaginationProvider>();
-    final elements = provider.getCurrentPage();
+    final paginationProvider = context.watch<PaginationProvider>();
     final navProvider = context.watch<NavigationProvider>();
     final merchantProvider = context.watch<MerchantProvider>();
 
+    final Map<String, Color> statusColors = {
+      "ACTIVO": Color(0xff02a8f5),
+      "PAGADA": primaryColor,
+      "PAGADA CON SOBRANTE": Colors.green,
+      "PAGADA CON FALTANTE": Colors.orange,
+      "EXPIRADA": Color(0xff595959),
+      "REVERSADA": Color.fromARGB(219, 246, 195, 26),
+      "RECHAZADO": Color(0xffff0000),
+    };
+
     if (merchantProvider.haveSimpleError) {
       Snackbars.customSnackbar(context,
-          message: merchantProvider.errorMessage!);
+          message: merchantProvider.errorMessage ?? "");
     }
 
     return Scaffold(
@@ -114,7 +113,57 @@ class _ListOrdersScreenState extends State<ListOrdersScreen> {
           if (merchantProvider.isLoading == false) ...[
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 35, vertical: 15),
-              child: Filter(options: merchantProvider.status!),
+              child: Filter(
+                id: true,
+                phoneNumber: false,
+                date: true,
+                dropdown: true,
+                options: merchantProvider.status!,
+                getdata: (filters) async {
+                  final merchantProvider = context.read<MerchantProvider>();
+                  final paginationProvider = context.read<PaginationProvider>();
+
+                  // Reinicia la paginación antes de buscar
+                  paginationProvider.resetPagination();
+
+                  // Extrae los filtros
+                  final idOrder = filters['idOrder'];
+                  final idTypeOrder = filters['idTypeOrder'];
+                  final tagStatus = filters['tagStatus'];
+
+                  // final startDate = (filters['startDate']?.isNotEmpty ?? false)
+                  //     ? filters['startDate']
+                  //     : DateFormatter.formatDate2(DateTime.now());
+
+                  // final endDate = (filters['endDate']?.isNotEmpty ?? false)
+                  //     ? filters['endDate']
+                  //     : DateFormatter.formatDate2(DateTime.now());
+
+                  final range = filters['startDate']?.split(' - ') ?? [];
+                  final startDate = range.isNotEmpty
+                      ? range[0].trim()
+                      : DateFormatter.formatDate2(DateTime.now());
+                  final endDate = range.length > 1
+                      ? range[1].trim()
+                      : DateFormatter.formatDate2(DateTime.now());
+
+                  // Llama a la función de obtener datos con los filtros
+                  paginationProvider.setFilters(
+                    tagStatus: tagStatus,
+                    startDate: startDate,
+                    endDate: endDate,
+                    idOrder: idOrder,
+                    idTypeOrder: idTypeOrder,
+                  );
+
+                  // Llama a la función de obtener datos con los filtros
+                  await paginationProvider.fetchPageData(context);
+
+                  // Actualiza la paginación con los nuevos datos
+                  paginationProvider
+                      .setTotal(merchantProvider.orders!['count']);
+                },
+              ),
             ),
             if (merchantProvider.orders?['count'] == 0) ...[
               Expanded(
@@ -143,12 +192,30 @@ class _ListOrdersScreenState extends State<ListOrdersScreen> {
               Expanded(
                 child: ListView.builder(
                     controller: _scrollController,
-                    itemCount: elements.length,
-                    itemBuilder: (context, index) => Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 15, horizontal: 35),
-                          child: elements[index],
-                        )),
+                    itemCount: paginationProvider.currentPageData.length,
+                    itemBuilder: (context, index) {
+                      final order = paginationProvider.currentPageData[index];
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 15, horizontal: 35),
+                        child: TextCard(
+                          id: "Id: ${order["idOrder"]}",
+                          date: DateFormatter.formatDate(
+                              DateTime.parse(order['createdDate'])),
+                          status: order["status"],
+                          sucursal: order['metadata']["partnerName"] != null
+                              ? order['metadata']["partnerName"]
+                              : 'N/A',
+                          balance: order['balance'].toString(),
+                          // monto: order["amount"].toString(),
+                          monto: DigitFormatter.getMoneyFormatter(
+                              order['amount'].toString()),
+                          payType: order['nameTypeOrder'],
+                          refundStatus: order['refundStatus'],
+                          statusColor: statusColors[order['status']],
+                        ),
+                      );
+                    }),
               ),
 
               //Paginacion
