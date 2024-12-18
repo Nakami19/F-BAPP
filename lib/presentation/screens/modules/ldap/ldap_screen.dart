@@ -62,9 +62,9 @@ class _LdapScreenState extends State<LdapScreen> {
                           horizontal: 25, vertical: 10),
                       child: LargeCard(
                         image:
-                            '${DataConstant.images_modules}/${action.key}_ldap-on.svg',
+                            '${DataConstant.imagesModules}/${DataConstant.modulePathLdap}/chinchin-${action.key}_ldap-on.svg',
                         placeholder:
-                            '${DataConstant.images_modules}/cmer-create_order_merchant-on.svg',
+                            '${DataConstant.imagesModules}/${DataConstant.modulePathLdap}/chinchin-cmer-create_order_merchant-on.svg',
                         title: action.actionName,
                         height: 85,
                         textStyle: textStyle.bodyMedium!.copyWith(

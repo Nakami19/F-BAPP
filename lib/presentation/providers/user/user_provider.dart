@@ -35,22 +35,6 @@ class UserProvider extends GeneralProvider {
     notifyListeners();
   }
 
-  //determina si debe mostrarse el mensaje de error
-  bool _errorShown = false;
-  void clearError() {
-    haveErrors = false;
-    errorMessage = null;
-    trackingCode = null;
-    notifyListeners();
-  }
-
-  bool get shouldShowError {
-    if (haveErrors && !_errorShown) {
-      _errorShown = true; // Marca el error como mostrado
-      return true;
-    }
-    return false;
-  }
 
 //se obtiene el listado de miembros
   Future<void> getMemberlist(String member) async {

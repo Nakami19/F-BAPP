@@ -162,8 +162,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: userProvider.privileges!.map((privilege) {
                       return SmallCard(
                         image:
-                            '${DataConstant.images_modules}/${privilege.icon}/${privilege.icon}-on.svg',
-                        placeholder:'${DataConstant.images_modules}/${privilege.icon}}/${privilege.icon}-on.svg' ,
+                            '${DataConstant.imagesModules}/${privilege.icon}/chinchin-${privilege.icon}-on.svg',
+                        placeholder:'${DataConstant.imagesModules}/${privilege.icon}}/chinchin-${privilege.icon}-on.svg' ,
                         title: privilege.moduleName,
                         height: 120,
                         width: 130,

@@ -120,8 +120,7 @@ class _FirstLoginScreenState extends State<FirstLoginScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   SvgPicture.asset(
-                    '${DataConstant.images_chinchin}/chinchin-logo-business-base.svg',
-                    // '${DataConstant.images_modules}/list_merchant_devolutions_merchant-on.svg',
+                    '${DataConstant.imagesChinchin}/chinchin-logo-business-base.svg',
                     width: 220,
                     fit: BoxFit.contain,
                   ),

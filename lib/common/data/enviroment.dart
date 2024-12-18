@@ -10,8 +10,8 @@ class Enviroment{
   static String liveChatLicense = '12145539';
   static String CC_FBUS_GATEWAY = dotenv.env["QA"]!;
 
-
-  static   initEnviroment() async {
+  //se carga la informacion de .env
+  static initEnviroment() async {
     await dotenv.load(fileName: ".env");
   }
 

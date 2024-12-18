@@ -84,7 +84,7 @@ class _SecondLoginScreenState extends State<SecondLoginScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SvgPicture.asset(
-                    '${DataConstant.images_chinchin}/chinchin-logo-business-base.svg',
+                    '${DataConstant.imagesChinchin}/chinchin-logo-business-base.svg',
                     width: 220, 
                     fit: BoxFit.contain, 
                   ),

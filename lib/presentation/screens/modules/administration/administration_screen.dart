@@ -63,9 +63,9 @@ class _AdministrationScreenState extends State<AdministrationScreen> {
                           horizontal: 25, vertical: 10),
                       child: LargeCard(
                         image:
-                            '${DataConstant.images_modules}/${action.key}_administration-on.svg',
+                            '${DataConstant.imagesModules}/${DataConstant.modulePathAdministration}/chinchin-${action.key}_administration-on.svg',
                         placeholder:
-                            '${DataConstant.images_modules}/list_users_business_administration-on.svg',
+                            '${DataConstant.imagesModules}/${DataConstant.modulePathAdministration}/chinchin-list_users_business_administration-on.svg',
                         title: action.actionName,
                         height: 85,
                         textStyle: textStyle.bodyMedium!.copyWith(

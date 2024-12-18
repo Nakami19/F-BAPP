@@ -33,7 +33,7 @@ class _ScreensappbarState extends State<Screensappbar> {
         children: [
           // Imagen de fondo
           Image.asset(
-            '${DataConstant.images}/chinchin_business_background.png',
+            '${DataConstant.imagesChinchin}/chinchin_business_background.png',
             fit: BoxFit.cover,
             width: double.infinity,
             height: 110,
@@ -89,7 +89,7 @@ class _ScreensappbarState extends State<Screensappbar> {
                   Row(
                     children: [
                       SvgPicture.asset(
-                        '${DataConstant.images_chinchin}/chinchin-logo-business-base.svg',
+                        '${DataConstant.imagesChinchin}/chinchin-logo-business-base.svg',
                         height: 27,
                         fit: BoxFit.contain,
                       ),

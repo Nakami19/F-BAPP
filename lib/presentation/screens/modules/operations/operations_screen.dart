@@ -60,9 +60,9 @@ class _OperationsScreenState extends State<OperationsScreen> {
                           horizontal: 25, vertical: 10),
                       child: LargeCard(
                         image:
-                            '${DataConstant.images_modules}/${action.key}_operations-on.svg',
+                            '${DataConstant.imagesModules}/${DataConstant.modulePathOperations}/chinchin-${action.key}_operations-on.svg',
                         placeholder:
-                            '${DataConstant.images_modules}/payment_services_operations-on.svg',
+                            '${DataConstant.imagesModules}/${DataConstant.modulePathOperations}/chinchin-payment_services_operations-on.svg',
                         title: action.actionName,
                         imageHeight: 50,
                         height: 85,

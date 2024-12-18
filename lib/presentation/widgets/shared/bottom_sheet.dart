@@ -100,12 +100,10 @@ class _BottomSheetModulesState extends State<BottomSheetModules> {
                             final action = showactions[index];
                            
                               return SmallCard(
-                              image: '${DataConstant.images_modules}/${action.key}_${privilege.icon}-on.svg',
+                              image: '${DataConstant.imagesModules}/${privilege.icon}/chinchin-${action.key}_${privilege.icon}-on.svg',
                               // placeholder:'${DataConstant.images_modules}/${privilege.icon}-on.svg' ,
                               title: action.actionName,
                               imageHeight: 45,
-                              // height: 200,
-                              // width: 100,
                               textStyle: textStyle.labelSmall!.copyWith(
                                 fontWeight: FontWeight.w600,
                                 fontSize: 11,

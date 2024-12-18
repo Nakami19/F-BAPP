@@ -9,10 +9,16 @@ import 'app.dart';
 
 FutureOr<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  //se lee la informacion de .env
   await Enviroment.initEnviroment();
+
+  // se obtiene informacion de la app desde el pubspec
   final appInfo = await PackageInfo.fromPlatform();
   DataConstant.appVersion = appInfo.version;
   DataConstant.buildNumber = appInfo.buildNumber;
+
+  //se carga el modo oscuro
   final themeProvider = ThemeProvider();
   await themeProvider.loadDarkModeFromStorage();
 

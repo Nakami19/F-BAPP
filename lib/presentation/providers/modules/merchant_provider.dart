@@ -7,7 +7,6 @@ import 'package:f_bapp/common/widgets/others/snackbars.dart';
 import 'package:f_bapp/config/network/api_error.dart';
 import 'package:f_bapp/config/network/api_response.dart';
 import 'package:f_bapp/infrastructure/services/modules/merchant_services.dart';
-import 'package:flutter/material.dart';
 
 class MerchantProvider extends GeneralProvider {
 
@@ -30,14 +29,14 @@ class MerchantProvider extends GeneralProvider {
   }
 
   //se obtienen los listados de estatus 
-  Future <void> ListStatus (String tag_status) async {
+  Future <void> ListStatus (String tagstatus) async {
 
     super.setLoadingStatus(true);
     notifyListeners();
 
     try {
 
-      final response = await merchantService.getListStatus(tag_status);
+      final response = await merchantService.getListStatus(tagstatus);
 
       final data = jsonDecode(response.toString());
 

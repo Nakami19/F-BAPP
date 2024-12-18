@@ -61,9 +61,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           horizontal: 25, vertical: 10),
                       child: LargeCard(
                         image:
-                            '${DataConstant.images_modules}/${action.key}_onboarding-on.svg',
+                            '${DataConstant.imagesModules}/${DataConstant.modulePathOnboarding}/chinchin-${action.key}_onboarding-on.svg',
                         placeholder:
-                            '${DataConstant.images_modules}/details_onboarding_membership_v2_onboarding-on.svg',
+                            '${DataConstant.imagesModules}/${DataConstant.modulePathOnboarding}/chinchin-details_onboarding_membership_v2_onboarding-on.svg',
                         title: action.actionName,
                         height: 85,
                         // imageHeight: 100,

@@ -1,13 +1,9 @@
-import 'package:f_bapp/common/assets/theme/app_theme.dart';
-import 'package:f_bapp/common/providers/theme_provider.dart';
 import 'package:f_bapp/common/widgets/cards/small_card.dart';
 import 'package:f_bapp/common/widgets/inputs/custom_dropdown.dart';
 import 'package:f_bapp/common/widgets/others/custom_skeleton.dart';
 import 'package:f_bapp/config/data_constants/data_constants.dart';
 import 'package:f_bapp/presentation/providers/auth/login_provider.dart';
-import 'package:f_bapp/presentation/providers/shared/home_provider.dart';
 import 'package:f_bapp/presentation/providers/shared/navigation_provider.dart';
-import 'package:f_bapp/presentation/providers/shared/utils_provider.dart';
 import 'package:f_bapp/presentation/providers/user/user_provider.dart';
 import 'package:f_bapp/presentation/widgets/shared/customNavbar.dart';
 import 'package:f_bapp/presentation/widgets/shared/dashboardAppbar.dart';
@@ -29,21 +25,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       GlobalKey<ScaffoldState>();
   String? selectedCompany;
 
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final userProvider = context.read<UserProvider>();
-
-      //para el dropdown se selecciona la primera compañia
-      // selectedCompany =
-      //     userProvider.memberlist![0]['idParentRelation'].toString();
-
-      if (mounted) {
-        setState(() {});
-      }
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -161,9 +142,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   children: [
                     SmallCard(
                       image:
-                          '${DataConstant.images_profile}/change_password-on.svg',
+                          '${DataConstant.imagesProfile}/chinchin-change_password-on.svg',
                       title: 'Cambiar clave',
-                      // height: 120,
                       width: 120,
                       imageHeight: 70,
                       textStyle: textStyle.bodyMedium!.copyWith(
@@ -173,9 +153,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     SmallCard(
                       image:
-                          '${DataConstant.images_profile}/security_questions-on.svg',
+                          '${DataConstant.imagesProfile}/chinchin-security_questions-on.svg',
                       title: 'Preguntas de seguridad',
-                      // height: 120,
                       width: 120,
                       imageHeight: 70,
                       textStyle: textStyle.bodyMedium!.copyWith(

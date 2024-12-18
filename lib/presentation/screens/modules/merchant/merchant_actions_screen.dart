@@ -61,8 +61,8 @@ class _MerchantScreenState extends State<MerchantScreen> {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 25, vertical: 10),
                       child: LargeCard(
-                        image: '${DataConstant.images_modules}/${action.key}_merchant-on.svg',
-                        placeholder: '${DataConstant.images_modules}/list_merchant_devolutions_merchant-on.svg',
+                        image: '${DataConstant.imagesModules}/${DataConstant.modulePathMerchant}/chinchin-${action.key}_merchant-on.svg',
+                        placeholder: '${DataConstant.imagesModules}/${DataConstant.modulePathMerchant}/chinchin-list_merchant_devolutions_merchant-on.svg',
                         title: action.actionName,
                         height: 85,
                         textStyle: textStyle.bodyMedium!.copyWith(

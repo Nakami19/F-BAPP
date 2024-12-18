@@ -36,7 +36,7 @@ class DrawerMenu extends StatelessWidget {
                   ),
 
                   SvgPicture.asset(
-                    '${DataConstant.images_chinchin}/chinchin-logo-business-base.svg',
+                    '${DataConstant.imagesChinchin}/chinchin-logo-business-base.svg',
                     height: 40,
                     fit: BoxFit.contain,
                   ),
@@ -74,7 +74,7 @@ class DrawerMenu extends StatelessWidget {
                           child: Row(
                             children: [
                               SvgPicture.asset(
-                                '${DataConstant.images_modules}/${privilege.icon}/${privilege.icon}-on.svg',
+                                '${DataConstant.imagesModules}/${privilege.icon}/chinchin-${privilege.icon}-on.svg',
                                 height: 42,
                               ),
                               SizedBox(

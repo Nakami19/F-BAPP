@@ -1,8 +1,13 @@
 class DataConstant {
-  static String images_chinchin = 'assets/chinchin';
+  static String imagesChinchin = 'assets/chinchin';
   static String images = 'assets/images';
-  static String images_modules = 'assets/modules';
-  static String images_profile = 'assets/profile';
+  static String imagesModules = 'assets/modules';
+  static String imagesProfile = 'assets/profile';
+  static String modulePathMerchant = 'merchant';
+  static String modulePathOnboarding = 'onboarding';
+  static String modulePathAdministration = 'administration';
+  static String modulePathLdap = 'ldap';
+  static String modulePathOperations = 'operations';
   static String? appVersion;
   static String? buildNumber;
 }

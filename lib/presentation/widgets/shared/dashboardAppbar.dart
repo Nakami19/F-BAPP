@@ -25,7 +25,7 @@ class _DashboardAppbarState extends State<DashboardAppbar> {
         children: [
           // Imagen de fondo
           Image.asset(
-            '${DataConstant.images}/chinchin_business_background.png',
+            '${DataConstant.imagesChinchin}/chinchin_business_background.png',
             // fit: BoxFit.cover,
           ),
           Positioned(
@@ -39,7 +39,7 @@ class _DashboardAppbarState extends State<DashboardAppbar> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   SvgPicture.asset(
-                    '${DataConstant.images_chinchin}/chinchin-logo-business-base.svg',
+                    '${DataConstant.imagesChinchin}/chinchin-logo-business-base.svg',
                     height: 40,
                     fit: BoxFit.contain,
                   ),
