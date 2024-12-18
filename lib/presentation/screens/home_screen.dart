@@ -1,29 +1,20 @@
-import 'dart:io';
-import 'package:f_bapp/app.dart';
-import 'package:f_bapp/common/assets/theme/app_theme.dart';
-import 'package:f_bapp/common/providers/theme_provider.dart';
 import 'package:f_bapp/common/widgets/cards/small_card.dart';
 import 'package:f_bapp/common/widgets/inputs/custom_dropdown.dart';
 import 'package:f_bapp/common/widgets/others/custom_skeleton.dart';
-import 'package:f_bapp/common/widgets/others/snackbars.dart';
 import 'package:f_bapp/config/data_constants/data_constants.dart';
 import 'package:f_bapp/infrastructure/services/secure_storage_service.dart';
 import 'package:f_bapp/presentation/providers/auth/login_provider.dart';
-import 'package:f_bapp/presentation/providers/shared/home_provider.dart';
 import 'package:f_bapp/presentation/providers/shared/navigation_provider.dart';
 import 'package:f_bapp/presentation/providers/shared/utils_provider.dart';
 import 'package:f_bapp/presentation/providers/user/user_provider.dart';
-import 'package:f_bapp/presentation/screens/tab_screen.dart';
-import 'package:f_bapp/presentation/widgets/graphics/graphic.dart';
-import 'package:f_bapp/presentation/widgets/graphics/pie_graphic2.dart';
+import 'package:f_bapp/presentation/widgets/graphics/bar_graphic.dart';
+import 'package:f_bapp/presentation/widgets/graphics/pie_graphic.dart';
 import 'package:f_bapp/presentation/widgets/shared/customNavbar.dart';
 import 'package:f_bapp/presentation/widgets/shared/dashboardAppbar.dart';
 import 'package:f_bapp/presentation/widgets/shared/drawer_menu.dart';
 import 'package:f_bapp/presentation/widgets/shared/user_data.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
-import 'package:fl_chart/fl_chart.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -42,14 +33,13 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final utilsProvider = context.read<UtilsProvider>();
-      final userProvider = context.read<UserProvider>();
+      
       context.read<NavigationProvider>().updateIndex(0);
 
-      // selectedCompany = userProvider.memberlist![0]['idParentRelation'].toString();
 
       //se obtiene la informacion del usuario
       if (!utilsProvider.isLoading) {
-        final res = await utilsProvider.getUserinfo();
+        await utilsProvider.getUserinfo();
       }
 
       if (mounted) {
@@ -65,16 +55,6 @@ class _HomeScreenState extends State<HomeScreen> {
     final navProvider = context.watch<NavigationProvider>();
     final loginProvider = context.read<LoginProvider>();
 
-    if (userProvider.shouldShowError) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        Snackbars.customSnackbar(
-          navigatorKey.currentContext!,
-          title: userProvider.errorMessage ?? "Error",
-          message: userProvider.trackingCode ?? "",
-        );
-      });
-    }
-
     return WillPopScope(
       onWillPop: () async {
         return false;
@@ -89,12 +69,11 @@ class _HomeScreenState extends State<HomeScreen> {
               screenKey: _homeScaffoldKey,
             )),
         body: Padding(
-          // padding: const EdgeInsets.all(30),
           padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
           child: Column(
-            // mainAxisAlignment: MainAxisAlignment.center
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+
               SizedBox(
                 height: 110,
               ),
@@ -117,22 +96,23 @@ class _HomeScreenState extends State<HomeScreen> {
               if (!userProvider.isLoading)
                 CustomDropdown(
                     title: 'Seleccione una compañia *',
-                    options: userProvider.memberlist!,
-                    selectedValue: navProvider.selectedCompany,
+                    options: userProvider.memberlist!, //se obtiene la lista de miembros
+                    selectedValue: navProvider.selectedCompany, //se muestra la compañia seleccionada 
                     autoSelectFirst: true,
-                    itemValueMapper: (option) =>
+                    itemValueMapper: (option) => //se envian el valor que tendra cada opcion
                         option['idParentRelation'].toString(),
-                    itemLabelMapper: (option) => option['name'].toString(),
+                    itemLabelMapper: (option) => option['name'].toString(), //se envia el label de la opcion a mostrarse 
                     onChanged: (value) {
                       setState(() {
                         navProvider.updateCompany(
                             value!); // Actualizar el valor seleccionado.
                       });
-                      userProvider.getMemberTypeChangeList(
+                      userProvider.getMemberTypeChangeList( //se actualiza la lista de miembros
                           value!, loginProvider.userLogin!);
                     },
                     showError: true,
                     errorText: 'error'),
+
               SizedBox(
                 height: 10,
               ),
@@ -182,8 +162,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: userProvider.privileges!.map((privilege) {
                       return SmallCard(
                         image:
-                            '${DataConstant.images_modules}/${privilege.icon}-on.svg',
-                        placeholder:'${DataConstant.images_modules}/${privilege.icon}-on.svg' ,
+                            '${DataConstant.images_modules}/${privilege.icon}/${privilege.icon}-on.svg',
+                        placeholder:'${DataConstant.images_modules}/${privilege.icon}}/${privilege.icon}-on.svg' ,
                         title: privilege.moduleName,
                         height: 120,
                         width: 130,
@@ -206,87 +186,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     )
                   ),
                                       
-              // //cargando de las tarjetas
-              // if (userProvider.isLoading) ...[
-              //   const Column(
-              //     children: [
-              //       Row(
-              //         mainAxisAlignment: MainAxisAlignment.center,
-              //         crossAxisAlignment: CrossAxisAlignment.center,
-              //         children: [
-              //           CustomSkeleton(
-              //             height: 150,
-              //             width: 140,
-              //           ),
-              //           SizedBox(
-              //             width: 20,
-              //             height: 20,
-              //           ),
-              //           CustomSkeleton(
-              //             height: 150,
-              //             width: 140,
-              //           ),
-              //         ],
-              //       ),
-              //       SizedBox(
-              //         height: 20,
-              //       ),
-              //       Row(
-              //         mainAxisAlignment: MainAxisAlignment.center,
-              //         crossAxisAlignment: CrossAxisAlignment.center,
-              //         children: [
-              //           CustomSkeleton(
-              //             height: 150,
-              //             width: 140,
-              //           ),
-              //           SizedBox(
-              //             width: 20,
-              //             height: 20,
-              //           ),
-              //           CustomSkeleton(
-              //             height: 150,
-              //             width: 140,
-              //           ),
-              //         ],
-              //       ),
-              //     ],
-              //   ),
-              // ],
-        
-              // //se muestran las tarjetas ya cargó
-              // if (!userProvider.isLoading)
-              //   Expanded(
-        
-              //     child: GridView.count(
-              //       crossAxisCount: 2,
-              //       mainAxisSpacing: 20,
-              //       crossAxisSpacing: 20,
-              //       padding: EdgeInsets.only(bottom: 10, left: 1, right: 3, top: 5), //el padding hace que no muestren al final de la pantalla
-              //       shrinkWrap: true,
-              //       physics: NeverScrollableScrollPhysics(),
-              //       children: userProvider.privileges!.map((privilege) {
-              //         return SmallCard(
-              //           image:
-              //               '${DataConstant.images_modules}/${privilege.icon}-on.svg',
-              //           placeholder:'${DataConstant.images_modules}/${privilege.icon}-on.svg' ,
-              //           title: privilege.moduleName,
-              //           height: 120,
-              //           width: 130,
-              //           imageHeight: 70,
-              //           textStyle: textStyle.bodyMedium!.copyWith(
-              //             fontSize: 15,
-              //             fontWeight: FontWeight.bold
-              //           ),
-              //           onTap: () {
-              //             final privilegeActions = privilege.actions; // Acciones del privilegio
-              //             context.read<UserProvider>().setActions(privilegeActions);
-              //             Navigator.pushNamed(
-              //                 context, '/${privilege.moduleName}Screen');
-              //           },
-              //         );
-              //       }).toList(),
-              //     ),
-              //   ),
+          
             ],
           ),
         ),

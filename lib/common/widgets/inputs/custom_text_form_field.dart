@@ -76,6 +76,7 @@ class CustomTextFormField extends StatelessWidget {
           onChanged: onChanged,
           validator: validator,
           decoration: InputDecoration(
+            contentPadding:const EdgeInsets.symmetric(horizontal: 23, vertical: 13),
             fillColor: Colors.white,
               floatingLabelBehavior: FloatingLabelBehavior.always,
               counterText: '',

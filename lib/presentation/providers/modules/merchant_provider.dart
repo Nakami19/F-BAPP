@@ -1,10 +1,13 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:f_bapp/app.dart';
 import 'package:f_bapp/common/providers/general_provider.dart';
+import 'package:f_bapp/common/widgets/others/snackbars.dart';
 import 'package:f_bapp/config/network/api_error.dart';
 import 'package:f_bapp/config/network/api_response.dart';
 import 'package:f_bapp/infrastructure/services/modules/merchant_services.dart';
+import 'package:flutter/material.dart';
 
 class MerchantProvider extends GeneralProvider {
 
@@ -56,10 +59,17 @@ class MerchantProvider extends GeneralProvider {
         ),
       );
 
-      super.setErrorMessage(resp.message);
       super.setSimpleError(true);
+      super.setErrorMessage(resp.message);
+      
 
       super.setTrackingCode(resp.trackingCode);
+
+      Snackbars.customSnackbar(
+        navigatorKey.currentContext!,
+        title: resp.trackingCode,
+        message: resp.message
+      );
 
       
       notifyListeners();
@@ -67,9 +77,15 @@ class MerchantProvider extends GeneralProvider {
       rethrow;
     }catch (error) {
       print('Unexpected error: $error');
-      super.setErrors(true);
+      super.setSimpleError(true);
       super.setErrorMessage("Ocurrió un error inesperado");
       super.setTrackingCode(error.toString());
+
+      Snackbars.customSnackbar(
+        navigatorKey.currentContext!,
+        title: "Ocurrió un error inesperado",
+        message: error.toString()
+      );
       notifyListeners();
       rethrow;
     } finally {
@@ -114,7 +130,6 @@ class MerchantProvider extends GeneralProvider {
 
       // return data['data'];
     } on DioError catch (error) {
-
       final response = error.response;
       final data = response?.data as Map<String, dynamic>;
 
@@ -128,22 +143,31 @@ class MerchantProvider extends GeneralProvider {
         ),
       );
 
-      super.setErrorMessage(resp.message);
       super.setSimpleError(true);
+      super.setErrorMessage(resp.message);
+      
 
       super.setTrackingCode(resp.trackingCode);
 
+      Snackbars.customSnackbar(
+        navigatorKey.currentContext!,
+        title: resp.trackingCode,
+        message: resp.message
+      );
       
       notifyListeners();
       
-      rethrow;
     }catch (error) {
       print('Unexpected error: $error');
-      super.setErrors(true);
+      super.setSimpleError(true);
       super.setErrorMessage("Ocurrió un error inesperado");
       super.setTrackingCode(error.toString());
+      Snackbars.customSnackbar(
+        navigatorKey.currentContext!,
+        title: "Ocurrió un error inesperado",
+        message: error.toString()
+      );
       notifyListeners();
-      rethrow;
     } finally {
       super.setLoadingStatus(false);
       notifyListeners();

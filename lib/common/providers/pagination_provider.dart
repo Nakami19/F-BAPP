@@ -4,74 +4,6 @@ import 'package:f_bapp/presentation/providers/modules/merchant_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-// class PaginationProvider extends GeneralProvider {
-//   int _total = 0; // Total de elementos
-//   int _limit = 5; // Límites por página
-//   int _page = 0;   // Página actual
-
-//   List<TextCard> elements=[];
-
-//   List<TextCard> filteredelements=[];
-
-//   List<TextCard> get elementsList => elements;
-
-//   // List<String> get elementsList =>
-//   //     List.generate(_total, (index) => 'Elemento #${index + 1}');
-
-//   int get total => filteredelements.length;
-//   int get limit => _limit;
-//   int get page => _page;
-
-//   void setTotal(int value) {
-//       _total = value;
-//       notifyListeners(); 
-    
-//   }
-
-//   set newElements(List<TextCard> newElements) {
-//     elements = newElements;
-//     filteredelements = List.from(newElements); // Copia inicial sin filtros
-//     _total = filteredelements.length;
-//     notifyListeners();
-//   }
-
-//   // List<TextCard> getCurrentPage() {
-//   //   int start = _page * _limit;
-//   //   int end = start + _limit;
-//   //   if (end > total) end = total;
-//   //   return elements.sublist(start, end);
-//   // }
-
-//   List<TextCard> getCurrentPage() {
-//   int start = _page * _limit;
-//   int end = start + _limit;
-//   if (end > filteredelements.length) end = filteredelements.length;
-//   return filteredelements.sublist(start, end);
-// }
-
-//   int getNumPages() {
-//     return (_total/_limit).ceil();
-//   }
-  
-//   // (total / limit).ceil();
-
-//   void nextPage() {
-//     if ((_page + 1) * _limit < _total) {
-//       _page++;
-//       notifyListeners();
-//     }
-//   }
-
-//   void previousPage() {
-//     if (_page > 0) {
-//       _page--;
-//       notifyListeners();
-//     }
-//   }
-
-
-
-// }
 
 class PaginationProvider extends GeneralProvider {
   int _total = 0; // Total de elementos
@@ -91,13 +23,13 @@ class PaginationProvider extends GeneralProvider {
   String? _startDate;
   String? _endDate;
   String? _idOrder;
-  String? _idTypeOrder;
+  String? _phoneNumber;
 
     String? get tagStatus => _tagStatus;
   String? get startDate => _startDate;
   String? get endDate => _endDate;
   String? get idOrder => _idOrder;
-  String? get idTypeOrder => _idTypeOrder;
+  String? get phoneNumber => _phoneNumber;
 
 
     void setFilters({
@@ -105,13 +37,13 @@ class PaginationProvider extends GeneralProvider {
     String? startDate,
     String? endDate,
     String? idOrder,
-    String? idTypeOrder,
+    String? phoneNumber,
   }) {
     _tagStatus = tagStatus;
     _startDate = startDate;
     _endDate = endDate;
     _idOrder = idOrder;
-    _idTypeOrder = idTypeOrder;
+    _phoneNumber = phoneNumber;
     notifyListeners();
   }
 
@@ -132,30 +64,31 @@ class PaginationProvider extends GeneralProvider {
   Future<void> nextPage(BuildContext context) async {
     if (_page + 1 < getNumPages()) {
       _page++;
-      await fetchPageData(context);
+      // await fetchPageData(context);
     }
   }
 
   Future<void> previousPage(BuildContext context) async {
     if (_page > 0) {
       _page--;
-      await fetchPageData(context);
+      // await fetchPageData(context);
     }
   }
 
-    Future<void> fetchPageData(BuildContext context) async {
-    final merchantProvider = context.read<MerchantProvider>();
-    final data = await merchantProvider.Listorders(
-      limit: _limit,
-      page: _page,
-      tagStatus: _tagStatus,
-      startDate: _startDate,
-      endDate: _endDate,
-      idOrder: _idOrder,
-      idTypeOrder: _idTypeOrder,
-    );
-    setPageData(merchantProvider.orders!['rows']);
-  }
+  //   Future<void> fetchPageData(BuildContext context) async {
+  //   final merchantProvider = context.read<MerchantProvider>();
+  //   final data = await merchantProvider.Listorders(
+  //     limit: _limit,
+  //     page: _page,
+  //     tagStatus: _tagStatus,
+  //     startDate: _startDate,
+  //     endDate: _endDate,
+  //     idOrder: _idOrder,
+  //   );
+  //   setPageData(merchantProvider.orders!['rows']);
+  // }
+
+
 
   void resetPagination() {
     _page = 0;
@@ -163,9 +96,18 @@ class PaginationProvider extends GeneralProvider {
     notifyListeners();
   }
 
+  void clearFilters() {
+  _tagStatus = null;
+  _startDate = null;
+  _endDate = null;
+  _idOrder = null;
+  _phoneNumber = null;
+  notifyListeners();
+}
+
  void updateFilters(Map<String, dynamic> filters) {
   _idOrder = filters['idOrder'];
-  _idTypeOrder = filters['idTypeOrder'];
+  _phoneNumber = filters['phoneNumber'];
   _tagStatus = filters['tagStatus'];
   _startDate = filters['startDate'];
   _endDate = filters['endDate'];
@@ -175,10 +117,12 @@ class PaginationProvider extends GeneralProvider {
 Map<String, dynamic> getFilters() {
   return {
     'idOrder': _idOrder,
-    'idTypeOrder': _idTypeOrder,
+    'phoneNumber': _phoneNumber,
     'tagStatus': _tagStatus,
     'startDate': _startDate,
     'endDate': _endDate,
   };
 }
 }
+
+

@@ -1,7 +1,9 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:f_bapp/app.dart';
 import 'package:f_bapp/common/providers/general_provider.dart';
+import 'package:f_bapp/common/widgets/others/snackbars.dart';
 import 'package:f_bapp/config/network/api_error.dart';
 import 'package:f_bapp/config/network/api_response.dart';
 import 'package:f_bapp/infrastructure/class/privileges.dart';
@@ -107,6 +109,11 @@ class UserProvider extends GeneralProvider {
       super.setSimpleError(true);
 
       super.setTrackingCode(resp.trackingCode);
+      Snackbars.customSnackbar(
+        navigatorKey.currentContext!,
+        title: resp.trackingCode,
+        message: resp.message
+      );
       notifyListeners();
     } catch (error) {
       print('Unexpected error: $error');
@@ -118,8 +125,6 @@ class UserProvider extends GeneralProvider {
   }
 
   Future<void> getMemberTypeChangeList(String idParentRelation, String member) async {
-    print(idParentRelation);
-    print("EEEEEEEEEEEEEEEEEEEEEEEEEEE");
 
     super.setLoadingStatus(true);
 
@@ -128,9 +133,6 @@ class UserProvider extends GeneralProvider {
     final response2 = await loginService.getMemberTypes(member: member);
     final data = jsonDecode(response.toString());
     final data2 = jsonDecode(response2.toString());
-
-    print("AAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-    print(data);
 
     // Procesamiento de datos según el formato esperado
     if (data2.containsKey('privileges')) {
@@ -160,6 +162,12 @@ class UserProvider extends GeneralProvider {
     super.setErrorMessage(resp.message);
     super.setSimpleError(true);
     super.setTrackingCode(resp.trackingCode);
+
+    Snackbars.customSnackbar(
+        navigatorKey.currentContext!,
+        title: resp.trackingCode,
+        message: resp.message
+      );
     notifyListeners();
   } catch (error) {
     print('Unexpected error: $error');
@@ -173,24 +181,4 @@ class UserProvider extends GeneralProvider {
 
   }
 
-
-  //   /**
-  //  * Llama al API de cambiar de miembro
-  //  * @param idParentRelation
-  //  * @returns
-  //  */
-  // getMemberTypeChange(idPrivileges: string) {
-  //   let params = {
-  //     idPrivileges
-  //   }
-  //   return this.http.get(
-  //     environment.CC_GATEWAY_URL + '/v1/auth/business/change',{
-  //       headers: new HttpHeaders({
-  //         'Content-Type': 'application/json',
-  //       }),
-  //       observe: 'response',
-  //       params,
-  //     }
-  //   )
-  // }
 }

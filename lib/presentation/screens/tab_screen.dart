@@ -43,7 +43,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
         children: [
           // Imagen de fondo
           Image.asset(
-            '${DataConstant.images}/background.png',
+            '${DataConstant.images}/chinchin_business_background.png',
             // fit: BoxFit.cover,
           ),
           Positioned(

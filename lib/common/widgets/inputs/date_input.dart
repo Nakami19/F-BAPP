@@ -5,7 +5,6 @@ import 'package:f_bapp/common/widgets/inputs/custom_text_form_field.dart';
 import 'package:f_bapp/presentation/providers/shared/utils_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:table_calendar/table_calendar.dart';
 
 class DateInput extends StatelessWidget {
   final TextEditingController controller;
@@ -106,15 +105,14 @@ class DateInput extends StatelessWidget {
                       String formattedStartDate =
                           DateFormatter.formatDatePicker(
                         value.start,
-                        'dd/MM/yyyy',
+                        'yyyy/MM/dd',
                       );
                       String formattedEndDate = DateFormatter.formatDatePicker(
                         value.end,
-                        'dd/MM/yyyy',
+                        'yyyy/MM/dd',
                       );
-
-                      controller.text =
-                          "$formattedStartDate - $formattedEndDate";
+                      
+                      controller.text = "$formattedStartDate-$formattedEndDate";
                     }
                   })
                 }
@@ -122,9 +120,6 @@ class DateInput extends StatelessWidget {
         validator: (value) {
           if (value == null || value.isEmpty) {
             return 'Campo requerido';
-          }
-          if (value.contains(' ')) {
-            return 'El campo no permite espacios';
           }
 
           return null;

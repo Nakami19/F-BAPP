@@ -9,11 +9,13 @@ class Screensappbar extends StatefulWidget {
       {required this.title,
       required this.screenKey,
       required this.poproute,
+      this.onBack,
       super.key});
 
   final String title;
   final String poproute;
   final GlobalKey<ScaffoldState> screenKey;
+  final VoidCallback? onBack;
 
   @override
   State<Screensappbar> createState() => _ScreensappbarState();
@@ -31,7 +33,7 @@ class _ScreensappbarState extends State<Screensappbar> {
         children: [
           // Imagen de fondo
           Image.asset(
-            '${DataConstant.images}/background.png',
+            '${DataConstant.images}/chinchin_business_background.png',
             fit: BoxFit.cover,
             width: double.infinity,
             height: 110,
@@ -59,6 +61,9 @@ class _ScreensappbarState extends State<Screensappbar> {
                             size: 20,
                           ),
                           onPressed: () {
+                            if (widget.onBack!=null) {
+                              widget.onBack!();
+                            }
                             Navigator.pushNamedAndRemoveUntil(
                               context,
                               widget.poproute, // Ruta destino
