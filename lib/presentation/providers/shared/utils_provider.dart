@@ -1,14 +1,9 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
-import 'package:f_bapp/common/data/enviroment.dart';
 import 'package:f_bapp/common/providers/general_provider.dart';
-import 'package:f_bapp/presentation/widgets/shared/text_card.dart';
-import 'package:f_bapp/config/network/api_error.dart';
-import 'package:f_bapp/config/network/api_response.dart';
-import 'package:f_bapp/config/network/dio_client.dart';
-import 'package:f_bapp/infrastructure/services/secure_storage_service.dart';
-import 'package:f_bapp/infrastructure/services/storage_service_impl.dart';
+import 'package:f_bapp/infrastructure/shared/secure_storage_service.dart';
+import 'package:f_bapp/infrastructure/shared/storage_service_impl.dart';
 
 class UtilsProvider extends GeneralProvider {
   final storage = SecureStorageService();

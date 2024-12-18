@@ -1,6 +1,4 @@
-// Tipo de conexión
-// ignore_for_file: constant_identifier_names
-
+// Tipo de conexión 
 enum Connection {
   developer,
   qa,
@@ -8,11 +6,14 @@ enum Connection {
   preProduction,
   production,
 }
+
+//version de la app y build
 class Constants{
   static String? appVersion;
   static String? buildNumber;
 }
 
+//tipo de documento de identidad
 List<String> typeDocuments = [
   'V',
   'J',
@@ -21,8 +22,3 @@ List<String> typeDocuments = [
   'P',
   'Cancelar', // Cancelar
 ];
-
-// Color de cintillos
-const DEVELOPER_COLOR = 0xFF2B4B2C;
-const QUALITY_COLOR = 0xFFF0C200;
-const PRODUCTION_COLOR = 0x00000000;

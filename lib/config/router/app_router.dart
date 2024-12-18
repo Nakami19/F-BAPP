@@ -19,7 +19,6 @@ import 'package:f_bapp/presentation/screens/modules/onboarding/verifications_scr
 import 'package:f_bapp/presentation/screens/modules/onboardingV1/onboardingv1_screen.dart';
 import 'package:f_bapp/presentation/screens/modules/operations/operations_screen.dart';
 import 'package:f_bapp/presentation/screens/profile/profile_screen.dart';
-import 'package:f_bapp/presentation/screens/tab_screen.dart';
 import 'package:f_bapp/presentation/screens/terms_condition_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -44,9 +43,6 @@ class AppRouter {
       
       case profileScreen:
         return FadePageTransition(builder: (_) => const ProfileScreen());
-      
-      case tabsScreen:
-        return FadePageTransition(builder: (_) => const BottomNavBar());
       
       case operationsScreen:
         return FadePageTransition(builder: (_) => const OperationsScreen());

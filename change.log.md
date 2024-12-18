@@ -1,8 +1,19 @@
 ## [F-APP]
 
+## [1.0.0+19] - 2024-12-18 - Natalia. R
+
+## Added
+
+- Añadidos comentarios al codigo
+
+## Fix
+
+- Cambio en nombres de archivos
+
 ## [1.0.0+18] - 2024-12-18 - Natalia. R
 
 ## Fix
+
 - Cambio de nombres de variables siguiendo lowerCase
 - Cambio de nombres de imagenes colocando chinchin al inicio
 

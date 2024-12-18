@@ -1,3 +1,4 @@
+import 'package:f_bapp/common/assets/theme/app_colors.dart';
 import 'package:f_bapp/common/assets/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
@@ -42,7 +43,7 @@ class _CustomTextfieldState extends State<CustomTextfield> {
           prefixIcon: widget.fieldIcon,
           contentPadding: const EdgeInsets.symmetric(horizontal: 23, vertical: 13),
           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(BorderRadiusValue),
+            borderRadius: BorderRadius.circular(borderRadiusValue),
             borderSide: BorderSide(
               color: primaryColor,
               width: 2
@@ -50,14 +51,14 @@ class _CustomTextfieldState extends State<CustomTextfield> {
             
           ),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(BorderRadiusValue),
+            borderRadius: BorderRadius.circular(borderRadiusValue),
             borderSide: BorderSide(
               color: primaryColor,
               width: 2
             ),
           ),
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(BorderRadiusValue),
+            borderRadius: BorderRadius.circular(borderRadiusValue),
             borderSide: BorderSide(
               color: primaryColor,
               width: 2

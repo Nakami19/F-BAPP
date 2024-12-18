@@ -1,3 +1,4 @@
+import 'package:f_bapp/common/assets/theme/app_colors.dart';
 import 'package:f_bapp/common/assets/theme/app_theme.dart';
 import 'package:f_bapp/common/providers/theme_provider.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +27,7 @@ class CustomSkeleton extends StatelessWidget {
       child: Container(
           decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(BorderRadiusValue)),
+              borderRadius: BorderRadius.circular(borderRadiusValue)),
           height: height,
           width: width?? double.infinity),
     );

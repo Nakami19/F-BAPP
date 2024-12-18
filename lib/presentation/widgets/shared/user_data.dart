@@ -1,3 +1,4 @@
+import 'package:f_bapp/common/assets/theme/app_colors.dart';
 import 'package:f_bapp/common/assets/theme/app_theme.dart';
 import 'package:f_bapp/presentation/providers/shared/utils_provider.dart';
 import 'package:flutter/material.dart';
@@ -24,20 +25,24 @@ class _UserDataState extends State<UserData> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(
+
+          const Icon(
             Icons.account_circle,
             color: primaryColor,
             size: 40,
           ),
-          SizedBox(
+
+          const SizedBox(
             width: 10,
           ),
+
           Text(
             '${userName}\n@${utilsProvider.userName}',
             style: textStyle!.copyWith(
               fontWeight: FontWeight.w700
             ),
           ),
+          
         ],
       ),
     );

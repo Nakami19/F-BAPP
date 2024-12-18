@@ -1,3 +1,4 @@
+import 'package:f_bapp/common/assets/theme/app_colors.dart';
 import 'package:f_bapp/common/assets/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
@@ -39,7 +40,7 @@ class _TextCardState extends State<TextCard> {
         width: double.infinity,
         padding: EdgeInsets.all(16),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(BorderRadiusValue),
+          borderRadius: BorderRadius.circular(borderRadiusValue),
           color: Colors.white,
           boxShadow: [
             BoxShadow(
@@ -120,7 +121,7 @@ class _TextCardState extends State<TextCard> {
                         ),
                         shape: RoundedRectangleBorder(
                           borderRadius:
-                              BorderRadius.circular(BorderRadiusValue),
+                              BorderRadius.circular(borderRadiusValue),
                         ),
                       ),
                       onPressed: () {
@@ -141,14 +142,6 @@ class _TextCardState extends State<TextCard> {
                           textAlign: TextAlign.center,
                         ),
                       ),
-                      // Text(
-                      //   status,
-                      //   style: textStyle.bodySmall!.copyWith(
-                      //     fontWeight: FontWeight.w600,
-                      //     color: statusColor ?? primaryColor,
-                      //     fontSize: 13,
-                      //   ),
-                      // ),
                     ),
                 ],
               ),

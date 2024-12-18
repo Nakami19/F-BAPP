@@ -1,3 +1,4 @@
+import 'package:f_bapp/common/assets/theme/app_colors.dart';
 import 'package:f_bapp/common/providers/general_provider.dart';
 import 'package:f_bapp/common/widgets/buttons/loading_button_text.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +18,7 @@ class CustomButton extends StatelessWidget {
   final double? paddingV;
   final double? height; 
   final double? width; 
-  final double borderRadius = BorderRadiusValue; 
+  final double borderRadius = borderRadiusValue; 
   final ButtonStyle? styleTextButton;
   final TextStyle? styleText;
 
@@ -39,24 +40,29 @@ class CustomButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final themeProvider = context.read<ThemeProvider>();
-    final textTheme = Theme.of(context).textTheme.titleLarge;
     return Padding(
+
       padding: EdgeInsets.symmetric(
         horizontal: paddingH ?? 5,
         vertical: paddingV ?? 5,
       ),
+
       child: SizedBox(
+
         width: width ?? double.infinity,
         height: height?? 55,
+
+        //Se verifica si el boton debe ser outline o text, por default sera filled
         child: isText ?
               TextButton(
                 style: styleTextButton?? styleTextButton,
                 onPressed: !provider.isLoading ? () => onTap() : null,
-                child: Text(title,
-                style: styleText??styleText,
+                child: Text(
+                  title,
+                  style: styleText??styleText,
                 ),
               )
+
          : isOutline
             ? OutlinedButton(
                 style: OutlinedButton.styleFrom(
@@ -66,8 +72,7 @@ class CustomButton extends StatelessWidget {
                   side: BorderSide(
                     color: isPrimaryColor ? primaryColor : secondaryColor,
                   ),
-                  foregroundColor:
-                      isPrimaryColor ? primaryColor : secondaryColor,
+                  foregroundColor: isPrimaryColor ? primaryColor : secondaryColor,
                 ),
                 onPressed: !provider.isLoading ? () => onTap() : null,
                 child: LoadingButtonText(
@@ -76,6 +81,7 @@ class CustomButton extends StatelessWidget {
                   styleText: styleText,
                 ),
               )
+
             : FilledButton(
                 style: FilledButton.styleFrom(
                   backgroundColor:

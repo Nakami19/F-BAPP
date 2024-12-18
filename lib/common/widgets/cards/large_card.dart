@@ -2,6 +2,7 @@ import 'package:f_bapp/common/assets/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
+//Tarjeta que contiene de manera horizontal una imagen y texto
 class LargeCard extends StatefulWidget {
   const LargeCard(
       {super.key,
@@ -32,26 +33,32 @@ class _LargeCardState extends State<LargeCard> {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: widget.onTap ?? ()=>{},
+      
+    //contenedor de los elementos
       child: Container(
+        
         height: widget.height ?? double.infinity,
         width: widget.width ?? double.infinity,
         padding: EdgeInsets.all(13),
+
         decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(BorderRadiusValue),
+        borderRadius: BorderRadius.circular(borderRadiusValue),
         color: Colors.white,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.15),
             spreadRadius: 3,
             blurRadius: 5,
-            offset: Offset(0, 5),
+            offset: const Offset(0, 5),
           ),
         ],
       ),
+
       child: Row(
-        // crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
+
+          //imagen a la izquierda
           SvgPicture.asset(
             widget.image,
             height: widget.imageHeight ?? 70,
@@ -60,14 +67,15 @@ class _LargeCardState extends State<LargeCard> {
               widget.placeholder,
               height: widget.imageHeight ?? 70,
               ),
-            // color: primaryColor,
             ),
-          SizedBox(width: 20,),
+
+         const SizedBox(width: 20,),
+
+          //Texto a la derecha
           Expanded(
             child: Text(
               widget.title,
               style: widget.textStyle,
-              // textAlign: TextAlign.center,
               ),
           )
         ],

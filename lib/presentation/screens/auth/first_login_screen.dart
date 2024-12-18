@@ -1,26 +1,26 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:f_bapp/common/assets/theme/app_colors.dart';
 import 'package:f_bapp/common/assets/theme/app_theme.dart';
+import 'package:f_bapp/common/data/constants.dart';
 import 'package:f_bapp/common/widgets/buttons/custom_button.dart';
 import 'package:f_bapp/common/widgets/inputs/custom_text_form_field.dart';
-import 'package:f_bapp/common/widgets/inputs/date_input.dart';
-import 'package:f_bapp/common/widgets/others/app_banner_version.dart';
+import 'package:f_bapp/common/widgets/shared/app_banner_version.dart';
 import 'package:f_bapp/config/data_constants/data_constants.dart';
 import 'package:f_bapp/config/router/routes.dart';
 import 'package:f_bapp/flavors.dart';
-import 'package:f_bapp/infrastructure/services/secure_storage_service.dart';
-import 'package:f_bapp/infrastructure/services/storage_service_impl.dart';
+import 'package:f_bapp/infrastructure/shared/secure_storage_service.dart';
+import 'package:f_bapp/infrastructure/shared/storage_service_impl.dart';
 import 'package:f_bapp/presentation/providers/auth/login_provider.dart';
-import 'package:f_bapp/common/widgets/others/error_box.dart';
-import 'package:f_bapp/presentation/providers/shared/session_provider.dart';
+import 'package:f_bapp/common/widgets/shared/error_box.dart';
 import 'package:f_bapp/presentation/providers/shared/utils_provider.dart';
 import 'package:f_bapp/presentation/widgets/auth/login_fingerprint_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
-import '../../../common/widgets/others/info_chinchin_popup.dart';
-import '../../../common/widgets/others/terms_condition_button.dart';
+import '../../../common/widgets/shared/info_chinchin_popup.dart';
+import '../../../common/widgets/shared/terms_condition_button.dart';
 import '../../../common/providers/theme_provider.dart';
 
 class FirstLoginScreen extends StatefulWidget {
@@ -48,23 +48,26 @@ class _FirstLoginScreenState extends State<FirstLoginScreen> {
     super.initState();
 
     final loginProvider = context.read<LoginProvider>();
-    final sessionProvider = context.read<SessionProvider>();
 
 
     Future.microtask(() async {
-      var enabledBiometricValue =
-          await normalStorage.getValue<String>('enabledBiometric');
-      var encodedUserData =
-          await normalStorage.getValue<String>('userCompleteName');
+      //Verifica si la biometria esta habilitada
+      var enabledBiometricValue = await normalStorage.getValue<String>('enabledBiometric');
 
+      //Datos del usuario
+      var encodedUserData = await normalStorage.getValue<String>('userCompleteName');
+
+      //Si hay datos almacenados indica que los datos existen y los decodifica 
       if (encodedUserData != '' && encodedUserData != null) {
         existUserData = true;
         decodedUserData = json.decode(encodedUserData);
       }
 
+      //Indicar si la biometria esta habilitada
       enabledBiometric = enabledBiometricValue == "true" ? true : false;
 
       loginProvider.changeBiometricStatus(enabledBiometric);
+
 
       // Voy a obtener la biometria
 
@@ -108,17 +111,20 @@ class _FirstLoginScreenState extends State<FirstLoginScreen> {
       child: Scaffold(
         appBar: CustomAppbar(
           environment: FlavorConfig.flavorValues.environmentName,
-          buildNumber: DataConstant.buildNumber!,
-          version: DataConstant.appVersion!,
+          buildNumber: Constants.buildNumber!,
+          version: Constants.appVersion!,
         ),
-        // body: DateInput(),
+
         body: Center(
           child: SingleChildScrollView(
+
             child: Form(
               key: firstLoginForm,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
+
+                  //Logo business
                   SvgPicture.asset(
                     '${DataConstant.imagesChinchin}/chinchin-logo-business-base.svg',
                     width: 220,
@@ -127,6 +133,7 @@ class _FirstLoginScreenState extends State<FirstLoginScreen> {
 
                   const SizedBox(height: 30),
 
+                  // si no hay biometria o se utiliza una cuenta diferente
                   if (enabledBiometric == false &&
                           existBiometricData == false ||
                       useAnotherAccount)
@@ -179,6 +186,7 @@ class _FirstLoginScreenState extends State<FirstLoginScreen> {
                   const SizedBox(
                     height: 20,
                   ),
+
 
                   if (loginProvider.actionWithUser) ...[
                     // No tengo biometria
@@ -252,6 +260,7 @@ class _FirstLoginScreenState extends State<FirstLoginScreen> {
                                 }
                               }),
                         ),
+
                             CustomButton(
                           provider:
                               Provider.of<LoginProvider>(context, listen: false),
@@ -265,7 +274,8 @@ class _FirstLoginScreenState extends State<FirstLoginScreen> {
                           onTap: () {}),
                       ],
                     ),
-
+                    
+                    //tengo biometria y vengo de otra cuenta
                     if (enabledBiometric == true &&
                           existBiometricData == true &&
                       useAnotherAccount) 
@@ -284,6 +294,7 @@ class _FirstLoginScreenState extends State<FirstLoginScreen> {
                       ),
                     ),
 
+                  //tengo biometria y no vengo de otra cuenta
                   if (enabledBiometric && useAnotherAccount == false) ...[
                     const FingerPrintAuthButton()
                   ],
@@ -293,7 +304,8 @@ class _FirstLoginScreenState extends State<FirstLoginScreen> {
                     paddingH: 25,
                   ),
                 
-                //si tiene biometria
+
+                //si tiene biometria y no viene de otra cuenta
                   if (enabledBiometric && 
                   existBiometricData && 
                   !useAnotherAccount)
@@ -316,6 +328,7 @@ class _FirstLoginScreenState extends State<FirstLoginScreen> {
             ),
           ),
         ),
+        
         bottomNavigationBar: Column(
           mainAxisSize: MainAxisSize.min,
           children: [

@@ -1,4 +1,5 @@
 import 'package:another_flushbar/flushbar.dart';
+import 'package:f_bapp/common/assets/theme/app_colors.dart';
 import 'package:f_bapp/common/assets/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
@@ -24,7 +25,7 @@ class Snackbars {
   }) async {
     Flushbar(
       margin: const EdgeInsets.all(8),
-      borderRadius: BorderRadius.circular(BorderRadiusValue),
+      borderRadius: BorderRadius.circular(borderRadiusValue),
       flushbarStyle: FlushbarStyle.FLOATING,
       backgroundColor: isLightTheme ? primaryScaffoldColor : containerColor,
       flushbarPosition: FlushbarPosition.TOP,

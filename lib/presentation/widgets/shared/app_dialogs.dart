@@ -1,17 +1,16 @@
 import 'dart:convert';
 
-import 'package:f_bapp/common/assets/theme/app_theme.dart';
+import 'package:f_bapp/common/assets/theme/app_colors.dart';
 import 'package:f_bapp/common/providers/general_provider.dart';
 import 'package:f_bapp/common/providers/theme_provider.dart';
 import 'package:f_bapp/common/widgets/buttons/custom_button.dart';
-import 'package:f_bapp/common/widgets/others/snackbars.dart';
+import 'package:f_bapp/common/widgets/shared/snackbars.dart';
 import 'package:f_bapp/config/router/routes.dart';
-import 'package:f_bapp/infrastructure/services/secure_storage_service.dart';
-import 'package:f_bapp/infrastructure/services/storage_service_impl.dart';
+import 'package:f_bapp/infrastructure/shared/secure_storage_service.dart';
+import 'package:f_bapp/infrastructure/shared/storage_service_impl.dart';
 import 'package:f_bapp/presentation/providers/app_providers.dart';
 import 'package:f_bapp/presentation/providers/auth/login_provider.dart';
 import 'package:f_bapp/presentation/providers/shared/session_provider.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';
@@ -20,6 +19,8 @@ import 'package:provider/provider.dart';
 
 class AppDialogs {
   static TextStyle fontStyle = const TextStyle(fontSize: 18);
+
+  // Revisar si estos se pueden pasar a common
   
     /// Cerrar sesión
     static logoutDialog(BuildContext context) {
@@ -92,12 +93,7 @@ class AppDialogs {
                       context.read<SessionProvider>().destroySession(
                             haveModalAction: false,
                           );
-
-                      // context.read<SessionProvider>().cancelTimer(
-                      //       haveModalAction: false,
-                      //     );
-
-                      
+       
                       
                       Navigator.pushNamedAndRemoveUntil(
                         context,

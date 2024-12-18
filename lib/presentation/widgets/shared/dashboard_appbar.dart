@@ -1,5 +1,5 @@
 import 'package:f_bapp/config/data_constants/data_constants.dart';
-import 'package:f_bapp/presentation/providers/user/user_provider.dart';
+import 'package:f_bapp/presentation/providers/shared/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
@@ -26,8 +26,9 @@ class _DashboardAppbarState extends State<DashboardAppbar> {
           // Imagen de fondo
           Image.asset(
             '${DataConstant.imagesChinchin}/chinchin_business_background.png',
-            // fit: BoxFit.cover,
           ),
+
+          //Ubicacion del contenido 
           Positioned(
             left: 0,
             right: 0,
@@ -38,11 +39,15 @@ class _DashboardAppbarState extends State<DashboardAppbar> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+
+                  //Logo de business
                   SvgPicture.asset(
                     '${DataConstant.imagesChinchin}/chinchin-logo-business-base.svg',
                     height: 40,
                     fit: BoxFit.contain,
                   ),
+
+                  //Icono para el menu
                   IconButton(
                     tooltip: 'Menú',
                     icon: Icon(
@@ -52,10 +57,13 @@ class _DashboardAppbarState extends State<DashboardAppbar> {
                     ),
                     onPressed: () {
                       if (!userProvider.isLoading) {
+                        //se abre el side menu
                         widget.screenKey.currentState!.openDrawer();
                       }
                     },
                   ),
+
+
                 ],
               ),
             ),

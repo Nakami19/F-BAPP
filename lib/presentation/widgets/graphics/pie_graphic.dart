@@ -1,3 +1,4 @@
+import 'package:f_bapp/common/assets/theme/app_colors.dart';
 import 'package:f_bapp/common/assets/theme/app_theme.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -145,7 +146,7 @@ class _PieGraphic2State extends State<PieGraphic2> {
             border: Border.all(
               color: Colors.white
             ),
-            borderRadius: BorderRadius.circular(BorderRadiusValue)
+            borderRadius: BorderRadius.circular(borderRadiusValue)
           ),
           child: Text('${data['module']}', style:textStyle.bodySmall!.copyWith(
                             fontWeight: FontWeight.bold,

@@ -6,7 +6,7 @@ class MerchantServices {
   Future<Response> getListStatus (String tagstatus) async {
     try {
       final response = await dio.get(
-        '${Enviroment.CC_FBUS_GATEWAY}/v1/list/status',
+        '${Enviroment.ccFbusGateway}/v1/list/status',
         queryParameters: {'tagTypeStatus': tagstatus,},
       );
 
@@ -21,7 +21,7 @@ class MerchantServices {
 
       // Realizar la solicitud HTTP
       final response = await dio.get(
-        '${Enviroment.CC_FBUS_GATEWAY}/v1/list/orders',
+        '${Enviroment.ccFbusGateway}/v1/list/orders',
         queryParameters: params, 
       );
 

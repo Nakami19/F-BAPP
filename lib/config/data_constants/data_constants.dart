@@ -1,4 +1,5 @@
 class DataConstant {
+  //rutas
   static String imagesChinchin = 'assets/chinchin';
   static String images = 'assets/images';
   static String imagesModules = 'assets/modules';
@@ -8,11 +9,5 @@ class DataConstant {
   static String modulePathAdministration = 'administration';
   static String modulePathLdap = 'ldap';
   static String modulePathOperations = 'operations';
-  static String? appVersion;
-  static String? buildNumber;
 }
 
-enum Views {
-  Home,
-  Profile,
-}

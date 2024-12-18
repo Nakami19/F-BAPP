@@ -1,4 +1,4 @@
-import 'package:f_bapp/infrastructure/services/key_value_storage_service.dart';
+import 'package:f_bapp/infrastructure/shared/key_value_storage_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class StorageService extends KeyValueStorageService {

@@ -3,11 +3,11 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:f_bapp/app.dart';
 import 'package:f_bapp/common/providers/general_provider.dart';
-import 'package:f_bapp/common/widgets/others/snackbars.dart';
+import 'package:f_bapp/common/widgets/shared/snackbars.dart';
 import 'package:f_bapp/config/network/api_error.dart';
 import 'package:f_bapp/config/network/api_response.dart';
-import 'package:f_bapp/infrastructure/class/privileges.dart';
-import 'package:f_bapp/infrastructure/services/login_services.dart';
+import 'package:f_bapp/infrastructure/classes/modules/privileges.dart';
+import 'package:f_bapp/infrastructure/services/auth/login_services.dart';
 import 'package:flutter/material.dart';
 
 class UserProvider extends GeneralProvider {
@@ -36,7 +36,7 @@ class UserProvider extends GeneralProvider {
   }
 
 
-//se obtiene el listado de miembros
+  // Se obtiene la informacion del usuario de una compañia
   Future<void> getMemberlist(String member) async {
     try {
       final response = await loginService.getMemberTypes(member: member);
@@ -44,34 +44,10 @@ class UserProvider extends GeneralProvider {
 
        memberlist = List<Map<String, dynamic>>.from(data['data']);
 
+    //se establecen los privilegios
     final privilegesData = data['privileges'] as List;
     final privilegeList = privilegesData.map((privilegeJson) => Privilege.fromJson(privilegeJson)).toList();
     setprivileges = privilegeList;
-      // // memberlist=response.data["data"];
-
-      // if (data.containsKey('privileges')) {
-      //   final privilegesData = data['privileges'];
-      //   if (privilegesData is List) {
-      //     privileges = privilegesData
-      //         .map((privilege) =>
-      //             Privilege.fromJson(privilege as Map<String, dynamic>))
-      //         .toList();
-      //   } else {
-      //     privileges = [];
-      //   }
-
-      // } else {
-      //   privileges = [];
-      // }
-
-      // if (data.containsKey('data')) {
-      //   memberlist = (data['data'] as List<dynamic>?)
-      //           ?.map((item) => item as Map<String, dynamic>)
-      //           .toList() ??
-      //       [];
-      // } else {
-      //   memberlist = [];
-      // }
 
 
       notifyListeners();
@@ -89,6 +65,7 @@ class UserProvider extends GeneralProvider {
         ),
       );
 
+    //Se establece que hay un error, el mensaje y el tracking code
       super.setErrorMessage(resp.message);
       super.setSimpleError(true);
 
@@ -108,6 +85,7 @@ class UserProvider extends GeneralProvider {
     }
   }
 
+  //Se obtiene el listado de miembros
   Future<void> getMemberTypeChangeList(String idParentRelation, String member) async {
 
     super.setLoadingStatus(true);

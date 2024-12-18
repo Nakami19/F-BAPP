@@ -1,3 +1,4 @@
+import 'package:f_bapp/common/assets/theme/app_colors.dart';
 import 'package:f_bapp/common/assets/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -11,28 +12,26 @@ class CustomDropdown<T> extends StatefulWidget {
        this.showError,
        this.errorText,
       this.title,
+      this.hintText,
       required this.itemValueMapper,
       required this.itemLabelMapper,
       this.selectedValue,
       this.optionsTextsStyle,
       this.label,
       super.key});
-  // final List<dynamic> options;
+
   final ValueChanged<String?> onChanged;
   final List<T> options;
   final String? errorText;
   final bool? showError;
   final String? label;
   final String? title;
+  final String? hintText;
   final String? selectedValue;
-  final bool autoSelectFirst; // Nuevo parámetro
+  final bool autoSelectFirst;
   final TextStyle? optionsTextsStyle;
 
-  // final String Function(T option) itemValueMapper;
-
-  // /// Función que mapea el texto que se muestra en el dropdown.
-  // final String Function(T option) itemLabelMapper;
-
+  //Funciones que toma un objeto option y devuelve un String, permiten que el widget sea reutilizable
   final String Function(dynamic option) itemValueMapper;
   final String Function(dynamic option) itemLabelMapper;
 
@@ -41,26 +40,17 @@ class CustomDropdown<T> extends StatefulWidget {
 }
 
 class _CustomDropdownState extends State<CustomDropdown> {
+  // Variable para almacenar el valor seleccionado actualmente.
   String? value;
 
   @override
   void initState() {
     super.initState();
-    // selectedValue = widget.options.isNotEmpty ? widget.options[0] : null;
-    //   if (widget.options.isNotEmpty) {
-    //   value = widget.itemValueMapper(widget.options.first); // Toma el primer elemento si no hay valor seleccionado
-    // }
-
-    // if (widget.selectedValue != null) {
-    //   value = widget.selectedValue;
-    // } else if (widget.options.isNotEmpty) {
-    //   value = widget.itemValueMapper(widget.options.first);
-    // }
 
      if (widget.selectedValue != null) {
       value = widget.selectedValue; // Si se pasa un valor seleccionado
     } else if (widget.autoSelectFirst && widget.options.isNotEmpty) {
-      value = widget.itemValueMapper(widget.options.first); // Seleccionar primero
+      value = widget.itemValueMapper(widget.options.first); // Selecciona la primera opción automáticamente.
     } else {
       value = null; // No seleccionar nada (placeholder activo)
     }
@@ -80,11 +70,11 @@ class _CustomDropdownState extends State<CustomDropdown> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    final textStyle = Theme.of(context).textTheme;
 
     return Column(
       children: [
+
+        //Si hay un titulo se muestra sobre el dropdown
         if(widget.title!=null)
           Align(
             alignment: Alignment.centerLeft,
@@ -97,55 +87,68 @@ class _CustomDropdownState extends State<CustomDropdown> {
               ),
             ),
           ),
-        SizedBox(height: 2),
+
+        const SizedBox(height: 2),
+
+        //Contenerdor del dropdown
         Container(
+          //Color y radio del borde
           decoration: BoxDecoration(
             border: Border.all(color: primaryColor, width: 2),
-            borderRadius: BorderRadius.circular(BorderRadiusValue),
+            borderRadius: BorderRadius.circular(borderRadiusValue),
           ),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8),
             child: DropdownButtonHideUnderline(
               child: DropdownButton2(
-                isExpanded: true,
+                isExpanded: true, //se ocupa todo el ancho
                 hint: Text(
-                    'Estado',
-                    style: TextStyle(color: AppTheme.hintTextColor),
+                    widget.hintText??"",
+                    style: TextStyle(color: hintTextColor),
                   ),
-                value: value,
-                // icon: Icon(Icons.keyboard_arrow_down),
+
+                value: value, //valor seleccionado
+
+                //opciones del dropdown
                 items: widget.options.map((option) {
                   return DropdownMenuItem<String>(
-                      value: widget.itemValueMapper(option),
+                      value: widget.itemValueMapper(option), //valor del elemento
                       child: Text(
-                        widget.itemLabelMapper(option),
+                        widget.itemLabelMapper(option), //texto que se muestra
+
+                        // Aplica estilo adicional si es el elemento seleccionado.
                         style: widget.optionsTextsStyle != null? widget.optionsTextsStyle!.copyWith(
                           fontWeight: value == widget.itemValueMapper(option)
                               ? FontWeight
-                                  .w600 // Estilo especial solo en el menú desplegable
+                                  .w600 
                               : FontWeight.normal,
                         ) :
                         TextStyle(
                           fontWeight: value == widget.itemValueMapper(option)
                               ? FontWeight
-                                  .w600 // Estilo especial solo en el menú desplegable
+                                  .w600 
                               : FontWeight.normal,
                         ),
                       ));
                 }).toList(),
+
                 onChanged: (String? newValue) {
                   if (newValue != null && newValue != value) {
+                    //cambia el valor de manera local
                     setState(() {
                       value = newValue;
                     });
+                    //notifica el cambio
                     widget.onChanged(newValue); 
                   }
                 },
+
+                //Configuracion del dropdown al abrise
                 dropdownStyleData: DropdownStyleData(
                     maxHeight: MediaQuery.of(context).size.height / 3,
                     decoration: BoxDecoration(
                         borderRadius:
-                            BorderRadius.circular(BorderRadiusValue))),
+                            BorderRadius.circular(borderRadiusValue))),
               ),
             ),
           ),

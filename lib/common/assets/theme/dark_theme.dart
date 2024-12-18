@@ -1,7 +1,7 @@
 part of 'app_theme.dart';
 
 ThemeData themeDataDark(Color themeColor, Color primaryColor) {
-  const inputErrorColor = Color(0xFFFF0000);
+
   final ThemeData base = ThemeData.dark();
 
   final border = OutlineInputBorder(
@@ -24,8 +24,7 @@ ThemeData themeDataDark(Color themeColor, Color primaryColor) {
       fillColor: MaterialStateProperty.resolveWith<Color?>(
         (Set<MaterialState> states) {
           if (states.contains(MaterialState.disabled)) {
-            return Colors
-                .grey[700]; // Color cuando el Checkbox está deshabilitado
+            return checkBoxColor;
           }
           return null; // Usa el color activo por defecto para otros estados
         },
@@ -44,7 +43,7 @@ ThemeData themeDataDark(Color themeColor, Color primaryColor) {
     bottomNavigationBarTheme: BottomNavigationBarThemeData(
       backgroundColor: darkColor,
       selectedIconTheme: IconThemeData(color: themeColor),
-      unselectedItemColor: Colors.grey[600],
+      unselectedItemColor: unselectedItemColor,
       selectedItemColor: themeColor,
       selectedLabelStyle: TextStyle(
         color: themeColor,
@@ -61,7 +60,7 @@ ThemeData themeDataDark(Color themeColor, Color primaryColor) {
       backgroundColor: containerColor,
       elevation: 1,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(BorderRadiusValue),
+        borderRadius: BorderRadius.circular(borderRadiusValue),
       ),
     ),
 
@@ -72,7 +71,7 @@ ThemeData themeDataDark(Color themeColor, Color primaryColor) {
         statusBarIconBrightness: Brightness.light,
         statusBarBrightness: Brightness.light,
       ),
-      shadowColor: Colors.grey,
+      shadowColor: appBarShadowColor,
       iconTheme: IconThemeData(
         color: themeColor,
       ),
@@ -96,7 +95,7 @@ ThemeData themeDataDark(Color themeColor, Color primaryColor) {
       errorStyle: const TextStyle(
         color: inputErrorColor,
       ),
-      suffixIconColor: const Color(0xFFEAEAEA),
+      suffixIconColor: textFieldColor,
       isDense: true,
       filled: true,
       fillColor: containerColor,
@@ -106,12 +105,12 @@ ThemeData themeDataDark(Color themeColor, Color primaryColor) {
       ),
       hintStyle: const TextStyle(
         overflow: TextOverflow.ellipsis,
-        color: Color(0xFFEAEAEA),
+        color: textFieldColor,
       ),
       disabledBorder: const OutlineInputBorder(
         borderSide: BorderSide(
           width: 1.2,
-          color: Colors.grey,
+          color: textFieldBorderColor,
         ),
       ),
       errorMaxLines: 6,
@@ -151,7 +150,7 @@ ThemeData themeDataDark(Color themeColor, Color primaryColor) {
       selectedColor: primaryColor,
       contentPadding: const EdgeInsets.symmetric(horizontal: 10),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(BorderRadiusValue),
+        borderRadius: BorderRadius.circular(borderRadiusValue),
       ),
     ),
 
@@ -160,7 +159,7 @@ ThemeData themeDataDark(Color themeColor, Color primaryColor) {
       style: FilledButton.styleFrom(
         disabledBackgroundColor: Colors.grey,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(BorderRadiusValue),
+          borderRadius: BorderRadius.circular(borderRadiusValue),
         ),
       ),
     ),
@@ -178,7 +177,7 @@ ThemeData themeDataDark(Color themeColor, Color primaryColor) {
             // color: primaryColor,
             color: primaryColor),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(BorderRadiusValue),
+          borderRadius: BorderRadius.circular(borderRadiusValue),
         ),
       ),
     ),
@@ -189,7 +188,7 @@ ThemeData themeDataDark(Color themeColor, Color primaryColor) {
       surfaceTintColor: darkColor,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.all(
-          Radius.circular(BorderRadiusValue),
+          Radius.circular(borderRadiusValue),
         ),
       ),
     ),
@@ -201,7 +200,7 @@ ThemeData themeDataDark(Color themeColor, Color primaryColor) {
           fontSize: 16,
         ),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(BorderRadiusValue),
+          borderRadius: BorderRadius.circular(borderRadiusValue),
         ),
       ),
     ),

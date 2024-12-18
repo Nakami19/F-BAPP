@@ -1,9 +1,8 @@
 import 'package:f_bapp/common/providers/pagination_provider.dart';
 import 'package:f_bapp/presentation/providers/modules/merchant_provider.dart';
-import 'package:f_bapp/presentation/providers/shared/home_provider.dart';
 import 'package:f_bapp/presentation/providers/shared/navigation_provider.dart';
 import 'package:f_bapp/presentation/providers/shared/utils_provider.dart';
-import 'package:f_bapp/presentation/providers/user/user_provider.dart';
+import 'package:f_bapp/presentation/providers/shared/user_provider.dart';
 import 'package:provider/single_child_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +19,6 @@ class AppProviders {
     ChangeNotifierProvider(create: (_) => LoginProvider()),
     ChangeNotifierProvider(create: (_) => UserProvider()),
     ChangeNotifierProvider(create: (_) => UtilsProvider()),
-    ChangeNotifierProvider(create: (_) => HomeProvider()),
     ChangeNotifierProvider(create: (_) => NavigationProvider()),
     ChangeNotifierProvider(create: (_) => PaginationProvider()),
     ChangeNotifierProvider(create: (_) => MerchantProvider()),

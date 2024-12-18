@@ -85,7 +85,7 @@ class _FilterState extends State<Filter> {
     final textStyle = Theme.of(context).textTheme;
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(BorderRadiusValue),
+        borderRadius: BorderRadius.circular(borderRadiusValue),
         color: Colors.white,
         boxShadow: [
           BoxShadow(
@@ -182,6 +182,7 @@ class _FilterState extends State<Filter> {
                           Padding(
                               padding: const EdgeInsets.only(bottom: 12),
                               child: CustomDropdown(
+                                hintText: 'Estado',
                                 options: widget.options,
                                 onChanged: (value) {
                                   setState(() {

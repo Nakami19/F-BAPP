@@ -20,9 +20,6 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       automaticallyImplyLeading: false,
       backgroundColor: FlavorConfig.flavorValues.bannerColor,
-      // Color(
-      //   Environment.getHeadbandColor(connection),
-      // ),
       title: Center(
         child: Text(
           '$environment $version+$buildNumber',

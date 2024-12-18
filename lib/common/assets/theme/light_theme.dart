@@ -13,15 +13,6 @@ ThemeData themeDataLight(Color textColor) {
       primary: primaryColor,
     ),
 
-    // drawerTheme: DrawerThemeData(
-    //   shape: RoundedRectangleBorder(
-    //     borderRadius: BorderRadius.circular(5),
-    //   ),
-    // ),
-
-    // bottomSheetTheme: const BottomSheetThemeData(
-    //   shape: LinearBorder(),
-    // ),
 
     textSelectionTheme: TextSelectionThemeData(
       cursorColor: textColor,
@@ -30,10 +21,10 @@ ThemeData themeDataLight(Color textColor) {
     // Scaffold
     scaffoldBackgroundColor: primaryScaffoldColor,
     dialogTheme: DialogTheme(
-      backgroundColor: Colors.white,
+      backgroundColor: primaryScaffoldColor,
       elevation: 1,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(BorderRadiusValue),
+        borderRadius: BorderRadius.circular(borderRadiusValue),
       ),
     ),
 
@@ -45,7 +36,7 @@ ThemeData themeDataLight(Color textColor) {
         statusBarBrightness: Brightness.light,
       ),
       scrolledUnderElevation: 0,
-      shadowColor: Colors.grey,
+      shadowColor: appBarShadowColor,
       iconTheme: IconThemeData(color: textColor),
       backgroundColor: primaryScaffoldColor,
       elevation: 0,
@@ -55,9 +46,6 @@ ThemeData themeDataLight(Color textColor) {
         fontSize: 16,
       ),
     ),
-
-    // Color fondo dialogos
-    dialogBackgroundColor: Colors.white,
 
     // TextFields
     inputDecorationTheme: InputDecorationTheme(
@@ -70,18 +58,18 @@ ThemeData themeDataLight(Color textColor) {
       ),
       hintStyle: const TextStyle(
         overflow: TextOverflow.ellipsis,
-        color: Color(0xFFA09F9F),
+        color: textFiledHintColor,
       ),
       disabledBorder: const OutlineInputBorder(
         borderSide: BorderSide(
           width: 1.2,
-          color: Colors.grey,
+          color: textFieldBorderColor,
         ),
       ),
       errorMaxLines: 6,
       enabledBorder: border.copyWith(
         borderSide: const BorderSide(
-          color: Colors.grey,
+          color: textFieldBorderColor,
           width: 1.2,
         ),
       ),
@@ -93,13 +81,13 @@ ThemeData themeDataLight(Color textColor) {
       ),
       errorBorder: border.copyWith(
         borderSide: BorderSide(
-          color: Colors.red.shade800,
+          color: textFieldErrorBorderColor,
           width: 1.2,
         ),
       ),
       focusedErrorBorder: border.copyWith(
         borderSide: BorderSide(
-          color: Colors.red.shade800,
+          color: textFieldErrorBorderColor,
           width: 1.2,
         ),
       ),
@@ -112,7 +100,7 @@ ThemeData themeDataLight(Color textColor) {
     listTileTheme: ListTileThemeData(
       contentPadding: const EdgeInsets.symmetric(horizontal: 10),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(BorderRadiusValue),
+        borderRadius: BorderRadius.circular(borderRadiusValue),
       ),
     ),
 
@@ -120,7 +108,7 @@ ThemeData themeDataLight(Color textColor) {
     filledButtonTheme: FilledButtonThemeData(
       style: FilledButton.styleFrom(
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(BorderRadiusValue),
+          borderRadius: BorderRadius.circular(borderRadiusValue),
         ),
       ),
     ),
@@ -129,7 +117,7 @@ ThemeData themeDataLight(Color textColor) {
       style: ElevatedButton.styleFrom(
         disabledBackgroundColor: Colors.grey,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(BorderRadiusValue),
+          borderRadius: BorderRadius.circular(borderRadiusValue),
         ),
       ),
     ),
@@ -140,7 +128,7 @@ ThemeData themeDataLight(Color textColor) {
           color: primaryColor,
         ),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(BorderRadiusValue),
+          borderRadius: BorderRadius.circular(borderRadiusValue),
         ),
       ),
     ),
@@ -148,12 +136,12 @@ ThemeData themeDataLight(Color textColor) {
     cardTheme: const CardTheme(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.all(
-          Radius.circular(BorderRadiusValue),
+          Radius.circular(borderRadiusValue),
         ),
       ),
       elevation: 7,
-      color: Colors.white,
-      surfaceTintColor: Colors.white,
+      color: cardsColor,
+      surfaceTintColor: cardsColor,
     ),
 
     textButtonTheme: TextButtonThemeData(
@@ -163,7 +151,7 @@ ThemeData themeDataLight(Color textColor) {
           fontSize: 16,
         ),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(BorderRadiusValue),
+          borderRadius: BorderRadius.circular(borderRadiusValue),
         ),
       ),
     ),

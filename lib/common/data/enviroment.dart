@@ -1,4 +1,7 @@
+import 'package:f_bapp/common/assets/theme/app_colors.dart';
+import 'package:f_bapp/common/assets/theme/app_theme.dart';
 import 'package:f_bapp/common/data/constants.dart';
+import 'package:f_bapp/flavors.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class Enviroment{
@@ -7,8 +10,7 @@ class Enviroment{
   static String imageUrl = dotenv.env['IMAGE_URL']!;
   static String recaptcha = dotenv.env['RECAPTCHA']!;
   static String verificationUrl = dotenv.env['VERIFICATION_URL']!;
-  static String liveChatLicense = '12145539';
-  static String CC_FBUS_GATEWAY = dotenv.env["QA"]!;
+  static String ccFbusGateway = FlavorConfig.flavorValues.baseUrl;
 
   //se carga la informacion de .env
   static initEnviroment() async {
@@ -20,15 +22,15 @@ class Enviroment{
   static getHeadbandColor(Connection connection) {
     switch (connection) {
       case Connection.developer:
-        return headbandColor = DEVELOPER_COLOR;
+        return headbandColor = developerColor;
       case Connection.qa:
-        return headbandColor = QUALITY_COLOR;
+        return headbandColor = qualityColor;
       case Connection.sandbox:
-        return headbandColor = QUALITY_COLOR;
+        return headbandColor = qualityColor;
       case Connection.preProduction:
-        return headbandColor = PRODUCTION_COLOR;
+        return headbandColor = productionColor;
       case Connection.production:
-        return headbandColor = PRODUCTION_COLOR;
+        return headbandColor = productionColor;
     }
   }
 

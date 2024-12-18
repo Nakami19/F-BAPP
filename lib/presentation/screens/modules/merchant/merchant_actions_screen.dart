@@ -2,9 +2,9 @@ import 'package:f_bapp/common/widgets/cards/large_card.dart';
 import 'package:f_bapp/config/data_constants/data_constants.dart';
 import 'package:f_bapp/config/router/routes.dart';
 import 'package:f_bapp/presentation/providers/shared/navigation_provider.dart';
-import 'package:f_bapp/presentation/providers/user/user_provider.dart';
-import 'package:f_bapp/presentation/widgets/shared/screensAppbar.dart';
-import 'package:f_bapp/presentation/widgets/shared/customNavbar.dart';
+import 'package:f_bapp/presentation/providers/shared/user_provider.dart';
+import 'package:f_bapp/presentation/widgets/shared/screens_appbar.dart';
+import 'package:f_bapp/presentation/widgets/shared/custom_navbar.dart';
 import 'package:f_bapp/presentation/widgets/shared/drawer_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -43,108 +43,43 @@ class _MerchantScreenState extends State<MerchantScreen> {
       drawer: DrawerMenu(),
       key: _merchantScaffoldKey,
       appBar: PreferredSize(
-          preferredSize: Size.fromHeight(110),
+          preferredSize: const Size.fromHeight(110),
           child: Screensappbar(
               title: 'Merchant', screenKey: _merchantScaffoldKey, poproute: homeScreen,)),
+
       body: Padding(
         padding: const EdgeInsets.only(bottom: 30),
+
         child: Container(
           height: MediaQuery.of(context).size.height,
+          //Se construyen las tarjetas
           child: ListView.builder(
               itemCount: showactions.length,
               itemBuilder: (context, index) {
+
                 final action = showactions[index];
-                return GestureDetector(
-                  onTap: () {},
-                  child: SizedBox(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 25, vertical: 10),
-                      child: LargeCard(
-                        image: '${DataConstant.imagesModules}/${DataConstant.modulePathMerchant}/chinchin-${action.key}_merchant-on.svg',
-                        placeholder: '${DataConstant.imagesModules}/${DataConstant.modulePathMerchant}/chinchin-list_merchant_devolutions_merchant-on.svg',
-                        title: action.actionName,
-                        height: 85,
-                        textStyle: textStyle.bodyMedium!.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                        onTap: () {
-                          Navigator.pushNamed(
-                              context, '/${action.actionName}Screen');
-                        } ,
-                      ),
+
+                return Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 25, vertical: 10),
+                      
+                  child: LargeCard(
+                    image: '${DataConstant.imagesModules}/${DataConstant.modulePathMerchant}/chinchin-${action.key}_merchant-on.svg',
+                    placeholder: '${DataConstant.imagesModules}/${DataConstant.modulePathMerchant}/chinchin-list_merchant_devolutions_merchant-on.svg',
+                    title: action.actionName,
+                    height: 85,
+                    textStyle: textStyle.bodyMedium!.copyWith(
+                      fontWeight: FontWeight.bold,
                     ),
+                    onTap: () {
+                      Navigator.pushNamed(
+                          context, '/${action.actionName}Screen');
+                    } ,
                   ),
                 );
               }),
         ),
-        // child: SingleChildScrollView(
-        // child: Column(
-        //         children: [
-        //           SizedBox(height: 20), // Espacio antes del primer elemento
-        //           Padding(
-        // padding: const EdgeInsets.symmetric(horizontal: 25),
-        // child: LargeCard(
-        //   image: '${DataConstant.images_modules}/icono_listado_devoluciones.svg',
-        //   title: 'Hola',
-        //   onTap: ()=>{print(userProvider.privileges)},
-        //   height: 90,
-        //   textStyle: textStyle.bodyMedium!.copyWith(
-        //     fontWeight: FontWeight.bold,
-        //   ),
-        // ),
-        //           ),
-        //           SizedBox(height: 33),
-        //           Padding(
-        // padding: const EdgeInsets.symmetric(horizontal: 25),
-        // child: LargeCard(
-        //   image: '${DataConstant.images_modules}/icono_listado_devoluciones.svg',
-        //   title: 'Listado de ordenes',
-        //   height: 90,
-        //   textStyle: textStyle.bodyMedium!.copyWith(
-        //     fontWeight: FontWeight.bold,
-        //   ),
-        // ),
-        //           ),
-        //           SizedBox(height: 33),
-        //           Padding(
-        // padding: const EdgeInsets.symmetric(horizontal: 25),
-        // child: LargeCard(
-        //   image: '${DataConstant.images_modules}/icono_listado_devoluciones.svg',
-        //   title: 'Listado de pagos moviles',
-        //   height: 90,
-        //   textStyle: textStyle.bodyMedium!.copyWith(
-        //     fontWeight: FontWeight.bold,
-        //   ),
-        // ),
-        //           ),
-        //           SizedBox(height: 33),
-        //           Padding(
-        // padding: const EdgeInsets.symmetric(horizontal: 25),
-        // child: LargeCard(
-        //   image: '${DataConstant.images_modules}/icono_listado_devoluciones.svg',
-        //   title: 'Envio de pago movil (vuelto)',
-        //   height: 90,
-        //   textStyle: textStyle.bodyMedium!.copyWith(
-        //     fontWeight: FontWeight.bold,
-        //   ),
-        // ),
-        //           ),
-        //           SizedBox(height: 33),
-        //           Padding(
-        // padding: const EdgeInsets.symmetric(horizontal: 25),
-        // child: LargeCard(
-        //   image: '${DataConstant.images_modules}/icono_listado_devoluciones.svg',
-        //   title: 'Crear orden de pasarela',
-        //   height: 90,
-        //   textStyle: textStyle.bodyMedium!.copyWith(
-        //     fontWeight: FontWeight.bold,
-        //   ),
-        // ),
-        //           ),
-        //           SizedBox(height: 20), // Espacio después del último elemento
-        //         ],
-        // ),
+
       ),
       bottomNavigationBar: Customnavbar(
           selectedIndex: 2,

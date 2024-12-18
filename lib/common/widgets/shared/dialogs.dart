@@ -1,12 +1,7 @@
-import 'package:f_bapp/common/assets/theme/app_theme.dart';
+import 'package:f_bapp/common/assets/theme/app_colors.dart';
 import 'package:f_bapp/common/providers/general_provider.dart';
 import 'package:f_bapp/common/providers/theme_provider.dart';
 import 'package:f_bapp/common/widgets/buttons/custom_button.dart';
-import 'package:f_bapp/common/widgets/others/snackbars.dart';
-import 'package:f_bapp/config/router/routes.dart';
-import 'package:f_bapp/infrastructure/services/secure_storage_service.dart';
-import 'package:f_bapp/presentation/providers/app_providers.dart';
-import 'package:f_bapp/presentation/providers/shared/session_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
@@ -14,6 +9,7 @@ import 'package:provider/provider.dart';
 class Dialogs {
   static TextStyle fontStyle = const TextStyle(fontSize: 18);
 
+  //Dialogo custom
   static customDialog(BuildContext context,
       {required String title,
       Widget? content,
@@ -36,9 +32,12 @@ class Dialogs {
       ),
       content: content,
       actionsAlignment: MainAxisAlignment.center,
+
+      //El contenido cambia si se muestran uno o dos botones
       actions: showButtons != null && showButtons
           ? showOnlyConfirmButton != null && showOnlyConfirmButton
               ? <Widget>[
+                //Caso donde se muestra un boton
                   CustomButton(
                       title: confirmButtonText ?? 'ACEPTAR',
                       isPrimaryColor: true,
@@ -46,22 +45,17 @@ class Dialogs {
                       onTap: actionSuccess,
                       height: 50,
                       provider: GeneralProvider())
-                  // CustomStaticButton(
-                  //   title: confirmButtonText ?? 'ACEPTAR',
-                  //   isPrimaryColor: true,
-                  //   isOutline: false,
-                  //   fontSize: 14,
-                  //   onTap: actionSuccess,
-                  //   paddingHorizontal: 0,
-                  // )
                 ]
               : <Widget>[
+
+                //Caso donde se muestran dos botones
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Expanded(
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 5),
+
                           child: CustomButton(
                               title: cancelButtonText ?? 'CANCELAR',
                               isPrimaryColor: false,
@@ -71,14 +65,14 @@ class Dialogs {
                               height: 50,
                               paddingH: 0,
                               styleText: textStyle!.copyWith(
-                                color: Color.fromRGBO(252, 198, 20, 100),
+                                color: const Color.fromRGBO(252, 198, 20, 100),
                                 fontSize: 10,
                               ),
                               styleTextButton: TextButton.styleFrom(
-                                side: BorderSide(
+                                side: const BorderSide(
                                   color: Color.fromRGBO(252, 198, 20,
-                                      100), // Cambia a tu color deseado
-                                  width: 2, // Grosor del borde
+                                      100), 
+                                  width: 2,
                                 ),
                               ),
                               onTap: closeAction ??
@@ -86,9 +80,12 @@ class Dialogs {
                               provider: GeneralProvider()),
                         ),
                       ),
+
+
                       Expanded(
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 5),
+
                           child: CustomButton(
                               title: confirmButtonText ?? 'CONFIRMAR',
                               isPrimaryColor: true,
@@ -107,39 +104,6 @@ class Dialogs {
                     ],
                   )
 
-                  // TextButton(
-                  //   style: FilledButton.styleFrom(
-                  //     shape: RoundedRectangleBorder(
-                  //       borderRadius:
-                  //           BorderRadius.circular(buttonBorderRadiusValue),
-                  //     ),
-                  //   ),
-                  //   onPressed:
-                  //       closeAction ?? () => Navigator.pop(context, false),
-                  //   child: Text(
-                  //     cancelButtonText ?? 'CANCELAR',
-                  //     style: const TextStyle(
-                  //       fontSize: 12,
-                  //     ),
-                  //   ),
-                  // ),
-
-                  // FilledButton(
-                  //   style: FilledButton.styleFrom(
-                  //     shape: RoundedRectangleBorder(
-                  //       borderRadius:
-                  //           BorderRadius.circular(buttonBorderRadiusValue),
-                  //     ),
-                  //   ),
-                  //   onPressed: actionSuccess,
-                  //   child: Text(
-                  //     confirmButtonText ?? 'CONFIRMAR',
-                  //     style: const TextStyle(
-                  //       fontWeight: FontWeight.bold,
-                  //       fontSize: 10,
-                  //     ),
-                  //   ),
-                  // )
                 ]
           : null,
     );
@@ -152,14 +116,14 @@ class Dialogs {
     return AlertDialog(
       backgroundColor:
           themeProvider.isDarkModeEnabled ? darkColor : primaryScaffoldColor,
-      title: Text(
+      title: const Text(
         'No hay conexión a internet',
         style: TextStyle(
           fontSize: 18,
           fontWeight: FontWeight.bold,
         ),
       ),
-      content: Text('Intenta conectarte a una red wifi o móvil'),
+      content:const Text('Intenta conectarte a una red wifi o móvil'),
     );
   }
 
@@ -171,7 +135,6 @@ class Dialogs {
         contentPadding: EdgeInsets.zero,
         content: Container(
           decoration: BoxDecoration(
-            // color: Colors.white,
             borderRadius: BorderRadius.circular(5),
           ),
           height: 75,

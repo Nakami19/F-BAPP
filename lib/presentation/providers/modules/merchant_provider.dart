@@ -3,19 +3,21 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:f_bapp/app.dart';
 import 'package:f_bapp/common/providers/general_provider.dart';
-import 'package:f_bapp/common/widgets/others/snackbars.dart';
+import 'package:f_bapp/common/widgets/shared/snackbars.dart';
 import 'package:f_bapp/config/network/api_error.dart';
 import 'package:f_bapp/config/network/api_response.dart';
 import 'package:f_bapp/infrastructure/services/modules/merchant_services.dart';
 
 class MerchantProvider extends GeneralProvider {
-
+  //para realizar las peticiones
   final merchantService = MerchantServices();
 
+  //ordenes para el listado
   Map<String, dynamic>? orders;
 
   Map<String, dynamic>? get order => orders;
 
+  //estados en las acciones de merchant
   List<dynamic>? status;
 
   set setOrders(Map<String, dynamic>? neworders) {
@@ -41,7 +43,6 @@ class MerchantProvider extends GeneralProvider {
       final data = jsonDecode(response.toString());
 
       setStatus = data['data'];
-      // return data['data'];
       
     } on DioError catch (error) {
 
@@ -75,7 +76,6 @@ class MerchantProvider extends GeneralProvider {
       
       rethrow;
     }catch (error) {
-      print('Unexpected error: $error');
       super.setSimpleError(true);
       super.setErrorMessage("Ocurrió un error inesperado");
       super.setTrackingCode(error.toString());
@@ -93,6 +93,7 @@ class MerchantProvider extends GeneralProvider {
     }
   } 
 
+//Obtener el listado de ordenes
   Future <void> Listorders (
     {int? limit,
     int? page,
@@ -120,14 +121,9 @@ class MerchantProvider extends GeneralProvider {
       final response = await merchantService.getOrders(params);
 
       final data = jsonDecode(response.toString());
-      
-      print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-
-      print(data['data']);
 
       setOrders = data['data'];
 
-      // return data['data'];
     } on DioError catch (error) {
       final response = error.response;
       final data = response?.data as Map<String, dynamic>;
@@ -157,7 +153,6 @@ class MerchantProvider extends GeneralProvider {
       notifyListeners();
       
     }catch (error) {
-      print('Unexpected error: $error');
       super.setSimpleError(true);
       super.setErrorMessage("Ocurrió un error inesperado");
       super.setTrackingCode(error.toString());

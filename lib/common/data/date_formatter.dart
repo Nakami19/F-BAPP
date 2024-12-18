@@ -34,10 +34,6 @@ class DateFormatter {
     // rETORNO Fecha, tiempo y am/pm
     return '$date3, $time $timeAmPm';
 
-    // return DateFormat.yMd()
-    //     .add_jm()
-    //     .format(parsedDateFormat)
-    //     .toString(); // convert local date time to string format local date time
   }
 
   // Dar formato a fecha devuelta por el datePicker

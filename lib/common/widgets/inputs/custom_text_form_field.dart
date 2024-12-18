@@ -1,3 +1,4 @@
+import 'package:f_bapp/common/assets/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -58,13 +59,17 @@ class CustomTextFormField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     final colors = Theme.of(context).colorScheme;
-    final themeProvider = context.read<ThemeProvider>();
+    
     return Padding(
-      padding: isPaddingZero ?? false
+
+      padding: isPaddingZero
           ? EdgeInsets.zero
           : EdgeInsets.symmetric(vertical: paddingV, horizontal: paddingH),
+      
       child: TextFormField(
+        // Configura el campo con las opciones proporcionadas.
           keyboardType: inputType ?? TextInputType.text,
           autofocus: autofocus ?? false,
           controller: controller,
@@ -75,6 +80,8 @@ class CustomTextFormField extends StatelessWidget {
           maxLength: maxLength,
           onChanged: onChanged,
           validator: validator,
+
+        //Estilo del campo
           decoration: InputDecoration(
             contentPadding:const EdgeInsets.symmetric(horizontal: 23, vertical: 13),
             fillColor: Colors.white,
@@ -83,59 +90,67 @@ class CustomTextFormField extends StatelessWidget {
               prefixIcon: preffixIcon ?? null,
               suffixIcon: suffixIcon,
               isDense: true,
+
               label: label != null
                   ? Text(
                       label!,
                       maxLines: 1,
-                      // style: TextStyle(
-                      //   color: enabled == true ? null : AppTheme.hintTextColor,
-                      // ),
+                      
                     )
                   : null,
+
               hintText: enabled == true ? hintText : null,
-              hintStyle: hintStyle!=null ? hintStyle : TextStyle(
-                color: AppTheme.hintTextColor,
+              hintStyle: hintStyle?? const TextStyle(
+                color: hintTextColor,
               ),
+
               errorText: errorMessage,
               focusColor: colors.primary,
+
+              // Bordes según el estado del campo.
               focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(BorderRadiusValue),
+                borderRadius: BorderRadius.circular(borderRadiusValue),
                 borderSide: const BorderSide(
                   color: primaryColor,
                   width: 2,
                 ),
               ),
+
               disabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(BorderRadiusValue),
+                borderRadius: BorderRadius.circular(borderRadiusValue),
                 borderSide: const BorderSide(
-                  color: AppTheme.hintTextColor,
+                  color: hintTextColor,
                   width: 2,
                 ),
               ),
+
               enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(BorderRadiusValue),
+                borderRadius: BorderRadius.circular(borderRadiusValue),
                 borderSide: const BorderSide(
                   color: primaryColor,
                   width: 2,
                 ),
               ),
+
               errorBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(BorderRadiusValue),
+                borderRadius: BorderRadius.circular(borderRadiusValue),
                 borderSide: const BorderSide(
                   color: errorColor,
                   width: 2,
                 ),
               ),
+
               focusedErrorBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(BorderRadiusValue),
+                borderRadius: BorderRadius.circular(borderRadiusValue),
                 borderSide: const BorderSide(
                   color: errorColor,
                   width: 2,
                 ),
               ),
             ),
+
           onTap: () {
-              // Ocultar el teclado al tocar el campo de texto en iOS
+              //Oculta el teclado en dispositivos iOS si el tipo es numérico.
               if (inputType == TextInputType.number &&
                   Theme.of(context).platform == TargetPlatform.iOS) {
                   FocusScope.of(context).unfocus();
@@ -144,6 +159,8 @@ class CustomTextFormField extends StatelessWidget {
               if (node != null) {
                 FocusScope.of(context).requestFocus(node);
                 }
+
+              //Se ejecuta la funcion onTap si fue proporcionada
               if (onTap != null) {
                 onTap!();
               }

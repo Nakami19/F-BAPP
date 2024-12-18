@@ -1,5 +1,5 @@
 import 'package:f_bapp/config/data_constants/data_constants.dart';
-import 'package:f_bapp/presentation/providers/user/user_provider.dart';
+import 'package:f_bapp/presentation/providers/shared/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
@@ -28,7 +28,7 @@ class _ScreensappbarState extends State<Screensappbar> {
     return AppBar(
       backgroundColor: Colors.transparent,
       automaticallyImplyLeading:
-          false, // Para personalizar completamente la flecha.
+          false,
       flexibleSpace: Stack(
         children: [
           // Imagen de fondo
@@ -38,6 +38,8 @@ class _ScreensappbarState extends State<Screensappbar> {
             width: double.infinity,
             height: 110,
           ),
+
+          //Contenido del appbar
           Positioned(
             left: 0,
             right: 0,
@@ -48,14 +50,16 @@ class _ScreensappbarState extends State<Screensappbar> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+
                   //parte izquieda
                   SizedBox(
                     width:MediaQuery.of(context).size.width/2,
                     child: Row(
                       children: [
+                        //Icono flecha
                         IconButton(
                           tooltip: 'Atrás',
-                          icon: Icon(
+                          icon:const Icon(
                             Icons.arrow_back,
                             color: Colors.black,
                             size: 20,
@@ -71,10 +75,12 @@ class _ScreensappbarState extends State<Screensappbar> {
                             );
                           },
                         ),
+
+                        //Nombre de vista actual
                         Flexible(
                           child: Text(
                             widget.title,
-                            style: TextStyle(
+                            style:const TextStyle(
                               fontSize: 15,
                               color: Colors.black,
                             ),
@@ -85,23 +91,29 @@ class _ScreensappbarState extends State<Screensappbar> {
                       ],
                     ),
                   ),
+
                   //parte derecha
                   Row(
                     children: [
+
+                      //Logo de business
                       SvgPicture.asset(
                         '${DataConstant.imagesChinchin}/chinchin-logo-business-base.svg',
                         height: 27,
                         fit: BoxFit.contain,
                       ),
+
+                      //Icono menu
                       IconButton(
                         tooltip: 'Menú',
-                        icon: Icon(
+                        icon: const Icon(
                           Icons.menu,
                           color: Colors.black,
                           size: 25,
                         ),
                         onPressed: () {
                           if (!userProvider.isLoading) {
+                            //Abre el side menu
                             widget.screenKey.currentState!.openDrawer();
                           }
                         },

@@ -1,7 +1,8 @@
+import 'package:f_bapp/common/assets/theme/app_colors.dart';
 import 'package:f_bapp/common/assets/theme/app_theme.dart';
 import 'package:f_bapp/common/providers/theme_provider.dart';
 import 'package:f_bapp/config/data_constants/data_constants.dart';
-import 'package:f_bapp/presentation/providers/user/user_provider.dart';
+import 'package:f_bapp/presentation/providers/shared/user_provider.dart';
 import 'package:f_bapp/presentation/widgets/shared/app_dialogs.dart';
 import 'package:f_bapp/presentation/widgets/shared/user_data.dart';
 import 'package:flutter/material.dart';
@@ -31,7 +32,7 @@ class DrawerMenu extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   //logo de business e informacion del usuario
-                  SizedBox(
+                  const SizedBox(
                     height: 50,
                   ),
 
@@ -41,12 +42,12 @@ class DrawerMenu extends StatelessWidget {
                     fit: BoxFit.contain,
                   ),
 
-                  SizedBox(
+                 const SizedBox(
                     height: 30,
                   ),
 
-                  UserData(),
-                  SizedBox(
+                 const UserData(),
+                 const SizedBox(
                     height: 40,
                   ),
 

@@ -1,21 +1,19 @@
 import 'dart:io';
 
-import 'package:f_bapp/common/assets/theme/app_theme.dart';
+import 'package:f_bapp/common/assets/theme/app_colors.dart';
 import 'package:f_bapp/common/widgets/buttons/custom_button.dart';
 import 'package:f_bapp/common/widgets/inputs/custom_text_form_field.dart';
-import 'package:f_bapp/common/widgets/others/dialogs.dart';
-import 'package:f_bapp/common/widgets/others/info_chinchin_popup.dart';
-import 'package:f_bapp/common/widgets/others/terms_condition_button.dart';
+import 'package:f_bapp/common/widgets/shared/info_chinchin_popup.dart';
+import 'package:f_bapp/common/widgets/shared/terms_condition_button.dart';
 import 'package:f_bapp/config/data_constants/data_constants.dart';
 import 'package:f_bapp/config/helpers/base64_coder.dart';
 import 'package:f_bapp/config/router/routes.dart';
-import 'package:f_bapp/infrastructure/class/privileges.dart';
 import 'package:f_bapp/presentation/providers/auth/login_provider.dart';
 import 'package:f_bapp/presentation/providers/shared/navigation_provider.dart';
 import 'package:f_bapp/presentation/providers/shared/session_provider.dart';
 import 'package:f_bapp/common/providers/theme_provider.dart';
-import 'package:f_bapp/common/widgets/others/error_box.dart';
-import 'package:f_bapp/presentation/providers/user/user_provider.dart';
+import 'package:f_bapp/common/widgets/shared/error_box.dart';
+import 'package:f_bapp/presentation/providers/shared/user_provider.dart';
 import 'package:f_bapp/presentation/widgets/shared/app_dialogs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -76,19 +74,26 @@ class _SecondLoginScreenState extends State<SecondLoginScreen> {
             child: const Text('Iniciar sesión'),
           ),
         ),
+
         body: Center(
           child: SingleChildScrollView(
+
             child: Form(
               key: secondLoginForm,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  
+                  //Logo de business
                   SvgPicture.asset(
                     '${DataConstant.imagesChinchin}/chinchin-logo-business-base.svg',
                     width: 220, 
                     fit: BoxFit.contain, 
                   ),
+
                   const SizedBox(height: 30),
+
+
                   Text(
                     'Iniciar Sesión',
                     style: textTheme.titleLarge!.copyWith(
@@ -148,29 +153,27 @@ class _SecondLoginScreenState extends State<SecondLoginScreen> {
                       paddingH: 0,
                       onTap: () async{
                         if (secondLoginForm.currentState!.validate()) {
+                          //Se crea el objeto con el nombre del usuario y su contraseña
                           final loginData = {
                             'member': loginProvider.userLogin!,
                             'password': Base64Encoder.encodeBase64(loginProvider.password!),
                           };
-                          final loginResp = await loginProvider.login1(loginData);
-                          // final memberResp = await userProvider.getMemberlist(loginProvider.userLogin!);
 
-                          
-                          // if(loginResp!=null) {
-                          //   final privileges = loginResp['privileges'] as List<Privilege>;
-                          //   userProvider.Setprivileges = privileges; 
-                          // }
+                          //Se realiza la peticion para iniciar sesion
+                          final loginResp = await loginProvider.loginUser(loginData);
                     
                           if (loginProvider.statusCode != HttpStatus.ok) {
                           return;
                           }
 
+                          //Se obtiene la lista de miembros
                           final memberResp = await userProvider.getMemberlist(loginProvider.userLogin!);
                           
                           loginProvider.disposeValues();
                           
                           if (!mounted) return;
-                                
+                            
+                          //Se indica que el usuario esta autenticado
                           context.read<SessionProvider>().authenticateUser();
                           final sessionProvider = context.read<SessionProvider>();
                     
@@ -192,13 +195,15 @@ class _SecondLoginScreenState extends State<SecondLoginScreen> {
                             );
                           }
 
+                        //Indico el primer elemento de la lista de miembros como la compañia seleccionada 
                         context.read<NavigationProvider>().updateCompany(userProvider.memberlist![0]['idParentRelation'].toString());
 
-                                
-                          sessionProvider.startSessionTimer(150000);
+                         //Inicia el temporizador de la sesion  
+                        sessionProvider.startSessionTimer(150000);
                     
                           if (!mounted) return;
-                                
+
+                          //Se navega hasta la vista home
                           Navigator.pushReplacementNamed(
                               context,
                               homeScreen,
@@ -212,7 +217,9 @@ class _SecondLoginScreenState extends State<SecondLoginScreen> {
                       }
                       ),
                   ),
+
                     ErrorBox(provider: loginProvider, paddingH: 25),
+
                     CustomButton(
                     provider:loginProvider ,
                     title: '¿Olvidó su contraseña?', 
@@ -224,13 +231,13 @@ class _SecondLoginScreenState extends State<SecondLoginScreen> {
                     paddingV: 10,
                     height: 35,
                     onTap: () {})
-            
                    
                 ],
               ),
             ),
           ),
         ),
+        
         bottomNavigationBar: Column(
             mainAxisSize: MainAxisSize.min,
             children: [

@@ -1,28 +1,32 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:f_bapp/common/widgets/others/dialogs.dart';
-import 'package:f_bapp/presentation/providers/shared/home_provider.dart';
+import 'package:dio/dio.dart';
+import 'package:f_bapp/common/assets/theme/app_colors.dart';
+import 'package:f_bapp/common/providers/general_provider.dart';
+import 'package:f_bapp/common/widgets/shared/dialogs.dart';
+import 'package:f_bapp/config/network/api_error.dart';
+import 'package:f_bapp/config/network/api_response.dart';
+import 'package:f_bapp/infrastructure/services/auth/login_services.dart';
+import 'package:f_bapp/infrastructure/shared/secure_storage_service.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
 import '../../../app.dart';
-import '../../../common/assets/theme/app_theme.dart';
-import '../../../common/widgets/others/snackbars.dart';
+import '../../../common/widgets/shared/snackbars.dart';
 import '../../../config/router/routes.dart';
-import '../../../infrastructure/services/secure_storage_service.dart';
 import '../app_providers.dart';
 
 //no se movieron a general provider ya que en otros providers no son necesarios estos metodos
 
-class SessionProvider with ChangeNotifier {
+class SessionProvider extends GeneralProvider {
   final storage = SecureStorageService();
+  final loginService = LoginServices();
   bool _isAuthenticated = false;
   bool _isDialogOpen = false;
   int? _expirationTime;
   Timer? _timer;
   bool _isMaintenanceMode = false;
   bool get isMaintenanceMode => _isMaintenanceMode;
+  static const int maxSeconds = 20;
 
   void setMaintenanceMode(bool value) {
     _isMaintenanceMode = value;
@@ -66,16 +70,15 @@ class SessionProvider with ChangeNotifier {
                   if (!isActionSuccessClicked) {
                     isActionSuccessClicked = true;
 
-                    final homeProvider = context.read<HomeProvider>();
-                    await homeProvider.refreshSession().then(
+                   await refreshSession().then(
                       (value) {
-                        if (homeProvider.statusCode == HttpStatus.ok) {
+                        if (statusCode == HttpStatus.ok) {
                           Navigator.pop(context, true);
                         }
                       },
                     );
 
-                    if (homeProvider.statusCode != HttpStatus.ok) {
+                    if (statusCode != HttpStatus.ok) {
                       return;
                     }
 
@@ -242,6 +245,43 @@ class SessionProvider with ChangeNotifier {
         );
       });
     }
+  }
+
+  Future<void> refreshSession() async {
+    try {
+      super.setLoadingStatus(true);
+      final req = await loginService.refreshSession();
+      super.setStatusCode(req.statusCode!);
+
+      ApiResponse.fromJson(
+        req.data,
+        (json) => null,
+        (json) => null,
+      );
+    } on DioError catch (error) {
+      final response = error.response;
+      final data = response?.data as Map<String, dynamic>;
+      super.setStatusCode(response!.statusCode!);
+
+      final resp = ApiResponse.fromJson(
+        data,
+        (json) => null, // No hay data para el caso de error
+        (json) => ApiError(
+          message: json['message'],
+          value: json['value'],
+          trackingCode: json['trackingCode'],
+        ),
+      );
+
+      super.setErrors(true);
+      super.setErrorMessage(resp.message);
+      super.setTrackingCode(resp.trackingCode);
+    }
+    finally {
+      super.setLoadingStatus(false);
+    }
+
+    notifyListeners();
   }
 
   @override

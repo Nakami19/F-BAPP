@@ -1,3 +1,4 @@
+import 'package:f_bapp/common/assets/theme/app_colors.dart';
 import 'package:f_bapp/common/assets/theme/app_theme.dart';
 import 'package:f_bapp/common/data/date_formatter.dart';
 import 'package:f_bapp/common/providers/theme_provider.dart';
@@ -6,12 +7,19 @@ import 'package:f_bapp/presentation/providers/shared/utils_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+//input para seleccionar fecha de un calendario
 class DateInput extends StatelessWidget {
   final TextEditingController controller;
   final bool rangeDate;
+  final String? label;
+  final String? hintText;
 
   const DateInput(
-      {super.key, required this.controller, required this.rangeDate});
+      {super.key,
+      required this.controller,
+      required this.rangeDate,
+      this.label,
+      this.hintText});
 
   @override
   Widget build(BuildContext context) {
@@ -22,8 +30,8 @@ class DateInput extends StatelessWidget {
         controller: controller,
         inputType: TextInputType.none,
         isPaddingZero: true,
-        // label: 'Fecha de la transacción *',
-        hintText: 'Fecha de la transacción *',
+        label: label,
+        hintText: hintText,
         readOnly: true,
         enabled: !utilsProvider.isLoading,
         showCursor: false,
@@ -32,13 +40,15 @@ class DateInput extends StatelessWidget {
           size: 20,
         ),
         onTap: () => {
+
+          //Si el calendario no es de tipo de rango de fecha
               if (!rangeDate)
                 {
                   showDatePicker(
                       context: context,
                       // locale: const Locale('es'),
                       initialDate: DateTime.now(),
-                      firstDate: DateTime(2000),
+                      firstDate: DateTime(2000), // el calendario empieza en enero del 2000
                       lastDate: DateTime.now(),
                       cancelText: 'CANCELAR',
                       builder: (context, child) {
@@ -74,6 +84,8 @@ class DateInput extends StatelessWidget {
                     },
                   ),
                 }
+              
+              //Si el calendario es de tipo de rango de fecha
               else
                 {
                   showDateRangePicker(
@@ -98,8 +110,7 @@ class DateInput extends StatelessWidget {
                         child: child!,
                       );
                     },
-                  )
-                  .then((value) {
+                  ).then((value) {
                     if (value != null) {
                       // Formatear las fechas seleccionadas
                       String formattedStartDate =
@@ -111,7 +122,7 @@ class DateInput extends StatelessWidget {
                         value.end,
                         'yyyy/MM/dd',
                       );
-                      
+
                       controller.text = "$formattedStartDate-$formattedEndDate";
                     }
                   })

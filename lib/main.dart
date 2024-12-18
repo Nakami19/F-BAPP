@@ -1,7 +1,7 @@
 import 'dart:async';
+import 'package:f_bapp/common/data/constants.dart';
 import 'package:f_bapp/common/data/enviroment.dart';
 import 'package:f_bapp/common/providers/theme_provider.dart';
-import 'package:f_bapp/config/data_constants/data_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
@@ -15,8 +15,8 @@ FutureOr<void> main() async {
 
   // se obtiene informacion de la app desde el pubspec
   final appInfo = await PackageInfo.fromPlatform();
-  DataConstant.appVersion = appInfo.version;
-  DataConstant.buildNumber = appInfo.buildNumber;
+  Constants.appVersion = appInfo.version;
+  Constants.buildNumber = appInfo.buildNumber;
 
   //se carga el modo oscuro
   final themeProvider = ThemeProvider();

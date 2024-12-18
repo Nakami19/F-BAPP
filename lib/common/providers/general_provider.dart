@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../infrastructure/shared/error_type.dart';
+import '../../infrastructure/classes/shared/error_type.dart';
 
 class GeneralProvider extends ChangeNotifier {
   List<Map<String, ErrorType>> errors = [];
@@ -26,12 +26,14 @@ class GeneralProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  //identificar si hay errores
   bool haveErrors = false;
   void setErrors(bool val) {
     haveErrors = val;
     notifyListeners();
   }
 
+  //mensaje de error
   String? errorMessage;
   void setErrorMessage(String val) {
     errorMessage = val;
@@ -45,18 +47,21 @@ class GeneralProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  //identificar si hay errores
   bool haveSimpleError = false;
   void setSimpleError(bool val) {
     haveSimpleError = val;
     notifyListeners();
   }
 
+  //identificar tracking code
   String? trackingCode;
   void setTrackingCode(String val) {
     trackingCode = val;
     notifyListeners();
   }
 
+  //identificar si el input tiene errores
   bool _haveInputErrors = false;
   bool get haveInputErrors => _haveInputErrors;
   void setInputErrors(bool val) {
@@ -64,18 +69,21 @@ class GeneralProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  //codigo del status de la peticion
   int? statusCode;
   void setStatusCode(int val) {
     statusCode = val;
     notifyListeners();
   }
 
+  //identificar si se esta cargando algo
   bool isLoading = false;
   void setLoadingStatus(bool val) {
     isLoading = val;
     notifyListeners();
   }
 
+  //se reinician los valores
   void disposeValues() {
     setErrors(false);
     setSimpleError(false);
