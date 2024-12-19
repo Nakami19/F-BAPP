@@ -25,7 +25,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       GlobalKey<ScaffoldState>();
   String? selectedCompany;
 
-
   @override
   Widget build(BuildContext context) {
     final userProvider = context.watch<UserProvider>();
@@ -40,6 +39,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
       child: Scaffold(
         key: _profileScaffoldKey,
         drawer: DrawerMenu(),
+        onDrawerChanged: (isOpened) {
+          if (!isOpened) {
+            Future.delayed( Duration(milliseconds: navProvider.showNavBarDelay), () {
+              navProvider.updateShowNavBar(true);
+            });
+          } else {
+            navProvider.updateShowNavBar(false);
+          }
+        },
         extendBodyBehindAppBar: true,
         appBar: PreferredSize(
             preferredSize: Size.fromHeight(150),
@@ -76,7 +84,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     itemLabelMapper: (option) => option['name'].toString(),
                     onChanged: (value) {
                       setState(() {
-                        navProvider.updateCompany(value!); // Actualizar el valor seleccionado.
+                        navProvider.updateCompany(
+                            value!); // Actualizar el valor seleccionado.
                       });
                       userProvider.getMemberTypeChangeList(
                           value!, loginProvider.userLogin!);
@@ -146,10 +155,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       title: 'Cambiar clave',
                       width: 120,
                       imageHeight: 70,
-                      textStyle: textStyle.bodyMedium!.copyWith(
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold
-                      ),
+                      textStyle: textStyle.bodyMedium!
+                          .copyWith(fontSize: 15, fontWeight: FontWeight.bold),
                     ),
                     SmallCard(
                       image:
@@ -157,24 +164,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       title: 'Preguntas de seguridad',
                       width: 120,
                       imageHeight: 70,
-                      textStyle: textStyle.bodyMedium!.copyWith(
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold
-                      ),
+                      textStyle: textStyle.bodyMedium!
+                          .copyWith(fontSize: 15, fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),
             ],
           ),
         ),
-        bottomNavigationBar: Customnavbar(
-          selectedIndex: navProvider
-              .selectedIndex, // Índice actual del NavigationProvider.
-          onDestinationSelected: (index) {
-            navProvider
-                .updateIndex(index); // Actualiza el índice en el provider.
-          },
-        ),
+        // bottomNavigationBar: Customnavbar(
+        //   selectedIndex: navProvider
+        //       .selectedIndex, // Índice actual del NavigationProvider.
+        //   onDestinationSelected: (index) {
+        //     navProvider
+        //         .updateIndex(index); // Actualiza el índice en el provider.
+        //   },
+        // ),
       ),
     );
   }

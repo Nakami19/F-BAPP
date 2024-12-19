@@ -14,9 +14,8 @@ class ListProfitsScreen extends StatefulWidget {
 }
 
 class _ListProfitsScreenState extends State<ListProfitsScreen> {
-    final GlobalKey<ScaffoldState> _listprofitsScaffoldKey =
+  final GlobalKey<ScaffoldState> _listprofitsScaffoldKey =
       GlobalKey<ScaffoldState>();
-
 
   @override
   Widget build(BuildContext context) {
@@ -24,15 +23,27 @@ class _ListProfitsScreenState extends State<ListProfitsScreen> {
     return Scaffold(
       drawer: DrawerMenu(),
       key: _listprofitsScaffoldKey,
+      onDrawerChanged: (isOpened) {
+        if (!isOpened) {
+          Future.delayed(Duration(milliseconds: navProvider.showNavBarDelay), () {
+            navProvider.updateShowNavBar(true);
+          });
+        } else {
+          navProvider.updateShowNavBar(false);
+        }
+      },
       appBar: PreferredSize(
           preferredSize: Size.fromHeight(110),
           child: Screensappbar(
-              title: 'Listado de aliados', screenKey: _listprofitsScaffoldKey, poproute: merchantScreen,)),
-      bottomNavigationBar: Customnavbar(
-          selectedIndex: 2,
-          onDestinationSelected: (index) {
-            navProvider.updateIndex(index);
-          }),
+            title: 'Listado de aliados',
+            screenKey: _listprofitsScaffoldKey,
+            poproute: merchantScreen,
+          )),
+      // bottomNavigationBar: Customnavbar(
+      //     selectedIndex: 2,
+      //     onDestinationSelected: (index) {
+      //       navProvider.updateIndex(index);
+      //     }),
     );
   }
 }

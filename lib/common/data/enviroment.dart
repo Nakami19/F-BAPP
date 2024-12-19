@@ -1,5 +1,4 @@
 import 'package:f_bapp/common/assets/theme/app_colors.dart';
-import 'package:f_bapp/common/assets/theme/app_theme.dart';
 import 'package:f_bapp/common/data/constants.dart';
 import 'package:f_bapp/flavors.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';

@@ -20,19 +20,19 @@ class _Onboardingv1ScreenState extends State<Onboardingv1Screen> {
   final GlobalKey<ScaffoldState> _onboardingV1ScaffoldKey =
       GlobalKey<ScaffoldState>();
 
-  var showactions=[];
+  var showactions = [];
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    
+
     //se filtran las acciones que deben mostrarse
     final userProvider = context.read<UserProvider>();
-    showactions = userProvider.actions.where((action) => action.showInMenu == true).toList();
-    
+    showactions = userProvider.actions
+        .where((action) => action.showInMenu == true)
+        .toList();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -42,10 +42,21 @@ class _Onboardingv1ScreenState extends State<Onboardingv1Screen> {
     return Scaffold(
       drawer: DrawerMenu(),
       key: _onboardingV1ScaffoldKey,
+      onDrawerChanged: (isOpened) {
+        if (!isOpened) {
+          Future.delayed(Duration(milliseconds: navProvider.showNavBarDelay), () {
+            navProvider.updateShowNavBar(true);
+          });
+        } else {
+          navProvider.updateShowNavBar(false);
+        }
+      },
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(110),
-        child: Screensappbar(title: 'Onboarding v1', screenKey: _onboardingV1ScaffoldKey, poproute: homeScreen)
-      ),
+          preferredSize: Size.fromHeight(110),
+          child: Screensappbar(
+              title: 'Onboarding v1',
+              screenKey: _onboardingV1ScaffoldKey,
+              poproute: homeScreen)),
       body: Padding(
         padding: const EdgeInsets.only(bottom: 30),
         child: Container(
@@ -77,12 +88,11 @@ class _Onboardingv1ScreenState extends State<Onboardingv1Screen> {
               }),
         ),
       ),
-      bottomNavigationBar:Customnavbar(
-        selectedIndex: 2, 
-        onDestinationSelected:(index) {
-          navProvider.updateIndex(index);
-        } ),
-
+      // bottomNavigationBar:Customnavbar(
+      //   selectedIndex: 2,
+      //   onDestinationSelected:(index) {
+      //     navProvider.updateIndex(index);
+      //   } ),
     );
   }
 }

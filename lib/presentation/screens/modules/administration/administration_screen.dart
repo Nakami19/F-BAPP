@@ -20,7 +20,7 @@ class _AdministrationScreenState extends State<AdministrationScreen> {
   final GlobalKey<ScaffoldState> _administrationScaffoldKey =
       GlobalKey<ScaffoldState>();
 
-  var showactions=[];
+  var showactions = [];
 
   @override
   void initState() {
@@ -29,8 +29,9 @@ class _AdministrationScreenState extends State<AdministrationScreen> {
 
     //se filtran las acciones que deben mostrarse
     final userProvider = context.read<UserProvider>();
-    showactions = userProvider.actions.where((action) => action.showInMenu == true).toList();
-    
+    showactions = userProvider.actions
+        .where((action) => action.showInMenu == true)
+        .toList();
   }
 
   @override
@@ -41,6 +42,15 @@ class _AdministrationScreenState extends State<AdministrationScreen> {
     return Scaffold(
       drawer: DrawerMenu(),
       key: _administrationScaffoldKey,
+      onDrawerChanged: (isOpened) {
+        if (!isOpened) {
+          Future.delayed(Duration(milliseconds: navProvider.showNavBarDelay), () {
+            navProvider.updateShowNavBar(true);
+          });
+        } else {
+          navProvider.updateShowNavBar(false);
+        }
+      },
       appBar: PreferredSize(
           preferredSize: Size.fromHeight(110),
           child: Screensappbar(
@@ -78,11 +88,11 @@ class _AdministrationScreenState extends State<AdministrationScreen> {
               }),
         ),
       ),
-      bottomNavigationBar: Customnavbar(
-          selectedIndex: 2,
-          onDestinationSelected: (index) {
-            navProvider.updateIndex(index);
-          }),
+      // bottomNavigationBar: Customnavbar(
+      //     selectedIndex: 2,
+      //     onDestinationSelected: (index) {
+      //       navProvider.updateIndex(index);
+      //     }),
     );
   }
 }

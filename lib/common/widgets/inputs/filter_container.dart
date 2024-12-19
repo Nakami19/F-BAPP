@@ -13,23 +13,26 @@ import '../../providers/pagination_provider.dart';
 class Filter<T> extends StatefulWidget {
   const Filter(
       {super.key,
-      required this.options,
-      this.getdata,
-      required this.id,
-      required this.date,
-      required this.dropdown,
-      required this.phoneNumber,
+      required this.inputs,
+      // required this.options,
+      // this.getdata,
+      // required this.id,
+      // required this.date,
+      // required this.dropdown,
+      // required this.phoneNumber,
       // required this.validatorId
       });
 
-  final List<T> options;
-  final Future<void> Function(Map<String, dynamic>)? getdata;
+  // final List<T> options;
+  // final Future<void> Function(Map<String, dynamic>)? getdata;
 
-  final bool id;
-  final bool date;
-  final bool dropdown;
-  final bool phoneNumber;
+  // final bool id;
+  // final bool date;
+  // final bool dropdown;
+  // final bool phoneNumber;
   // final String? Function(String?)?validatorId;
+
+  final List<T> inputs;
 
   @override
   State<Filter> createState() => _FilterState();
@@ -49,14 +52,14 @@ class _FilterState extends State<Filter> {
     super.initState();
     final provider = context.read<PaginationProvider>();
 
-    _textController1 = TextEditingController(text: provider.idOrder ?? '');
-    _textController2 = TextEditingController(text: provider.phoneNumber ?? '');
-    _textController3 = TextEditingController(
-      text: (provider.startDate != null && provider.endDate != null)
-          ? '${provider.startDate} - ${provider.endDate}'
-          : '${DateFormatter.formatDate2(DateTime.now()).toString()} - ${DateFormatter.formatDate2(DateTime.now()).toString()}',
-    );
-    _dropdownValue = provider.tagStatus;
+    // _textController1 = TextEditingController(text: provider.idOrder ?? '');
+    // _textController2 = TextEditingController(text: provider.phoneNumber ?? '');
+    // _textController3 = TextEditingController(
+    //   text: (provider.startDate != null && provider.endDate != null)
+    //       ? '${provider.startDate} - ${provider.endDate}'
+    //       : '${DateFormatter.formatDate2(DateTime.now()).toString()} - ${DateFormatter.formatDate2(DateTime.now()).toString()}',
+    // );
+    // _dropdownValue = provider.tagStatus;
   }
 
   @override
@@ -144,95 +147,97 @@ class _FilterState extends State<Filter> {
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Column(children: [
-                        if (widget.id == true)
-                          Padding(
-                              padding: const EdgeInsets.only(bottom: 12),
-                              child: CustomTextFormField(
-                                controller: _textController1,
-                                hintText: widget.id
-                                    ? 'Buscar id'
-                                    : 'Buscar nro referencia',
-                                hintStyle: textStyle.bodySmall!
-                                    .copyWith(fontSize: 17, color: Colors.grey),
-                                enabled: true,
-                                // validator: widget.validatorId
-                              )
-                              // CustomTextfield(
-                              //   hint: widget.id
-                              //       ? 'Buscar id'
-                              //       : 'Buscar nro referencia',
-                              //   onChanged: (value) {
-                              //     setState(() {});
-                              //   },
-                              //   controller: _textController1,
-                              // ),
-                              ),
-                        if (widget.phoneNumber == true)
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 12),
-                            child: CustomTextfield(
-                              hint: 'Buscar nro telefono emisor',
-                              onChanged: (value) {
-                                setState(() {});
-                              },
-                              controller: _textController2,
-                            ),
-                          ),
-                        if (widget.dropdown == true)
-                          Padding(
-                              padding: const EdgeInsets.only(bottom: 12),
-                              child: CustomDropdown(
-                                hintText: 'Estado',
-                                options: widget.options,
-                                onChanged: (value) {
-                                  setState(() {
-                                    _dropdownValue = value;
-                                  });
-                                },
-                                selectedValue: _dropdownValue,
-                                itemValueMapper: (option) =>
-                                    option['tagStatus']!,
-                                itemLabelMapper: (option) =>
-                                    option['nameStatus']!,
-                                autoSelectFirst: false,
-                                optionsTextsStyle:
-                                    textStyle.bodySmall!.copyWith(fontSize: 14),
-                              )),
-                        if (widget.date == true)
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 12),
-                            child: DateInput(
-                              controller: _textController3,
-                              rangeDate: true,
-                            ),
-                          ),
-                        CustomButton(
-                            title: 'Buscar',
-                            isPrimaryColor: true,
-                            isOutline: false,
-                            onTap: () {
-                              if (form.currentState?.validate() ?? false) {
-                                if (widget.getdata != null) {
-                                  final filters = {
-                                    'idOrder': _textController1.text.isNotEmpty
-                                        ? _textController1.text
-                                        : null,
-                                    'phoneNumber':
-                                        _textController2.text.isNotEmpty
-                                            ? _textController2.text
-                                            : null,
-                                    'tagStatus': _dropdownValue,
-                                    'startDate':
-                                        _textController3.text.isNotEmpty
-                                            ? _textController3.text
-                                            : null,
-                                  };
 
-                                  widget.getdata!(filters);
-                                }
-                              }
-                            },
-                            provider: provider)
+
+                        // if (widget.id == true)
+                        //   Padding(
+                        //       padding: const EdgeInsets.only(bottom: 12),
+                        //       child: CustomTextFormField(
+                        //         controller: _textController1,
+                        //         hintText: widget.id
+                        //             ? 'Buscar id'
+                        //             : 'Buscar nro referencia',
+                        //         hintStyle: textStyle.bodySmall!
+                        //             .copyWith(fontSize: 17, color: Colors.grey),
+                        //         enabled: true,
+                        //         // validator: widget.validatorId
+                        //       )
+                        //       // CustomTextfield(
+                        //       //   hint: widget.id
+                        //       //       ? 'Buscar id'
+                        //       //       : 'Buscar nro referencia',
+                        //       //   onChanged: (value) {
+                        //       //     setState(() {});
+                        //       //   },
+                        //       //   controller: _textController1,
+                        //       // ),
+                        //       ),
+                        // if (widget.phoneNumber == true)
+                        //   Padding(
+                        //     padding: const EdgeInsets.only(bottom: 12),
+                        //     child: CustomTextfield(
+                        //       hint: 'Buscar nro telefono emisor',
+                        //       onChanged: (value) {
+                        //         setState(() {});
+                        //       },
+                        //       controller: _textController2,
+                        //     ),
+                        //   ),
+                        // if (widget.dropdown == true)
+                        //   Padding(
+                        //       padding: const EdgeInsets.only(bottom: 12),
+                        //       child: CustomDropdown(
+                        //         hintText: 'Estado',
+                        //         options: widget.options,
+                        //         onChanged: (value) {
+                        //           setState(() {
+                        //             _dropdownValue = value;
+                        //           });
+                        //         },
+                        //         selectedValue: _dropdownValue,
+                        //         itemValueMapper: (option) =>
+                        //             option['tagStatus']!,
+                        //         itemLabelMapper: (option) =>
+                        //             option['nameStatus']!,
+                        //         autoSelectFirst: false,
+                        //         optionsTextsStyle:
+                        //             textStyle.bodySmall!.copyWith(fontSize: 14),
+                        //       )),
+                        // if (widget.date == true)
+                        //   Padding(
+                        //     padding: const EdgeInsets.only(bottom: 12),
+                        //     child: DateInput(
+                        //       controller: _textController3,
+                        //       rangeDate: true,
+                        //     ),
+                        //   ),
+                        // CustomButton(
+                        //     title: 'Buscar',
+                        //     isPrimaryColor: true,
+                        //     isOutline: false,
+                        //     onTap: () {
+                        //       if (form.currentState?.validate() ?? false) {
+                        //         if (widget.getdata != null) {
+                        //           final filters = {
+                        //             'idOrder': _textController1.text.isNotEmpty
+                        //                 ? _textController1.text
+                        //                 : null,
+                        //             'phoneNumber':
+                        //                 _textController2.text.isNotEmpty
+                        //                     ? _textController2.text
+                        //                     : null,
+                        //             'tagStatus': _dropdownValue,
+                        //             'startDate':
+                        //                 _textController3.text.isNotEmpty
+                        //                     ? _textController3.text
+                        //                     : null,
+                        //           };
+
+                        //           widget.getdata!(filters);
+                        //         }
+                        //       }
+                        //     },
+                        //     provider: provider)
                       ]),
                     ),
                   )

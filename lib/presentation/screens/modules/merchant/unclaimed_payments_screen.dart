@@ -10,13 +10,13 @@ class UnclaimedPaymentsScreen extends StatefulWidget {
   const UnclaimedPaymentsScreen({super.key});
 
   @override
-  State<UnclaimedPaymentsScreen> createState() => _UnclaimedPaymentsScreenState();
+  State<UnclaimedPaymentsScreen> createState() =>
+      _UnclaimedPaymentsScreenState();
 }
 
 class _UnclaimedPaymentsScreenState extends State<UnclaimedPaymentsScreen> {
-    final GlobalKey<ScaffoldState> _unclaimedpaymentsScaffoldKey =
+  final GlobalKey<ScaffoldState> _unclaimedpaymentsScaffoldKey =
       GlobalKey<ScaffoldState>();
-
 
   @override
   Widget build(BuildContext context) {
@@ -24,15 +24,27 @@ class _UnclaimedPaymentsScreenState extends State<UnclaimedPaymentsScreen> {
     return Scaffold(
       drawer: DrawerMenu(),
       key: _unclaimedpaymentsScaffoldKey,
+      onDrawerChanged: (isOpened) {
+        if (!isOpened) {
+          Future.delayed(Duration(milliseconds: navProvider.showNavBarDelay), () {
+            navProvider.updateShowNavBar(true);
+          });
+        } else {
+          navProvider.updateShowNavBar(false);
+        }
+      },
       appBar: PreferredSize(
           preferredSize: Size.fromHeight(110),
           child: Screensappbar(
-              title: 'Pagos no reclamados', screenKey: _unclaimedpaymentsScaffoldKey, poproute: merchantScreen,)),
-      bottomNavigationBar: Customnavbar(
-          selectedIndex: 2,
-          onDestinationSelected: (index) {
-            navProvider.updateIndex(index);
-          }),
+            title: 'Pagos no reclamados',
+            screenKey: _unclaimedpaymentsScaffoldKey,
+            poproute: merchantScreen,
+          )),
+      // bottomNavigationBar: Customnavbar(
+      //     selectedIndex: 2,
+      //     onDestinationSelected: (index) {
+      //       navProvider.updateIndex(index);
+      //     }),
     );
   }
 }

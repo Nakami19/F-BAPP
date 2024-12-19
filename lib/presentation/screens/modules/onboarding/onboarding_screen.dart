@@ -20,7 +20,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   final GlobalKey<ScaffoldState> _onboardingScaffoldKey =
       GlobalKey<ScaffoldState>();
 
-  var showactions=[];
+  var showactions = [];
 
   @override
   void initState() {
@@ -29,8 +29,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
     //se filtran las acciones que deben mostrarse
     final userProvider = context.read<UserProvider>();
-    showactions = userProvider.actions.where((action) => action.showInMenu == true).toList();
-    
+    showactions = userProvider.actions
+        .where((action) => action.showInMenu == true)
+        .toList();
   }
 
   @override
@@ -41,10 +42,21 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     return Scaffold(
       drawer: DrawerMenu(),
       key: _onboardingScaffoldKey,
+      onDrawerChanged: (isOpened) {
+        if (!isOpened) {
+          Future.delayed( Duration(milliseconds: navProvider.showNavBarDelay), () {
+            navProvider.updateShowNavBar(true);
+          });
+        } else {
+          navProvider.updateShowNavBar(false);
+        }
+      },
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(110),
-        child: Screensappbar(title: 'Onboarding', screenKey: _onboardingScaffoldKey, poproute: homeScreen)
-      ),
+          preferredSize: Size.fromHeight(110),
+          child: Screensappbar(
+              title: 'Onboarding',
+              screenKey: _onboardingScaffoldKey,
+              poproute: homeScreen)),
       body: Padding(
         padding: const EdgeInsets.only(bottom: 30),
         child: Container(
@@ -77,12 +89,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               }),
         ),
       ),
-      bottomNavigationBar:Customnavbar(
-        selectedIndex: 2, 
-        onDestinationSelected:(index) {
-          navProvider.updateIndex(index);
-        } ),
-
+      // bottomNavigationBar:Customnavbar(
+      //   selectedIndex: 2,
+      //   onDestinationSelected:(index) {
+      //     navProvider.updateIndex(index);
+      //   } ),
     );
   }
 }

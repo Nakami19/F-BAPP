@@ -53,7 +53,7 @@ class DrawerMenu extends StatelessWidget {
 
                   //mostrar los modulos disponibles
                   Container(
-                    height: MediaQuery.of(context).size.height / 2,
+                    height: MediaQuery.of(context).size.height / 2.15,
                     child: Column(
                         children: userProvider.privileges!.map((privilege) {
                       return GestureDetector(

@@ -42,8 +42,7 @@ class App extends StatelessWidget {
                 data: mediaQueryData,
                 child: child ?? const SizedBox.shrink(),
               );
-        },
-         
+        }, 
       ),
     );
   }

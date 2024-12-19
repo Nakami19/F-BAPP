@@ -39,7 +39,6 @@ class _ListOrdersScreenState extends State<ListOrdersScreen> {
       final merchantProvider = context.read<MerchantProvider>();
       final paginationProvider = context.read<PaginationProvider>();
       paginationProvider.resetPagination();
-      paginationProvider.clearFilters();
       final response1 = await merchantProvider.ListStatus('ORDER');
       final response2 = await merchantProvider.Listorders(
           limit: 5,
@@ -49,7 +48,6 @@ class _ListOrdersScreenState extends State<ListOrdersScreen> {
 
       if (merchantProvider.orders != null) {
         paginationProvider.setTotal(merchantProvider.orders!['count']);
-        paginationProvider.setPageData(merchantProvider.orders!['rows']);
       }
     });
   }
@@ -72,13 +70,21 @@ class _ListOrdersScreenState extends State<ListOrdersScreen> {
 
     return WillPopScope(
       onWillPop: () async {
-        paginationProvider.clearFilters();
         merchantProvider.disposeValues();
         return true;
       },
       child: Scaffold(
         drawer: DrawerMenu(),
         key: _listordersScaffoldKey,
+        onDrawerChanged: (isOpened) {
+          if (!isOpened) {
+            Future.delayed(Duration(milliseconds: navProvider.showNavBarDelay), () {
+              navProvider.updateShowNavBar(true);
+            });
+          } else {
+            navProvider.updateShowNavBar(false);
+          }
+        },
         appBar: PreferredSize(
             preferredSize: Size.fromHeight(110),
             child: Screensappbar(
@@ -86,7 +92,6 @@ class _ListOrdersScreenState extends State<ListOrdersScreen> {
               screenKey: _listordersScaffoldKey,
               poproute: merchantScreen,
               onBack: () {
-                paginationProvider.clearFilters();
                 merchantProvider.disposeValues();
               },
             )),
@@ -120,66 +125,6 @@ class _ListOrdersScreenState extends State<ListOrdersScreen> {
               ),
             ],
             if (merchantProvider.isLoading == false) ...[
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 35, vertical: 15),
-                child: Filter(
-                  id: true,
-                  phoneNumber: false,
-                  date: true,
-                  dropdown: true,
-                  options: merchantProvider.status!,
-                  getdata: (filters) async {
-                    final merchantProvider = context.read<MerchantProvider>();
-                    final paginationProvider =
-                        context.read<PaginationProvider>();
-
-                    // Reinicia la paginación antes de buscar
-                    paginationProvider.resetPagination();
-
-                    // Extrae los filtros
-                    final idOrder = filters['idOrder'];
-                    final idTypeOrder = filters['idTypeOrder'];
-                    final tagStatus = filters['tagStatus'];
-
-                    // final startDate = (filters['startDate']?.isNotEmpty ?? false)
-                    //     ? filters['startDate']
-                    //     : DateFormatter.formatDate2(DateTime.now());
-
-                    // final endDate = (filters['endDate']?.isNotEmpty ?? false)
-                    //     ? filters['endDate']
-                    //     : DateFormatter.formatDate2(DateTime.now());
-
-                    final range = filters['startDate']?.split('-') ?? [];
-                    final startDate = range.isNotEmpty
-                        ? range[0].toString().trim()
-                        : DateFormatter.formatDate2(DateTime.now()).toString();
-                    final endDate = range.length > 1
-                        ? range[1].toString().trim()
-                        : DateFormatter.formatDate2(DateTime.now()).toString();
-
-                    print('HEEEEELLLPPP');
-                    print(startDate);
-                    print(endDate);
-
-                    // Llama a la función de obtener datos con los filtros
-                    paginationProvider.setFilters(
-                      tagStatus: tagStatus,
-                      startDate: startDate,
-                      endDate: endDate,
-                      idOrder: idOrder,
-                    );
-
-                    // Llama a la función de obtener datos con los filtros
-                    // await paginationProvider.fetchPageData(context);
-
-                    // Actualiza la paginación con los nuevos datos
-                    paginationProvider
-                        .setTotal(merchantProvider.orders!['count']);
-                  },
-                ),
-              ),
-
               if (merchantProvider.orders?['count'] == 0 ||
                   merchantProvider.haveSimpleError == true) ...[
                 Expanded(
@@ -187,7 +132,6 @@ class _ListOrdersScreenState extends State<ListOrdersScreen> {
                     physics: NeverScrollableScrollPhysics(),
                     child: Column(
                       children: [
-                        
                         Center(
                           child: SvgPicture.asset(
                             'assets/chinchin/no_data.svg',
@@ -202,13 +146,14 @@ class _ListOrdersScreenState extends State<ListOrdersScreen> {
                   ),
                 )
               ],
-              if (merchantProvider.orders?['count'] > 0 && merchantProvider.haveSimpleError==false) ...[
+              if (merchantProvider.orders?['count'] > 0 &&
+                  merchantProvider.haveSimpleError == false) ...[
                 Expanded(
                   child: ListView.builder(
                       controller: _scrollController,
-                      itemCount: paginationProvider.currentPageData.length,
+                      itemCount: merchantProvider.orders!['rows'].length,
                       itemBuilder: (context, index) {
-                        final order = paginationProvider.currentPageData[index];
+                        final order = merchantProvider.orders!['rows'][index];
                         return Padding(
                           padding: const EdgeInsets.symmetric(
                               vertical: 15, horizontal: 35),
@@ -229,11 +174,11 @@ class _ListOrdersScreenState extends State<ListOrdersScreen> {
             ]
           ],
         ),
-        bottomNavigationBar: Customnavbar(
-            selectedIndex: 2,
-            onDestinationSelected: (index) {
-              navProvider.updateIndex(index);
-            }),
+        // bottomNavigationBar: Customnavbar(
+        //     selectedIndex: 2,
+        //     onDestinationSelected: (index) {
+        //       navProvider.updateIndex(index);
+        //     }),
       ),
     );
   }
@@ -271,3 +216,63 @@ class _ListOrdersScreenState extends State<ListOrdersScreen> {
     return objects;
   }
 }
+
+// Padding(
+//                 padding:
+//                     const EdgeInsets.symmetric(horizontal: 35, vertical: 15),
+//                 child: Filter(
+//                   id: true,
+//                   phoneNumber: false,
+//                   date: true,
+//                   dropdown: true,
+//                   options: merchantProvider.status!,
+//                   getdata: (filters) async {
+//                     final merchantProvider = context.read<MerchantProvider>();
+//                     final paginationProvider =
+//                         context.read<PaginationProvider>();
+
+//                     // Reinicia la paginación antes de buscar
+//                     paginationProvider.resetPagination();
+
+//                     // Extrae los filtros
+//                     final idOrder = filters['idOrder'];
+//                     final idTypeOrder = filters['idTypeOrder'];
+//                     final tagStatus = filters['tagStatus'];
+
+//                     // final startDate = (filters['startDate']?.isNotEmpty ?? false)
+//                     //     ? filters['startDate']
+//                     //     : DateFormatter.formatDate2(DateTime.now());
+
+//                     // final endDate = (filters['endDate']?.isNotEmpty ?? false)
+//                     //     ? filters['endDate']
+//                     //     : DateFormatter.formatDate2(DateTime.now());
+
+//                     final range = filters['startDate']?.split('-') ?? [];
+//                     final startDate = range.isNotEmpty
+//                         ? range[0].toString().trim()
+//                         : DateFormatter.formatDate2(DateTime.now()).toString();
+//                     final endDate = range.length > 1
+//                         ? range[1].toString().trim()
+//                         : DateFormatter.formatDate2(DateTime.now()).toString();
+
+//                     print('HEEEEELLLPPP');
+//                     print(startDate);
+//                     print(endDate);
+
+//                     // Llama a la función de obtener datos con los filtros
+//                     paginationProvider.setFilters(
+//                       tagStatus: tagStatus,
+//                       startDate: startDate,
+//                       endDate: endDate,
+//                       idOrder: idOrder,
+//                     );
+
+//                     // Llama a la función de obtener datos con los filtros
+//                     // await paginationProvider.fetchPageData(context);
+
+//                     // Actualiza la paginación con los nuevos datos
+//                     paginationProvider
+//                         .setTotal(merchantProvider.orders!['count']);
+//                   },
+//                 ),
+//               ),

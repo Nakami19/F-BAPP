@@ -33,9 +33,8 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final utilsProvider = context.read<UtilsProvider>();
-      
-      context.read<NavigationProvider>().updateIndex(0);
 
+      context.read<NavigationProvider>().updateIndex(0);
 
       //se obtiene la informacion del usuario
       if (!utilsProvider.isLoading) {
@@ -62,6 +61,16 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Scaffold(
         key: _homeScaffoldKey,
         drawer: DrawerMenu(),
+        onDrawerChanged: (isOpened) {
+          if (!isOpened) {
+            // final navProvider = context.read<NavigationProvider>();
+            Future.delayed(Duration(milliseconds: navProvider.showNavBarDelay), () {
+              navProvider.updateShowNavBar(true);
+            });
+          } else {
+            navProvider.updateShowNavBar(false);
+          }
+        },
         extendBodyBehindAppBar: true,
         appBar: PreferredSize(
             preferredSize: Size.fromHeight(150),
@@ -74,13 +83,12 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-
               const SizedBox(
                 height: 110,
               ),
 
               UserData(),
-        
+
               // esta cargando/no ha cargado
               if (userProvider.isLoading) ...[
                 //skeleton del dropdown
@@ -94,30 +102,35 @@ class _HomeScreenState extends State<HomeScreen> {
                   width: double.infinity,
                 ),
               ],
-        
+
               //ya cargo
               if (!userProvider.isLoading)
                 CustomDropdown(
                     title: 'Seleccione una compañia *',
-                    options: userProvider.memberlist!, //se obtiene la lista de miembros
-                    selectedValue: navProvider.selectedCompany, //se muestra la compañia seleccionada 
+                    options: userProvider
+                        .memberlist!, //se obtiene la lista de miembros
+                    selectedValue: navProvider
+                        .selectedCompany, //se muestra la compañia seleccionada
                     autoSelectFirst: true,
                     //se recibe el objeto que contiene los key idParentRelation y name, y sus valores
-                    itemValueMapper: (option) => 
-                        option['idParentRelation'].toString(), //retorna el valor 
-                    itemLabelMapper: (option) => option['name'].toString(), //retorna el label
+                    itemValueMapper: (option) => option['idParentRelation']
+                        .toString(), //retorna el valor
+                    itemLabelMapper: (option) =>
+                        option['name'].toString(), //retorna el label
                     onChanged: (value) {
                       setState(() {
                         navProvider.updateCompany(
                             value!); // Actualizar el valor seleccionado.
                       });
-                      userProvider.getMemberTypeChangeList( //se actualiza la lista de miembros
-                          value!, loginProvider.userLogin!);
+                      userProvider.getMemberTypeChangeList(
+                          //se actualiza la lista de miembros
+                          value!,
+                          loginProvider.userLogin!);
                     },
                     showError: true,
                     errorText: 'error'),
 
-             const SizedBox(
+              const SizedBox(
                 height: 10,
               ),
 
@@ -129,7 +142,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   width: double.infinity,
                 ),
 
-               const  CustomSkeleton(height: 335),
+                const CustomSkeleton(height: 335),
 
                 const SizedBox(
                   height: 10,
@@ -140,76 +153,78 @@ class _HomeScreenState extends State<HomeScreen> {
               //ya cargo
               if (!userProvider.isLoading)
                 Expanded(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        //Graficos
-                       const Graphic(),
+                    child: SingleChildScrollView(
+                        child: Column(
+                  children: [
+                    //Graficos
+                    const Graphic(),
 
-                       const SizedBox(height: 10,),
+                    const SizedBox(
+                      height: 10,
+                    ),
 
-                       const PieGraphic2(),
-                      
-                      //Tarjetas de modulos
-                        Text("Módulos", 
-                        style: textStyle.bodyMedium!.copyWith(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold
-                        ),
-                        ),
+                    const PieGraphic2(),
 
-                       const SizedBox(height: 10,),
+                    //Tarjetas de modulos
+                    Text(
+                      "Módulos",
+                      style: textStyle.bodyMedium!
+                          .copyWith(fontSize: 22, fontWeight: FontWeight.bold),
+                    ),
 
-                      //Se generan las tarjetas 
-                        GridView.count(
-                    crossAxisCount: 2, //2 tarjetas por fila
-                    mainAxisSpacing: 20,
-                    crossAxisSpacing: 20,
-                    padding: EdgeInsets.only(bottom: 10, left: 1, right: 3, top: 5), //el padding bottom hace que no muestren al final de la pantalla
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    children: userProvider.privileges!.map((privilege) {
+                    const SizedBox(
+                      height: 10,
+                    ),
 
-                      return SmallCard(
-                        image:'${DataConstant.imagesModules}/${privilege.icon}/chinchin-${privilege.icon}-on.svg',
-                        placeholder:'${DataConstant.imagesModules}/${privilege.icon}}/chinchin-${privilege.icon}-on.svg' ,
-                        title: privilege.moduleName,
-                        height: 120,
-                        width: 130,
-                        imageHeight: 70,
-                        textStyle: textStyle.bodyMedium!.copyWith(
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold
-                        ),
-
-                        onTap: () {
-                          final privilegeActions = privilege.actions; // Se establecen las acciones del privilegio
-                          context.read<UserProvider>().setActions(privilegeActions);
-                          Navigator.pushNamed(
-                              context, '/${privilege.moduleName}Screen');
-                        },
-
-                      );
-                    }).toList(),
-                  ),
-                      ],
-                    )
-                    )
-                  ),
-                                      
-          
+                    //Se generan las tarjetas
+                    GridView.count(
+                      crossAxisCount: 2, //2 tarjetas por fila
+                      mainAxisSpacing: 20,
+                      crossAxisSpacing: 20,
+                      padding: EdgeInsets.only(
+                          bottom: 10,
+                          left: 1,
+                          right: 3,
+                          top:
+                              5), //el padding bottom hace que no muestren al final de la pantalla
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      children: userProvider.privileges!.map((privilege) {
+                        return SmallCard(
+                          image:
+                              '${DataConstant.imagesModules}/${privilege.icon}/chinchin-${privilege.icon}-on.svg',
+                          placeholder:
+                              '${DataConstant.imagesModules}/${privilege.icon}}/chinchin-${privilege.icon}-on.svg',
+                          title: privilege.moduleName,
+                          height: 120,
+                          width: 130,
+                          imageHeight: 70,
+                          textStyle: textStyle.bodyMedium!.copyWith(
+                              fontSize: 15, fontWeight: FontWeight.bold),
+                          onTap: () {
+                            final privilegeActions = privilege
+                                .actions; // Se establecen las acciones del privilegio
+                            context
+                                .read<UserProvider>()
+                                .setActions(privilegeActions);
+                            Navigator.pushNamed(
+                                context, '/${privilege.moduleName}Screen');
+                          },
+                        );
+                      }).toList(),
+                    ),
+                  ],
+                ))),
             ],
           ),
         ),
-        bottomNavigationBar: Customnavbar(
-          selectedIndex: navProvider.selectedIndex,
-          onDestinationSelected: (index) {
-            navProvider.updateIndex(index);
-          },
-        ),
+        // bottomNavigationBar: Customnavbar(
+        //   selectedIndex: navProvider.selectedIndex,
+        //   onDestinationSelected: (index) {
+        //     navProvider.updateIndex(index);
+        //   },
+        // ),
       ),
     );
   }
-
-  
 }

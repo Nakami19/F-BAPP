@@ -1,5 +1,4 @@
 import 'package:f_bapp/common/assets/theme/app_colors.dart';
-import 'package:f_bapp/common/assets/theme/app_theme.dart';
 import 'package:f_bapp/common/data/date_formatter.dart';
 import 'package:f_bapp/common/providers/theme_provider.dart';
 import 'package:f_bapp/common/widgets/inputs/custom_text_form_field.dart';

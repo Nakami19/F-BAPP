@@ -24,6 +24,15 @@ class _ListMobilePaymentsState extends State<ListMobilePayments> {
     return Scaffold(
       drawer: DrawerMenu(),
       key: _listmobilepaymentScaffoldKey,
+      onDrawerChanged: (isOpened) {
+        if (!isOpened) {
+          Future.delayed( Duration(milliseconds: navProvider.showNavBarDelay), () {
+            navProvider.updateShowNavBar(true);
+          });
+        } else {
+          navProvider.updateShowNavBar(false);
+        }
+      },
       appBar: PreferredSize(
           preferredSize: Size.fromHeight(110),
           child: Screensappbar(
@@ -31,13 +40,11 @@ class _ListMobilePaymentsState extends State<ListMobilePayments> {
             screenKey: _listmobilepaymentScaffoldKey,
             poproute: merchantScreen,
           )),
-
-    bottomNavigationBar: Customnavbar(
-          selectedIndex: 2,
-          onDestinationSelected: (index) {
-            navProvider.updateIndex(index);
-          }),
-
+      // bottomNavigationBar: Customnavbar(
+      //     selectedIndex: 2,
+      //     onDestinationSelected: (index) {
+      //       navProvider.updateIndex(index);
+      //     }),
     );
   }
 }

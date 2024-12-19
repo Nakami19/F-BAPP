@@ -14,25 +14,36 @@ class CreateOrderScreen extends StatefulWidget {
 }
 
 class _CreateOrderScreenState extends State<CreateOrderScreen> {
-    final GlobalKey<ScaffoldState> _createorderScaffoldKey =
+  final GlobalKey<ScaffoldState> _createorderScaffoldKey =
       GlobalKey<ScaffoldState>();
-
 
   @override
   Widget build(BuildContext context) {
     final navProvider = context.watch<NavigationProvider>();
     return Scaffold(
       drawer: DrawerMenu(),
+      onDrawerChanged: (isOpened) {
+        if (!isOpened) {
+          Future.delayed(Duration(milliseconds: navProvider.showNavBarDelay), () {
+            navProvider.updateShowNavBar(true);
+          });
+        } else {
+          navProvider.updateShowNavBar(false);
+        }
+      },
       key: _createorderScaffoldKey,
       appBar: PreferredSize(
           preferredSize: Size.fromHeight(110),
           child: Screensappbar(
-              title: 'Crear orden de pasarela', screenKey: _createorderScaffoldKey, poproute: merchantScreen,)),
-      bottomNavigationBar: Customnavbar(
-          selectedIndex: 2,
-          onDestinationSelected: (index) {
-            navProvider.updateIndex(index);
-          }),
+            title: 'Crear orden de pasarela',
+            screenKey: _createorderScaffoldKey,
+            poproute: merchantScreen,
+          )),
+      // bottomNavigationBar: Customnavbar(
+      //     selectedIndex: 2,
+      //     onDestinationSelected: (index) {
+      //       navProvider.updateIndex(index);
+      //     }),
     );
   }
 }

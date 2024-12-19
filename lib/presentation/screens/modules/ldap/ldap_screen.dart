@@ -19,7 +19,7 @@ class LdapScreen extends StatefulWidget {
 class _LdapScreenState extends State<LdapScreen> {
   final GlobalKey<ScaffoldState> _ldapScaffoldKey = GlobalKey<ScaffoldState>();
 
-  var showactions=[];
+  var showactions = [];
 
   @override
   void initState() {
@@ -28,8 +28,9 @@ class _LdapScreenState extends State<LdapScreen> {
 
     //se filtran las acciones que deben mostrarse
     final userProvider = context.read<UserProvider>();
-    showactions = userProvider.actions.where((action) => action.showInMenu == true).toList();
-    
+    showactions = userProvider.actions
+        .where((action) => action.showInMenu == true)
+        .toList();
   }
 
   @override
@@ -40,6 +41,15 @@ class _LdapScreenState extends State<LdapScreen> {
     return Scaffold(
       drawer: DrawerMenu(),
       key: _ldapScaffoldKey,
+      onDrawerChanged: (isOpened) {
+        if (!isOpened) {
+          Future.delayed(Duration(milliseconds: navProvider.showNavBarDelay), () {
+            navProvider.updateShowNavBar(true);
+          });
+        } else {
+          navProvider.updateShowNavBar(false);
+        }
+      },
       appBar: PreferredSize(
           preferredSize: Size.fromHeight(110),
           child: Screensappbar(
@@ -77,11 +87,11 @@ class _LdapScreenState extends State<LdapScreen> {
               }),
         ),
       ),
-      bottomNavigationBar: Customnavbar(
-          selectedIndex: 2,
-          onDestinationSelected: (index) {
-            navProvider.updateIndex(index);
-          }),
+      // bottomNavigationBar: Customnavbar(
+      //     selectedIndex: 2,
+      //     onDestinationSelected: (index) {
+      //       navProvider.updateIndex(index);
+      //     }),
     );
   }
 }

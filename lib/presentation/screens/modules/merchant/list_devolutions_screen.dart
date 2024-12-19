@@ -53,7 +53,6 @@ class _ListDevolutionsScreenState extends State<ListDevolutionsScreen> {
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<PaginationProvider>();
@@ -63,6 +62,15 @@ class _ListDevolutionsScreenState extends State<ListDevolutionsScreen> {
     return Scaffold(
       drawer: DrawerMenu(),
       key: _listdevolutionsScaffoldKey,
+      onDrawerChanged: (isOpened) {
+        if (!isOpened) {
+          Future.delayed(Duration(milliseconds: navProvider.showNavBarDelay), () {
+            navProvider.updateShowNavBar(true);
+          });
+        } else {
+          navProvider.updateShowNavBar(false);
+        }
+      },
       appBar: PreferredSize(
           preferredSize: Size.fromHeight(110),
           child: Screensappbar(
@@ -98,7 +106,7 @@ class _ListDevolutionsScreenState extends State<ListDevolutionsScreen> {
           //   child: ListView.builder(
           //     controller: _scrollController,
           //     itemCount: elements.length,
-          //     itemBuilder: (context, index) => 
+          //     itemBuilder: (context, index) =>
           //       Padding(
           //         padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 35),
           //         child: elements[index],
@@ -108,15 +116,14 @@ class _ListDevolutionsScreenState extends State<ListDevolutionsScreen> {
 
           //Paginacion
           // Pagination(scrollController: _scrollController)
-  
         ],
       ),
 
-    bottomNavigationBar: Customnavbar(
-          selectedIndex: 2,
-          onDestinationSelected: (index) {
-            navProvider.updateIndex(index);
-          }),
+      // bottomNavigationBar: Customnavbar(
+      //       selectedIndex: 2,
+      //       onDestinationSelected: (index) {
+      //         navProvider.updateIndex(index);
+      //       }),
     );
   }
 
@@ -170,7 +177,7 @@ class _ListDevolutionsScreenState extends State<ListDevolutionsScreen> {
 //           },
 //         ),
 //           ),
-          
+
 //           // Lista de elementos filtrados
 //           Expanded(
 //             child: ListView.builder(
@@ -197,6 +204,3 @@ class _ListDevolutionsScreenState extends State<ListDevolutionsScreen> {
 //     );
 //   }
 }
-
-
-

@@ -14,9 +14,8 @@ class RefundPaymentsScreen extends StatefulWidget {
 }
 
 class _RefundPaymentsScreenState extends State<RefundPaymentsScreen> {
-    final GlobalKey<ScaffoldState> _refundpaymentsScaffoldKey =
+  final GlobalKey<ScaffoldState> _refundpaymentsScaffoldKey =
       GlobalKey<ScaffoldState>();
-
 
   @override
   Widget build(BuildContext context) {
@@ -24,15 +23,27 @@ class _RefundPaymentsScreenState extends State<RefundPaymentsScreen> {
     return Scaffold(
       drawer: DrawerMenu(),
       key: _refundpaymentsScaffoldKey,
+      onDrawerChanged: (isOpened) {
+        if (!isOpened) {
+          Future.delayed( Duration(milliseconds: navProvider.showNavBarDelay), () {
+            navProvider.updateShowNavBar(true);
+          });
+        } else {
+          navProvider.updateShowNavBar(false);
+        }
+      },
       appBar: PreferredSize(
           preferredSize: Size.fromHeight(110),
           child: Screensappbar(
-              title: 'Envío de pago móvil (vuelto)', screenKey: _refundpaymentsScaffoldKey, poproute: merchantScreen,)),
-      bottomNavigationBar: Customnavbar(
-          selectedIndex: 2,
-          onDestinationSelected: (index) {
-            navProvider.updateIndex(index);
-          }),
+            title: 'Envío de pago móvil (vuelto)',
+            screenKey: _refundpaymentsScaffoldKey,
+            poproute: merchantScreen,
+          )),
+      // bottomNavigationBar: Customnavbar(
+      //     selectedIndex: 2,
+      //     onDestinationSelected: (index) {
+      //       navProvider.updateIndex(index);
+      //     }),
     );
   }
 }

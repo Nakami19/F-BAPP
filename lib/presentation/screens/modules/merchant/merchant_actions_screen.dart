@@ -20,8 +20,8 @@ class MerchantScreen extends StatefulWidget {
 class _MerchantScreenState extends State<MerchantScreen> {
   final GlobalKey<ScaffoldState> _merchantScaffoldKey =
       GlobalKey<ScaffoldState>();
-  
-  var showactions=[];
+
+  var showactions = [];
 
   @override
   void initState() {
@@ -30,8 +30,9 @@ class _MerchantScreenState extends State<MerchantScreen> {
 
     //se filtran las acciones que deben mostrarse
     final userProvider = context.read<UserProvider>();
-    showactions = userProvider.actions.where((action) => action.showInMenu == true).toList();
-    
+    showactions = userProvider.actions
+        .where((action) => action.showInMenu == true)
+        .toList();
   }
 
   @override
@@ -42,30 +43,41 @@ class _MerchantScreenState extends State<MerchantScreen> {
     return Scaffold(
       drawer: DrawerMenu(),
       key: _merchantScaffoldKey,
+      onDrawerChanged: (isOpened) {
+        if (!isOpened) {
+          Future.delayed( Duration(milliseconds: navProvider.showNavBarDelay), () {
+            navProvider.updateShowNavBar(true);
+          });
+        } else {
+          navProvider.updateShowNavBar(false);
+        }
+      },
       appBar: PreferredSize(
           preferredSize: const Size.fromHeight(110),
           child: Screensappbar(
-              title: 'Merchant', screenKey: _merchantScaffoldKey, poproute: homeScreen,)),
+            title: 'Merchant',
+            screenKey: _merchantScaffoldKey,
+            poproute: homeScreen,
+          )),
 
       body: Padding(
         padding: const EdgeInsets.only(bottom: 30),
-
         child: Container(
           height: MediaQuery.of(context).size.height,
           //Se construyen las tarjetas
           child: ListView.builder(
               itemCount: showactions.length,
               itemBuilder: (context, index) {
-
                 final action = showactions[index];
 
                 return Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 25, vertical: 10),
-                      
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
                   child: LargeCard(
-                    image: '${DataConstant.imagesModules}/${DataConstant.modulePathMerchant}/chinchin-${action.key}_merchant-on.svg',
-                    placeholder: '${DataConstant.imagesModules}/${DataConstant.modulePathMerchant}/chinchin-list_merchant_devolutions_merchant-on.svg',
+                    image:
+                        '${DataConstant.imagesModules}/${DataConstant.modulePathMerchant}/chinchin-${action.key}_merchant-on.svg',
+                    placeholder:
+                        '${DataConstant.imagesModules}/${DataConstant.modulePathMerchant}/chinchin-list_merchant_devolutions_merchant-on.svg',
                     title: action.actionName,
                     height: 85,
                     textStyle: textStyle.bodyMedium!.copyWith(
@@ -74,18 +86,17 @@ class _MerchantScreenState extends State<MerchantScreen> {
                     onTap: () {
                       Navigator.pushNamed(
                           context, '/${action.actionName}Screen');
-                    } ,
+                    },
                   ),
                 );
               }),
         ),
-
       ),
-      bottomNavigationBar: Customnavbar(
-          selectedIndex: 2,
-          onDestinationSelected: (index) {
-            navProvider.updateIndex(index);
-          }),
+      // bottomNavigationBar: Customnavbar(
+      //     selectedIndex: 2,
+      //     onDestinationSelected: (index) {
+      //       navProvider.updateIndex(index);
+      //     }),
     );
   }
 }

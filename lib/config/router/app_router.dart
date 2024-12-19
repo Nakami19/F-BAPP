@@ -3,6 +3,7 @@ import 'package:f_bapp/config/router/routes.dart';
 import 'package:f_bapp/presentation/screens/auth/first_login_screen.dart';
 import 'package:f_bapp/presentation/screens/auth/second_login_screen.dart';
 import 'package:f_bapp/presentation/screens/home_screen.dart';
+import 'package:f_bapp/presentation/screens/main_screen.dart';
 import 'package:f_bapp/presentation/screens/modules/administration/administration_screen.dart';
 import 'package:f_bapp/presentation/screens/modules/ldap/ldap_screen.dart';
 import 'package:f_bapp/presentation/screens/modules/merchant/create_order_screen.dart';
@@ -39,55 +40,55 @@ class AppRouter {
         );
 
       case homeScreen:
-        return FadePageTransition(builder: (_) => const HomeScreen());
+        return FadePageTransition(builder: (_) => const MainScreen(selectedIndex: 0, child:  HomeScreen()));
       
       case profileScreen:
-        return FadePageTransition(builder: (_) => const ProfileScreen());
+        return FadePageTransition(builder: (_) => const MainScreen(selectedIndex: 1,child: ProfileScreen()));
       
       case operationsScreen:
-        return FadePageTransition(builder: (_) => const OperationsScreen());
+        return FadePageTransition(builder: (_) => const MainScreen(selectedIndex: 2,child:OperationsScreen()));
       
       case merchantScreen:
-        return FadePageTransition(builder: (_) => const MerchantScreen());
+        return FadePageTransition(builder: (_) => const MainScreen(selectedIndex: 2, child: MerchantScreen()));
       
       case onboardingScreen:
-        return FadePageTransition(builder: (_) => const OnboardingScreen());
+        return FadePageTransition(builder: (_) => const MainScreen(selectedIndex: 2, child: OnboardingScreen()));
       
       case onboardingV1Screen:
-        return FadePageTransition(builder: (_) => const Onboardingv1Screen());
+        return FadePageTransition(builder: (_) => const MainScreen(selectedIndex: 2, child: Onboardingv1Screen()));
       
       case administrationScreen:
-        return FadePageTransition(builder: (_) => const AdministrationScreen());
+        return FadePageTransition(builder: (_) => const MainScreen(selectedIndex: 2, child: AdministrationScreen()));
       
       case ldapScreen:
-        return FadePageTransition(builder: (_) => const LdapScreen());
+        return FadePageTransition(builder: (_) => const MainScreen(selectedIndex: 2, child: LdapScreen()));
       
       case listmerchantdevolutionsScreen:
-        return FadePageTransition(builder: (_) =>  const ListDevolutionsScreen());
+        return FadePageTransition(builder: (_) =>  const MainScreen(selectedIndex: 2, child: ListDevolutionsScreen()));
       
       case listmerchantordersScreen:
-        return FadePageTransition(builder: (_) => const ListOrdersScreen());
+        return FadePageTransition(builder: (_) => const MainScreen(selectedIndex: 2, child: ListOrdersScreen()));
       
       case listmobilepaymentsScreen:
-        return FadePageTransition(builder: (_) => const ListMobilePayments());
+        return FadePageTransition(builder: (_) => const MainScreen(selectedIndex: 2, child: ListMobilePayments()));
       
       case unclaimedpaymentsScreen:
-        return FadePageTransition(builder: (_) => const UnclaimedPaymentsScreen());
+        return FadePageTransition(builder: (_) => const MainScreen(selectedIndex: 2, child: UnclaimedPaymentsScreen()));
       
       case refundpaymentsScreen:
-        return FadePageTransition(builder: (_) => const RefundPaymentsScreen());
+        return FadePageTransition(builder: (_) => const MainScreen(selectedIndex: 2, child: RefundPaymentsScreen()));
       
       case createorderScreen:
-        return FadePageTransition(builder: (_) => const CreateOrderScreen());
+        return FadePageTransition(builder: (_) => const MainScreen(selectedIndex: 2, child: CreateOrderScreen()));
       
       case listprofitsScreen:
-        return FadePageTransition(builder: (_) => const ListProfitsScreen());
+        return FadePageTransition(builder: (_) => const MainScreen(selectedIndex: 2, child: ListProfitsScreen()));
       
       case verificationsScreen:
-        return FadePageTransition(builder: (_) => const VerificationsScreen());
+        return FadePageTransition(builder: (_) => const MainScreen(selectedIndex: 2, child: VerificationsScreen()));
       
       case templatesScreen:
-        return FadePageTransition(builder: (_) => const TemplatesScreen());
+        return FadePageTransition(builder: (_) => const MainScreen(selectedIndex: 2, child: TemplatesScreen()));
 
       default:
         return FadePageTransition(
