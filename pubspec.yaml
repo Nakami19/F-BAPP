@@ -1,7 +1,7 @@
 name: f_bapp
 description: Chinchin Business App flutter 
 publish_to: 'none'
-version: 1.0.0+20
+version: 1.0.0+21
 
 environment:
   sdk: ^3.5.3
@@ -34,6 +34,7 @@ dependencies:
   currency_text_input_formatter: ^2.2.6
   money_formatter: ^0.0.6
   local_auth_android: ^1.0.46
+  url_launcher: ^6.3.1
 
 dev_dependencies:
   flutter_test:
@@ -54,6 +55,7 @@ flutter:
     - assets/modules/merchant/
     - assets/modules/onboarding/
     - assets/modules/operations/
+    - lib/common/assets/images/social_media/
 
 flutter_launcher_icons:
   android: "launcher_icon"

@@ -43,7 +43,7 @@ class _ListOrdersScreenState extends State<ListOrdersScreen> {
       final response2 = await merchantProvider.Listorders(
           limit: 5,
           page: 0,
-          startDate: DateFormatter.formatDate2(DateTime.now()).toString(),
+          startDate: '2024/12/16',
           endDate: DateFormatter.formatDate2(DateTime.now()).toString());
 
       if (merchantProvider.orders != null) {
@@ -78,7 +78,8 @@ class _ListOrdersScreenState extends State<ListOrdersScreen> {
         key: _listordersScaffoldKey,
         onDrawerChanged: (isOpened) {
           if (!isOpened) {
-            Future.delayed(Duration(milliseconds: navProvider.showNavBarDelay), () {
+            Future.delayed(Duration(milliseconds: navProvider.showNavBarDelay),
+                () {
               navProvider.updateShowNavBar(true);
             });
           } else {
@@ -169,7 +170,24 @@ class _ListOrdersScreenState extends State<ListOrdersScreen> {
                 ),
 
                 //Paginacion
-                const Pagination()
+                Pagination(
+                  onNextPressed: () {
+                    merchantProvider.Listorders(
+                        page: paginationProvider.page,
+                        limit: 5,
+                        startDate: '2024/12/16',
+                        endDate: DateFormatter.formatDate2(DateTime.now())
+                            .toString());
+                  },
+                  onPreviousPressed: () {
+                    merchantProvider.Listorders(
+                        page: paginationProvider.page,
+                        limit: 5,
+                        startDate: '2024/12/16',
+                        endDate: DateFormatter.formatDate2(DateTime.now())
+                            .toString());
+                  },
+                )
               ]
             ]
           ],

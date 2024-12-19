@@ -4,6 +4,12 @@
 
 ## Added
 
+- Añadido modal con la info de chinchin
+
+## [1.0.0+20] - 2024-12-19 - Natalia. R
+
+## Added
+
 - Añadido archivo main para mantener el bottom navbar fijo en todas las vistas
 
 ## [1.0.0+19] - 2024-12-18 - Natalia. R

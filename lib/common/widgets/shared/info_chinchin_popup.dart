@@ -1,4 +1,6 @@
 import 'package:f_bapp/common/assets/theme/app_colors.dart';
+import 'package:f_bapp/common/widgets/shared/dialogs.dart';
+import 'package:f_bapp/common/widgets/shared/info_chinchin.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -22,7 +24,8 @@ class InfoChinchinPopup extends StatelessWidget {
           ? primaryScaffoldColor
           : const Color(0xFF35445F),
       iconSize: 20,
-      onPressed: () => (),
+      onPressed: () => Dialogs.showMenuBottomSheet(context,
+          contentBody: InfoChinchin(showVersion: true)),
       icon: const Icon(
         Icons.info_outline,
       ),

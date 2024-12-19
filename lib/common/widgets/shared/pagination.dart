@@ -4,14 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class Pagination extends StatelessWidget {
-  // final ScrollController scrollController;
-  // final Future<List<dynamic>> Function(int limit, int page, Map<String, dynamic> filters) fetchData;
-
+  
   const Pagination({
     super.key, 
-    // required this.scrollController
-    // required this.fetchData,
+    this.onPreviousPressed,
+    this.onNextPressed
     });
+  
+  final void Function()? onPreviousPressed;
+  final void Function()? onNextPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +27,9 @@ class Pagination extends StatelessWidget {
             onPressed: provider.page > 0
                 ? () async {
                     await provider.previousPage(context);
+                    if (onPreviousPressed != null) {
+                      onPreviousPressed!();
+                    }
                     // _resetScroll();
                   }
                 : null,
@@ -41,6 +45,9 @@ class Pagination extends StatelessWidget {
             onPressed: provider.page + 1 < provider.getNumPages()
                 ? () async {
                     await provider.nextPage(context);
+                    if (onNextPressed != null) {
+                      onNextPressed!();
+                    }
                     // _resetScroll();
                   }
                 : null,

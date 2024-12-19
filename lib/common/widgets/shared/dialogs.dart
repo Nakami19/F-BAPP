@@ -1,4 +1,5 @@
 import 'package:f_bapp/common/assets/theme/app_colors.dart';
+import 'package:f_bapp/common/assets/theme/app_theme.dart';
 import 'package:f_bapp/common/providers/general_provider.dart';
 import 'package:f_bapp/common/providers/theme_provider.dart';
 import 'package:f_bapp/common/widgets/buttons/custom_button.dart';
@@ -127,6 +128,8 @@ class Dialogs {
     );
   }
 
+
+  //Mostrar el estado de cargando con un circulo y un indicador "Cargando" o texto personalizado
   static spinKitLoader(BuildContext context,
       {bool isDismissible = false, String? loadingText}) {
     return WillPopScope(
@@ -156,6 +159,149 @@ class Dialogs {
           ),
         ),
       ),
+    );
+  }
+
+  //* Menu desplegable
+  /// Función para mostrar menu desplegable
+  /// - List<String> menuOptios (lista de widgets a mostrar)
+  /// - String headerTitle: titulo del menú
+  /// - String routeScreen: ruta
+  /// - widget? contentBody: widget a mostrar
+  static showMenuBottomSheet(BuildContext context,
+      {List? menuOptios,
+      String? headerTitle,
+      Color? color,
+      String? routeScreen,
+      IconData? iconTitle,
+      bool allowClose = true,
+      required Widget contentBody}) {
+    final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
+    final textStyle = Theme.of(context).textTheme;
+
+    showModalBottomSheet<void>(
+      isDismissible: allowClose, //dice si es posible clickear afuera del menu
+      backgroundColor:
+          themeProvider.isDarkModeEnabled ? darkColor : primaryScaffoldColor,
+      elevation: 10,
+      shape: const RoundedRectangleBorder(
+        borderRadius:
+            BorderRadius.vertical(top: Radius.circular(borderRadiusValue)),
+      ),
+      context: context,
+      isScrollControlled: true,
+      builder: (BuildContext _) {
+        //* Wrap del contenido (header y body del shoMenubottomSheet)
+        return SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom),
+            child: Wrap(children: [
+              Container(
+
+                  decoration: const BoxDecoration(
+
+                    //* bordes top radius
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(borderRadiusValue),
+                      topRight: Radius.circular(borderRadiusValue),
+                    ),
+                  ),
+
+                  //* Aqui meto el header y el body
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min, // min
+
+                    children: [
+                      //* Row para titulo de menu desplegable
+                      Row(
+                          mainAxisSize: MainAxisSize.min, //max
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            //* icono y titulo de la parte superior
+                            Container(
+
+                              width: MediaQuery.of(context).size.width,
+                              padding: const EdgeInsets.all(0), // puede ser 0
+                              decoration: BoxDecoration(
+                                color: color ?? primaryColor,
+                                borderRadius: const BorderRadius.only(
+                                  topLeft: Radius.circular(borderRadiusValue),
+                                  topRight: Radius.circular(borderRadiusValue),
+                                ),
+                              ),
+
+                              child: Center(
+                                child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 0, vertical: 5),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.max, //min
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+
+                                        //* icono
+                                        GestureDetector(
+                                          child: const Icon(
+                                            Icons.keyboard_arrow_down_sharp,
+                                            color: Colors.white,
+                                          ),
+                                          onTap: () {
+                                            Navigator.pop(context);
+                                          },
+                                        ),
+                                        
+                                        //* titulo, se muestra si se asigna
+                                        if (headerTitle != null)
+                                          Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              // Icono del title
+                                              if (iconTitle != null) ...[
+                                                Icon(
+                                                  iconTitle,
+                                                  color: Colors.white,
+                                                  weight: 1,
+                                                ),
+                                                const SizedBox(width: 7),
+                                              ],
+
+                                              // Titulo
+                                              Text(
+                                                headerTitle,
+                                                style: textStyle.titleMedium!
+                                                    .copyWith(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                      ],
+                                    )),
+                              ),
+                            ),
+                          ]),
+
+                      //* contenido de widgets
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 12.0, horizontal: 0),
+                        child: contentBody,
+                      )
+                    ],
+                  )),
+            ]),
+          ),
+        );
+      },
     );
   }
 
