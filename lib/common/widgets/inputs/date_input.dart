@@ -122,7 +122,7 @@ class DateInput extends StatelessWidget {
                         'yyyy/MM/dd',
                       );
 
-                      controller.text = "$formattedStartDate-$formattedEndDate";
+                      controller.text = "$formattedStartDate - $formattedEndDate";
                     }
                   })
                 }

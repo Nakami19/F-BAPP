@@ -112,11 +112,11 @@ class MerchantProvider extends GeneralProvider {
 
       if (limit != null) params['limit'] = limit;
       if (page != null) params['page'] = page;
-      if (startDate != null) params['startDate'] = startDate;
-      if (endDate != null) params['endDate'] = endDate;
-      if (tagStatus != null) params['tagStatus'] = tagStatus;
-      if (idTypeOrder != null) params['idTypeOrder'] = idTypeOrder;
-      if (idOrder != null) params['idOrder'] = idOrder;
+      if (startDate != null && startDate !="") params['startDate'] = startDate;
+      if (endDate != null && endDate !="") params['endDate'] = endDate;
+      if (tagStatus != null && tagStatus !="") params['tagStatus'] = tagStatus;
+      if (idTypeOrder != null && idTypeOrder !="") params['idTypeOrder'] = idTypeOrder;
+      if (idOrder != null && idOrder !="") params['idOrder'] = idOrder;
 
       final response = await merchantService.getOrders(params);
 

@@ -11,76 +11,25 @@ import 'package:provider/provider.dart';
 import '../../providers/pagination_provider.dart';
 
 class Filter<T> extends StatefulWidget {
-  const Filter(
-      {super.key,
-      required this.inputs,
-      // required this.options,
-      // this.getdata,
-      // required this.id,
-      // required this.date,
-      // required this.dropdown,
-      // required this.phoneNumber,
-      // required this.validatorId
-      });
-
-  // final List<T> options;
-  // final Future<void> Function(Map<String, dynamic>)? getdata;
-
-  // final bool id;
-  // final bool date;
-  // final bool dropdown;
-  // final bool phoneNumber;
-  // final String? Function(String?)?validatorId;
+  const Filter({
+    super.key,
+    required this.inputs,
+    required this.onApply,
+    required this.onReset
+  });
 
   final List<T> inputs;
+  final VoidCallback? onReset; // Acción al presionar icono de papelera
+  final VoidCallback? onApply; // Acción al presionar "Buscar"
 
   @override
   State<Filter> createState() => _FilterState();
 }
 
 class _FilterState extends State<Filter> {
-  late TextEditingController _textController1;
-  late TextEditingController _textController2;
-  late TextEditingController _textController3;
   final form = GlobalKey<FormState>();
-  String? _dropdownValue;
   bool _isFilterVisible = false;
 
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    final provider = context.read<PaginationProvider>();
-
-    // _textController1 = TextEditingController(text: provider.idOrder ?? '');
-    // _textController2 = TextEditingController(text: provider.phoneNumber ?? '');
-    // _textController3 = TextEditingController(
-    //   text: (provider.startDate != null && provider.endDate != null)
-    //       ? '${provider.startDate} - ${provider.endDate}'
-    //       : '${DateFormatter.formatDate2(DateTime.now()).toString()} - ${DateFormatter.formatDate2(DateTime.now()).toString()}',
-    // );
-    // _dropdownValue = provider.tagStatus;
-  }
-
-  @override
-  void dispose() {
-    _textController1.dispose();
-    _textController2.dispose();
-    _textController3.dispose();
-    super.dispose();
-  }
-
-  void _resetFilters() {
-    setState(() {
-      _textController1.clear();
-      _textController2.clear();
-      _textController3 = TextEditingController(
-        text:
-            '${DateFormatter.formatDate2(DateTime.now()).toString()} - ${DateFormatter.formatDate2(DateTime.now()).toString()}',
-      );
-      _dropdownValue = null; // Reinicia el valor del Dropdown
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -113,7 +62,8 @@ class _FilterState extends State<Filter> {
                   children: [
                     _isFilterVisible
                         ? IconButton(
-                            onPressed: _resetFilters, // Reinicia filtros aquí,
+                            onPressed: widget.onReset,
+                            // _resetFilters, // Reinicia filtros aquí,
                             icon: Icon(Icons.delete_outline_rounded))
                         : Container(),
                     SizedBox(
@@ -146,9 +96,25 @@ class _FilterState extends State<Filter> {
                     key: form,
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
-                      child: Column(children: [
-
-
+                      child: Column(
+                        children: [
+                          ... widget.inputs.map((widget) {
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 12),
+                            child: widget,
+                          );
+                        }),
+                        
+                          CustomButton(
+                            title: 'Buscar',
+                            isPrimaryColor: true,
+                            isOutline: false,
+                            onTap: () {
+                              widget.onApply?.call();
+                            },
+                            provider: provider)
+                        ]
+                        // children: [
                         // if (widget.id == true)
                         //   Padding(
                         //       padding: const EdgeInsets.only(bottom: 12),
@@ -238,7 +204,8 @@ class _FilterState extends State<Filter> {
                         //       }
                         //     },
                         //     provider: provider)
-                      ]),
+                        // ]
+                      ),
                     ),
                   )
                 : SizedBox.shrink(),

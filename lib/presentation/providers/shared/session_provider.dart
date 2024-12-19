@@ -14,6 +14,7 @@ import '../../../app.dart';
 import '../../../common/widgets/shared/snackbars.dart';
 import '../../../config/router/routes.dart';
 import '../app_providers.dart';
+import 'navigation_provider.dart';
 
 //no se movieron a general provider ya que en otros providers no son necesarios estos metodos
 

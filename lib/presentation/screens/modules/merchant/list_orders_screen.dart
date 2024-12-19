@@ -1,17 +1,16 @@
 import 'package:f_bapp/common/assets/theme/app_colors.dart';
-import 'package:f_bapp/common/assets/theme/app_theme.dart';
 import 'package:f_bapp/common/data/date_formatter.dart';
 import 'package:f_bapp/common/data/digit_formatter.dart';
 import 'package:f_bapp/common/providers/pagination_provider.dart';
+import 'package:f_bapp/common/widgets/inputs/custom_dropdown.dart';
+import 'package:f_bapp/common/widgets/inputs/custom_text_form_field.dart';
+import 'package:f_bapp/common/widgets/inputs/date_input.dart';
 import 'package:f_bapp/common/widgets/inputs/filter_container.dart';
 import 'package:f_bapp/common/widgets/shared/custom_skeleton.dart';
 import 'package:f_bapp/common/widgets/shared/pagination.dart';
-import 'package:f_bapp/common/widgets/shared/snackbars.dart';
 import 'package:f_bapp/config/router/routes.dart';
-import 'package:f_bapp/infrastructure/services/modules/merchant_services.dart';
 import 'package:f_bapp/presentation/providers/modules/merchant_provider.dart';
 import 'package:f_bapp/presentation/providers/shared/navigation_provider.dart';
-import 'package:f_bapp/presentation/widgets/shared/custom_navbar.dart';
 import 'package:f_bapp/presentation/widgets/shared/drawer_menu.dart';
 import 'package:f_bapp/presentation/widgets/shared/screens_appbar.dart';
 import 'package:f_bapp/presentation/widgets/shared/text_card.dart';
@@ -32,20 +31,53 @@ class _ListOrdersScreenState extends State<ListOrdersScreen> {
 
   final ScrollController _scrollController = ScrollController();
 
+  //Colores para los estados (Activo, Pagado...)
+  final Map<String, Color> statusColors = {
+    "ACTIVO": Color(0xff02a8f5),
+    "PAGADA": primaryColor,
+    "PAGADA CON SOBRANTE": Colors.green,
+    "PAGADA CON FALTANTE": Colors.orange,
+    "EXPIRADA": Color(0xff595959),
+    "REVERSADA": Color.fromARGB(219, 246, 195, 26),
+    "RECHAZADO": Color(0xffff0000),
+  };
+
+//Controladores para los inputs del filtro
+  late TextEditingController idController;
+  late TextEditingController dateController;
+
+  //Variables del filtro de busqueda
+  String? dropdownValue;
+  String search ="";
+  String id="";
+  String endDate = DateFormatter.formatDate2(DateTime.now()).toString();
+  String startDate = DateFormatter.formatDate2(DateTime.now()).toString();
+
   @override
   void initState() {
     super.initState();
+
+    idController = TextEditingController();
+    dateController = TextEditingController(
+        text: '$startDate - $endDate');
+            // '${DateFormatter.formatDate2(DateTime.now()).toString()} - ${DateFormatter.formatDate2(DateTime.now()).toString()}');
+
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final merchantProvider = context.read<MerchantProvider>();
       final paginationProvider = context.read<PaginationProvider>();
+
+      //se reinicia la paginacion
       paginationProvider.resetPagination();
-      final response1 = await merchantProvider.ListStatus('ORDER');
-      final response2 = await merchantProvider.Listorders(
+
+      //peticiones para obtener la lista de ordenes y la lista de estatus
+      await merchantProvider.ListStatus('ORDER');
+       await merchantProvider.Listorders(
           limit: 5,
           page: 0,
-          startDate: '2024/12/16',
+          startDate: DateFormatter.formatDate2(DateTime.now()).toString(),
           endDate: DateFormatter.formatDate2(DateTime.now()).toString());
 
+      //el total de elementos para la paginacion sera igual a la cantidad de ordenes que halla
       if (merchantProvider.orders != null) {
         paginationProvider.setTotal(merchantProvider.orders!['count']);
       }
@@ -53,20 +85,89 @@ class _ListOrdersScreenState extends State<ListOrdersScreen> {
   }
 
   @override
+  void dispose() {
+    idController.dispose();
+    dateController.dispose();
+    super.dispose();
+  }
+
+  //Reinicio de los valores de los filtros
+  void resetFilters() {
+    setState(() {
+      idController.clear();
+      dateController.text =
+          '${DateFormatter.formatDate2(DateTime.now()).toString()} - ${DateFormatter.formatDate2(DateTime.now()).toString()}';
+      dropdownValue = null;
+    });
+  }
+
+  void applyFilters() async {
+    final paginationProvider = context.read<PaginationProvider>();
+
+    // Procesar filtros aquí
+    search = dropdownValue??"";
+    id = idController.text;
+    endDate = dateController.text.split(" - ")[1];
+    startDate = dateController.text.split(" - ")[0];
+
+    //se hace la peticion con los filtros aplicados
+    final merchantProvider = context.read<MerchantProvider>();
+   await  merchantProvider.Listorders(
+        page: 0,
+        limit: 5,
+        startDate: startDate,
+        endDate: endDate,
+        idOrder: id,
+        tagStatus: search);
+
+    paginationProvider.resetPagination();
+    paginationProvider.setTotal(merchantProvider.orders!['count']);
+    
+  }
+
+
+  @override
   Widget build(BuildContext context) {
     final paginationProvider = context.watch<PaginationProvider>();
     final navProvider = context.watch<NavigationProvider>();
     final merchantProvider = context.watch<MerchantProvider>();
+    final textStyle = Theme.of(context).textTheme;
 
-    final Map<String, Color> statusColors = {
-      "ACTIVO": Color(0xff02a8f5),
-      "PAGADA": primaryColor,
-      "PAGADA CON SOBRANTE": Colors.green,
-      "PAGADA CON FALTANTE": Colors.orange,
-      "EXPIRADA": Color(0xff595959),
-      "REVERSADA": Color.fromARGB(219, 246, 195, 26),
-      "RECHAZADO": Color(0xffff0000),
-    };
+    final List<Widget> filters = [
+      CustomTextFormField(
+        controller: idController,
+        hintText: 'Buscar id',
+        hintStyle:
+            textStyle.bodySmall!.copyWith(fontSize: 17, color: Colors.grey),
+        enabled: true,
+        // validator: widget.validatorId
+      ),
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 3),
+        child: CustomDropdown(
+          hintText: 'Estado',
+          options: merchantProvider.status ?? [],
+          onChanged: (value) {
+            setState(() {
+              dropdownValue = value;
+            });
+          },
+          selectedValue: dropdownValue,
+          itemValueMapper: (option) => option['tagStatus']!,
+          itemLabelMapper: (option) => option['nameStatus']!,
+          autoSelectFirst: false,
+          optionsTextsStyle: textStyle.bodySmall!.copyWith(fontSize: 14),
+        ),
+      ),
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 3),
+        child: DateInput(
+          controller: dateController,
+          rangeDate: true,
+          hintText: 'Fecha de emision',
+        ),
+      ),
+    ];
 
     return WillPopScope(
       onWillPop: () async {
@@ -98,7 +199,9 @@ class _ListOrdersScreenState extends State<ListOrdersScreen> {
             )),
         body: Column(
           children: [
-            if (merchantProvider.isLoading == true) ...[
+            if (merchantProvider.isLoading == true ||
+                merchantProvider.status == null ||
+                merchantProvider.orders == null) ...[
               SizedBox(
                 height: 15,
               ),
@@ -128,6 +231,15 @@ class _ListOrdersScreenState extends State<ListOrdersScreen> {
             if (merchantProvider.isLoading == false) ...[
               if (merchantProvider.orders?['count'] == 0 ||
                   merchantProvider.haveSimpleError == true) ...[
+                    Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 35, vertical: 15),
+                  child: Filter(
+                    inputs: filters,
+                    onReset: resetFilters,
+                    onApply: applyFilters,
+                  ),
+                ),
                 Expanded(
                   child: SingleChildScrollView(
                     physics: NeverScrollableScrollPhysics(),
@@ -149,6 +261,16 @@ class _ListOrdersScreenState extends State<ListOrdersScreen> {
               ],
               if (merchantProvider.orders?['count'] > 0 &&
                   merchantProvider.haveSimpleError == false) ...[
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 35, vertical: 15),
+                  child: Filter(
+                    inputs: filters,
+                    onReset: resetFilters,
+                    onApply: applyFilters,
+                  ),
+                ),
+
                 Expanded(
                   child: ListView.builder(
                       controller: _scrollController,
@@ -175,17 +297,19 @@ class _ListOrdersScreenState extends State<ListOrdersScreen> {
                     merchantProvider.Listorders(
                         page: paginationProvider.page,
                         limit: 5,
-                        startDate: '2024/12/16',
-                        endDate: DateFormatter.formatDate2(DateTime.now())
-                            .toString());
+                        startDate: startDate,
+                        endDate: endDate,
+                        idOrder: id,
+                        tagStatus: search);
                   },
                   onPreviousPressed: () {
                     merchantProvider.Listorders(
                         page: paginationProvider.page,
                         limit: 5,
-                        startDate: '2024/12/16',
-                        endDate: DateFormatter.formatDate2(DateTime.now())
-                            .toString());
+                        startDate: startDate,
+                        endDate: endDate,
+                        idOrder: id,
+                        tagStatus: search);
                   },
                 )
               ]
@@ -234,63 +358,3 @@ class _ListOrdersScreenState extends State<ListOrdersScreen> {
     return objects;
   }
 }
-
-// Padding(
-//                 padding:
-//                     const EdgeInsets.symmetric(horizontal: 35, vertical: 15),
-//                 child: Filter(
-//                   id: true,
-//                   phoneNumber: false,
-//                   date: true,
-//                   dropdown: true,
-//                   options: merchantProvider.status!,
-//                   getdata: (filters) async {
-//                     final merchantProvider = context.read<MerchantProvider>();
-//                     final paginationProvider =
-//                         context.read<PaginationProvider>();
-
-//                     // Reinicia la paginación antes de buscar
-//                     paginationProvider.resetPagination();
-
-//                     // Extrae los filtros
-//                     final idOrder = filters['idOrder'];
-//                     final idTypeOrder = filters['idTypeOrder'];
-//                     final tagStatus = filters['tagStatus'];
-
-//                     // final startDate = (filters['startDate']?.isNotEmpty ?? false)
-//                     //     ? filters['startDate']
-//                     //     : DateFormatter.formatDate2(DateTime.now());
-
-//                     // final endDate = (filters['endDate']?.isNotEmpty ?? false)
-//                     //     ? filters['endDate']
-//                     //     : DateFormatter.formatDate2(DateTime.now());
-
-//                     final range = filters['startDate']?.split('-') ?? [];
-//                     final startDate = range.isNotEmpty
-//                         ? range[0].toString().trim()
-//                         : DateFormatter.formatDate2(DateTime.now()).toString();
-//                     final endDate = range.length > 1
-//                         ? range[1].toString().trim()
-//                         : DateFormatter.formatDate2(DateTime.now()).toString();
-
-//                     print('HEEEEELLLPPP');
-//                     print(startDate);
-//                     print(endDate);
-
-//                     // Llama a la función de obtener datos con los filtros
-//                     paginationProvider.setFilters(
-//                       tagStatus: tagStatus,
-//                       startDate: startDate,
-//                       endDate: endDate,
-//                       idOrder: idOrder,
-//                     );
-
-//                     // Llama a la función de obtener datos con los filtros
-//                     // await paginationProvider.fetchPageData(context);
-
-//                     // Actualiza la paginación con los nuevos datos
-//                     paginationProvider
-//                         .setTotal(merchantProvider.orders!['count']);
-//                   },
-//                 ),
-//               ),

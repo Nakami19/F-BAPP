@@ -143,6 +143,7 @@ class _TextCardState extends State<TextCard> {
                         ),
                       ),
                     ),
+                    SizedBox(height: 5,)
                 ],
               ),
             ],

@@ -1,5 +1,11 @@
 ## [F-APP]
 
+## [1.0.0+22] - 2024-12-19 - Natalia. R
+
+## Fix
+
+- Se cambió manejo del filtro, se le pasa una lista con los widgets que debe mostrar
+
 ## [1.0.0+21] - 2024-12-19 - Natalia. R
 
 ## Added

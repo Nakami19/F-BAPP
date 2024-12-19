@@ -14,6 +14,7 @@ import 'package:f_bapp/infrastructure/shared/secure_storage_service.dart';
 import 'package:f_bapp/infrastructure/shared/storage_service_impl.dart';
 import 'package:f_bapp/presentation/providers/auth/login_provider.dart';
 import 'package:f_bapp/common/widgets/shared/error_box.dart';
+import 'package:f_bapp/presentation/providers/shared/navigation_provider.dart';
 import 'package:f_bapp/presentation/providers/shared/utils_provider.dart';
 import 'package:f_bapp/presentation/widgets/auth/login_fingerprint_button.dart';
 import 'package:flutter/material.dart';
@@ -84,6 +85,10 @@ class _FirstLoginScreenState extends State<FirstLoginScreen> {
       } else {
         existBiometricData = false;
       }
+
+      //Se establece que el navbar debe mostrarse
+    final navProvider = context.read<NavigationProvider>();
+    navProvider.updateShowNavBar(true);
     });
   }
 
