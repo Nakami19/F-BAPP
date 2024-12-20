@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 //Tarjeta que contiene de manera vertical una imagen y texto
-class SmallCard extends StatefulWidget {
+class SmallCard extends StatelessWidget {
   const SmallCard({
     super.key,
     required this.image,
@@ -25,18 +25,13 @@ class SmallCard extends StatefulWidget {
   final VoidCallback? onTap;
 
   @override
-  State<SmallCard> createState() => _SmallCardState();
-}
-
-class _SmallCardState extends State<SmallCard> {
-  @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: widget.onTap ?? ()=>{},
+      onTap: onTap ?? ()=>{},
 
       //contenedor de los elementos
       child: Container(
-        width: widget.width ?? double.infinity,
+        width: width ?? double.infinity,
         padding: EdgeInsets.all(13),
 
         decoration: BoxDecoration(
@@ -59,12 +54,12 @@ class _SmallCardState extends State<SmallCard> {
         children: [
           //imagen arriba
           SvgPicture.asset(
-            widget.image,
-            height: widget.imageHeight ?? 50,
+            image,
+            height: imageHeight ?? 50,
             placeholderBuilder: (context) => 
             SvgPicture.asset(
-              widget.placeholder??"",
-              height: widget.imageHeight ?? 50,
+              placeholder??"",
+              height: imageHeight ?? 50,
               ),
             // color: primaryColor,
             ),
@@ -73,8 +68,8 @@ class _SmallCardState extends State<SmallCard> {
 
           //Texto abajo
           Text(
-            widget.title,
-            style: widget.textStyle,
+            title,
+            style: textStyle,
             textAlign: TextAlign.center,
             overflow: TextOverflow.ellipsis,
             maxLines: 2,

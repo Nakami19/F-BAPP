@@ -8,12 +8,12 @@ class Screensappbar extends StatefulWidget {
   const Screensappbar(
       {required this.title,
       required this.screenKey,
-      required this.poproute,
+      this.poproute,
       this.onBack,
       super.key});
 
   final String title;
-  final String poproute;
+  final String? poproute;
   final GlobalKey<ScaffoldState> screenKey;
   final VoidCallback? onBack;
 
@@ -27,8 +27,7 @@ class _ScreensappbarState extends State<Screensappbar> {
     final userProvider = context.watch<UserProvider>();
     return AppBar(
       backgroundColor: Colors.transparent,
-      automaticallyImplyLeading:
-          false,
+      automaticallyImplyLeading: false,
       flexibleSpace: Stack(
         children: [
           // Imagen de fondo
@@ -50,29 +49,34 @@ class _ScreensappbarState extends State<Screensappbar> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-
                   //parte izquieda
                   SizedBox(
-                    width:MediaQuery.of(context).size.width/2,
+                    width: MediaQuery.of(context).size.width / 2,
                     child: Row(
                       children: [
                         //Icono flecha
                         IconButton(
                           tooltip: 'Atrás',
-                          icon:const Icon(
+                          icon: const Icon(
                             Icons.arrow_back,
                             color: Colors.black,
                             size: 20,
                           ),
                           onPressed: () {
-                            if (widget.onBack!=null) {
+                            if (widget.onBack != null) {
                               widget.onBack!();
                             }
-                            Navigator.pushNamedAndRemoveUntil(
-                              context,
-                              widget.poproute, // Ruta destino
-                              (route) => false, // Esto elimina todas las rutas previas
-                            );
+                            if (widget.poproute != null) {
+                              Navigator.pushNamedAndRemoveUntil(
+                                context,
+                                widget.poproute!, // Ruta destino
+                                (route) =>
+                                    false, // Elimina todas las rutas previas
+                              );
+                            } else {
+                              Navigator.pop(
+                                  context); // Regresa a la ruta anterior
+                            }
                           },
                         ),
 
@@ -80,11 +84,12 @@ class _ScreensappbarState extends State<Screensappbar> {
                         Flexible(
                           child: Text(
                             widget.title,
-                            style:const TextStyle(
+                            style: const TextStyle(
                               fontSize: 15,
                               color: Colors.black,
                             ),
-                            overflow: TextOverflow.visible, // Permitir el salto de línea
+                            overflow: TextOverflow
+                                .visible, // Permitir el salto de línea
                             softWrap: true, // Habilitar el ajuste de línea
                           ),
                         ),
@@ -95,7 +100,6 @@ class _ScreensappbarState extends State<Screensappbar> {
                   //parte derecha
                   Row(
                     children: [
-
                       //Logo de business
                       SvgPicture.asset(
                         '${DataConstant.imagesChinchin}/chinchin-logo-business-base.svg',

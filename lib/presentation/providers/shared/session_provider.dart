@@ -25,6 +25,7 @@ class SessionProvider extends GeneralProvider {
   bool _isDialogOpen = false;
   int? _expirationTime;
   Timer? _timer;
+  bool _isTimerPaused = false; 
   bool _isMaintenanceMode = false;
   bool get isMaintenanceMode => _isMaintenanceMode;
   static const int maxSeconds = 20;
@@ -47,6 +48,7 @@ class SessionProvider extends GeneralProvider {
 
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) async {
       // print(time);
+      if (_isTimerPaused) return; // No realizar acciones si está pausado
       time -= 1000;
 
       if (_timer != null) {
@@ -96,6 +98,7 @@ class SessionProvider extends GeneralProvider {
       }
 
       if (time <= 0) {
+        _isTimerPaused = false;
         timer.cancel();
         _timer?.cancel();
         destroySession();
@@ -103,12 +106,21 @@ class SessionProvider extends GeneralProvider {
     }});
   }
 
+  void pauseTimer() {
+    if (_timer != null && !_isTimerPaused) {
+      _isTimerPaused = true;
+      _timer?.cancel();
+    }
+  }
+
   void resetSessionTimer() {
     if (!_isAuthenticated) {
+      _isTimerPaused = false;
       return;
     }
 
     if (_timer != null) {
+      _isTimerPaused = false;
       _timer?.cancel();
       startSessionTimer(_expirationTime!);
     }
@@ -249,6 +261,7 @@ class SessionProvider extends GeneralProvider {
   }
 
   Future<void> refreshSession() async {
+    pauseTimer();
     try {
       super.setLoadingStatus(true);
       final req = await loginService.refreshSession();

@@ -2,7 +2,7 @@ import 'package:f_bapp/common/assets/theme/app_colors.dart';
 import 'package:f_bapp/common/assets/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
-class TextCard extends StatefulWidget {
+class TextCard extends StatelessWidget {
   const TextCard({
     super.key,
     this.height,
@@ -17,16 +17,11 @@ class TextCard extends StatefulWidget {
   final List<Map<String, dynamic>> texts;
 
   @override
-  State<TextCard> createState() => _TextCardState();
-}
-
-class _TextCardState extends State<TextCard> {
-  @override
   Widget build(BuildContext context) {
     final textStyle = Theme.of(context).textTheme;
 
     // Buscar el status y su color
-    final statusEntry = widget.texts.firstWhere(
+    final statusEntry = texts.firstWhere(
       (entry) => entry.containsValue('status'),
       orElse: () => {}, // Valor por defecto si no se encuentra
     );
@@ -35,10 +30,10 @@ class _TextCardState extends State<TextCard> {
     final statusColor = statusEntry['statusColor'];
 
     return InkWell(
-      onTap: widget.onTap ?? () {},
+      onTap: onTap ?? () {},
       child: Container(
         width: double.infinity,
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(borderRadiusValue),
           color: Colors.white,
@@ -51,6 +46,8 @@ class _TextCardState extends State<TextCard> {
             ),
           ],
         ),
+
+        //Para que ocupe toda la altura disponible
         child: IntrinsicHeight(
           child: Row(
             children: [
@@ -58,7 +55,7 @@ class _TextCardState extends State<TextCard> {
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: widget.texts
+                  children: texts
                       .where((entry) => (entry['label'] != 'status'))
                       .map((entry) {
                     final label = entry['label'] ?? "";
@@ -77,16 +74,14 @@ class _TextCardState extends State<TextCard> {
                                 text: label,
                                 style: textStyle.bodySmall!.copyWith(
                                   fontSize: 13,
-                                  fontWeight:
-                                      FontWeight.bold,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
                               TextSpan(
-                                text: value, 
+                                text: value,
                                 style: textStyle.bodySmall!.copyWith(
                                   fontSize: 13,
-                                  fontWeight: FontWeight
-                                      .normal, 
+                                  fontWeight: FontWeight.normal,
                                 ),
                               ),
                             ],
@@ -110,12 +105,16 @@ class _TextCardState extends State<TextCard> {
                     color: primaryColor,
                     size: 25,
                   ),
-                  SizedBox(height: 20),
+
+
+                  Spacer(),
+
+
                   if (status != null && status != "")
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
+                        // padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                         backgroundColor: Colors.transparent,
-                        elevation: 0,
                         side: BorderSide(
                           color: statusColor ?? primaryColor,
                         ),
@@ -123,12 +122,15 @@ class _TextCardState extends State<TextCard> {
                           borderRadius:
                               BorderRadius.circular(borderRadiusValue),
                         ),
+                      ).copyWith(
+                        //Quita efecto al presionar
+                        overlayColor: MaterialStateProperty.all(Colors
+                            .transparent), 
+                        elevation: MaterialStateProperty.all(0),
                       ),
-                      onPressed: () {
-                        // Acción del botón
-                      },
+                      onPressed: () {},
                       child: SizedBox(
-                        width: 90, // Ancho fijo para el botón
+                        width: 90,
                         child: Text(
                           status,
                           style: textStyle.bodySmall!.copyWith(
@@ -143,7 +145,9 @@ class _TextCardState extends State<TextCard> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 5,)
+                  SizedBox(
+                    height: 5,
+                  )
                 ],
               ),
             ],

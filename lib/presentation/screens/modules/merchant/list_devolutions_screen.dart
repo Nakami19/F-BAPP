@@ -1,5 +1,5 @@
 import 'package:f_bapp/common/providers/pagination_provider.dart';
-import 'package:f_bapp/presentation/widgets/shared/text_card.dart';
+import 'package:f_bapp/common/widgets/cards/text_card.dart';
 import 'package:f_bapp/common/widgets/inputs/filter_container.dart';
 import 'package:f_bapp/common/widgets/shared/pagination.dart';
 import 'package:f_bapp/config/router/routes.dart';

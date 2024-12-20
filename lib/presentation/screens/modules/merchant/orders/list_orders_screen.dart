@@ -13,7 +13,7 @@ import 'package:f_bapp/presentation/providers/modules/merchant_provider.dart';
 import 'package:f_bapp/presentation/providers/shared/navigation_provider.dart';
 import 'package:f_bapp/presentation/widgets/shared/drawer_menu.dart';
 import 'package:f_bapp/presentation/widgets/shared/screens_appbar.dart';
-import 'package:f_bapp/presentation/widgets/shared/text_card.dart';
+import 'package:f_bapp/common/widgets/cards/text_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
@@ -48,19 +48,25 @@ class _ListOrdersScreenState extends State<ListOrdersScreen> {
 
   //Variables del filtro de busqueda
   String? dropdownValue;
-  String search ="";
-  String id="";
+  String search = "";
+  String id = "";
   String endDate = DateFormatter.formatDate2(DateTime.now()).toString();
   String startDate = DateFormatter.formatDate2(DateTime.now()).toString();
+
+  List<Map<String, dynamic>> filterIcons = [
+    {
+      'icon': Icons.download_rounded,
+      'onPressed': (){}
+    }
+  ];
 
   @override
   void initState() {
     super.initState();
 
     idController = TextEditingController();
-    dateController = TextEditingController(
-        text: '$startDate - $endDate');
-            // '${DateFormatter.formatDate2(DateTime.now()).toString()} - ${DateFormatter.formatDate2(DateTime.now()).toString()}');
+    dateController = TextEditingController(text: '$startDate - $endDate');
+    // '${DateFormatter.formatDate2(DateTime.now()).toString()} - ${DateFormatter.formatDate2(DateTime.now()).toString()}');
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final merchantProvider = context.read<MerchantProvider>();
@@ -71,7 +77,7 @@ class _ListOrdersScreenState extends State<ListOrdersScreen> {
 
       //peticiones para obtener la lista de ordenes y la lista de estatus
       await merchantProvider.ListStatus('ORDER');
-       await merchantProvider.Listorders(
+      await merchantProvider.Listorders(
           limit: 5,
           page: 0,
           startDate: DateFormatter.formatDate2(DateTime.now()).toString(),
@@ -105,14 +111,14 @@ class _ListOrdersScreenState extends State<ListOrdersScreen> {
     final paginationProvider = context.read<PaginationProvider>();
 
     // Procesar filtros aquí
-    search = dropdownValue??"";
+    search = dropdownValue ?? "";
     id = idController.text;
     endDate = dateController.text.split(" - ")[1];
     startDate = dateController.text.split(" - ")[0];
 
     //se hace la peticion con los filtros aplicados
     final merchantProvider = context.read<MerchantProvider>();
-   await  merchantProvider.Listorders(
+    await merchantProvider.Listorders(
         page: 0,
         limit: 5,
         startDate: startDate,
@@ -122,9 +128,7 @@ class _ListOrdersScreenState extends State<ListOrdersScreen> {
 
     paginationProvider.resetPagination();
     paginationProvider.setTotal(merchantProvider.orders!['count']);
-    
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -133,6 +137,7 @@ class _ListOrdersScreenState extends State<ListOrdersScreen> {
     final merchantProvider = context.watch<MerchantProvider>();
     final textStyle = Theme.of(context).textTheme;
 
+    //Componentes que tendra el filtro
     final List<Widget> filters = [
       CustomTextFormField(
         controller: idController,
@@ -199,47 +204,53 @@ class _ListOrdersScreenState extends State<ListOrdersScreen> {
             )),
         body: Column(
           children: [
+            //Si esta cargando o no se tienen valores de los estatus o las ordenes
             if (merchantProvider.isLoading == true ||
                 merchantProvider.status == null ||
                 merchantProvider.orders == null) ...[
-              SizedBox(
+              const SizedBox(
                 height: 15,
               ),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 35, vertical: 15),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 35, vertical: 15),
                 child: Center(
                   child: CustomSkeleton(
                     height: 65,
                   ),
                 ),
               ),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 15, horizontal: 35),
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 15, horizontal: 35),
                 child: CustomSkeleton(height: 140),
               ),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 15, horizontal: 35),
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 15, horizontal: 35),
                 child: CustomSkeleton(height: 140),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 15,
               ),
             ],
-            if (merchantProvider.isLoading == false) ...[
+
+            //Ya cargo
+            if (merchantProvider.isLoading == false &&
+                merchantProvider.orders != null) ...[
+              //Si no hay ordenes
               if (merchantProvider.orders?['count'] == 0 ||
                   merchantProvider.haveSimpleError == true) ...[
-                    Padding(
+                //Filtro
+                Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 35, vertical: 15),
                   child: Filter(
+                    icons: filterIcons,
                     inputs: filters,
                     onReset: resetFilters,
                     onApply: applyFilters,
                   ),
                 ),
+
+                //Aviso
                 Expanded(
                   child: SingleChildScrollView(
                     physics: NeverScrollableScrollPhysics(),
@@ -259,18 +270,23 @@ class _ListOrdersScreenState extends State<ListOrdersScreen> {
                   ),
                 )
               ],
-              if (merchantProvider.orders?['count'] > 0 &&
+
+              //si hay ordenes y no hay errores
+              if (merchantProvider.orders!['count'] > 0 &&
                   merchantProvider.haveSimpleError == false) ...[
+                //Filtro
                 Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 35, vertical: 15),
                   child: Filter(
+                    icons: filterIcons,
                     inputs: filters,
                     onReset: resetFilters,
                     onApply: applyFilters,
                   ),
                 ),
 
+                //Tarjetas con informacion de las ordenes
                 Expanded(
                   child: ListView.builder(
                       controller: _scrollController,
@@ -284,7 +300,11 @@ class _ListOrdersScreenState extends State<ListOrdersScreen> {
                             texts: buildTextsFromOrder(order,
                                 statusColors), // Lista con los textos generada
                             onTap: () {
-                              print('Orden seleccionada: ${order['idOrder']}');
+                              Navigator.pushNamed(
+                                context,
+                                '/Detalle de orden',
+                                arguments: order['idOrder'],
+                              );
                             },
                           ),
                         );
@@ -293,6 +313,7 @@ class _ListOrdersScreenState extends State<ListOrdersScreen> {
 
                 //Paginacion
                 Pagination(
+                  //Funcion al pasar a la siguiente pagina
                   onNextPressed: () {
                     merchantProvider.Listorders(
                         page: paginationProvider.page,
@@ -302,6 +323,8 @@ class _ListOrdersScreenState extends State<ListOrdersScreen> {
                         idOrder: id,
                         tagStatus: search);
                   },
+
+                  //Funcion al pasar a la pagina anterior
                   onPreviousPressed: () {
                     merchantProvider.Listorders(
                         page: paginationProvider.page,
@@ -325,6 +348,7 @@ class _ListOrdersScreenState extends State<ListOrdersScreen> {
     );
   }
 
+  //Se contruye el contenido de la lista textos que tendra la tarjeta
   List<Map<String, dynamic>> buildTextsFromOrder(
       Map<String, dynamic> order, Map<String, Color> statusColors) {
     List<Map<String, dynamic>> objects = [];

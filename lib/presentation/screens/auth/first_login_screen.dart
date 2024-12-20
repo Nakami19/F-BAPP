@@ -276,6 +276,7 @@ class _FirstLoginScreenState extends State<FirstLoginScreen> {
                           styleText: textStyle.labelLarge,
                           paddingV: 5,
                           height: 35,
+                          paddingH: 70,
                           onTap: () {}),
                       ],
                     ),
@@ -285,6 +286,10 @@ class _FirstLoginScreenState extends State<FirstLoginScreen> {
                           existBiometricData == true &&
                       useAnotherAccount) 
                       TextButton(
+                      style: TextButton.styleFrom(
+                        elevation: 0,
+                        overlayColor: Colors.transparent
+                      ),  
                       onPressed: () {
                         setState(() {
                           useAnotherAccount = false;
@@ -315,6 +320,10 @@ class _FirstLoginScreenState extends State<FirstLoginScreen> {
                   existBiometricData && 
                   !useAnotherAccount)
                     TextButton(
+                      style: TextButton.styleFrom(
+                        elevation: 0,
+                        overlayColor: Colors.transparent
+                      ),
                       onPressed: () {
                         setState(() {
                           useAnotherAccount = true;

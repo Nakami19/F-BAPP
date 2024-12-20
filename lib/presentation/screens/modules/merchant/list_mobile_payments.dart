@@ -1,4 +1,4 @@
-import 'package:f_bapp/presentation/widgets/shared/text_card.dart';
+import 'package:f_bapp/common/widgets/cards/text_card.dart';
 import 'package:f_bapp/config/router/routes.dart';
 import 'package:f_bapp/presentation/providers/shared/navigation_provider.dart';
 import 'package:f_bapp/presentation/widgets/shared/custom_navbar.dart';

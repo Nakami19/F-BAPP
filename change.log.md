@@ -1,5 +1,13 @@
 ## [F-APP]
 
+## [1.0.0+23] - 2024-12-20 - Natalia. R
+
+## Added
+
+- Añadida y estructurada vista de detalle de orden
+
+- Añadida funcion de detener al temporizador mientras se refresca la sesion
+
 ## [1.0.0+22] - 2024-12-19 - Natalia. R
 
 ## Fix

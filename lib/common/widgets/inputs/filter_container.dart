@@ -15,12 +15,14 @@ class Filter<T> extends StatefulWidget {
     super.key,
     required this.inputs,
     required this.onApply,
-    required this.onReset
+    required this.onReset,
+    required this.icons
   });
 
   final List<T> inputs;
-  final VoidCallback? onReset; // Acción al presionar icono de papelera
-  final VoidCallback? onApply; // Acción al presionar "Buscar"
+  final VoidCallback onReset; // Acción al presionar icono de papelera
+  final VoidCallback onApply; // Acción al presionar "Buscar"
+  final List<Map<String,dynamic>> icons;
 
   @override
   State<Filter> createState() => _FilterState();
@@ -56,8 +58,13 @@ class _FilterState extends State<Filter> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                IconButton(
-                    onPressed: () {}, icon: Icon(Icons.download_rounded)),
+                ...widget.icons.map((icon){
+                  return IconButton(
+                    onPressed: icon['onPressed'], icon: Icon(icon['icon'])
+                    );
+                }),
+                // IconButton(
+                //     onPressed: () {}, icon: Icon(Icons.download_rounded)),
                 Row(
                   children: [
                     _isFilterVisible
@@ -114,97 +121,7 @@ class _FilterState extends State<Filter> {
                             },
                             provider: provider)
                         ]
-                        // children: [
-                        // if (widget.id == true)
-                        //   Padding(
-                        //       padding: const EdgeInsets.only(bottom: 12),
-                        //       child: CustomTextFormField(
-                        //         controller: _textController1,
-                        //         hintText: widget.id
-                        //             ? 'Buscar id'
-                        //             : 'Buscar nro referencia',
-                        //         hintStyle: textStyle.bodySmall!
-                        //             .copyWith(fontSize: 17, color: Colors.grey),
-                        //         enabled: true,
-                        //         // validator: widget.validatorId
-                        //       )
-                        //       // CustomTextfield(
-                        //       //   hint: widget.id
-                        //       //       ? 'Buscar id'
-                        //       //       : 'Buscar nro referencia',
-                        //       //   onChanged: (value) {
-                        //       //     setState(() {});
-                        //       //   },
-                        //       //   controller: _textController1,
-                        //       // ),
-                        //       ),
-                        // if (widget.phoneNumber == true)
-                        //   Padding(
-                        //     padding: const EdgeInsets.only(bottom: 12),
-                        //     child: CustomTextfield(
-                        //       hint: 'Buscar nro telefono emisor',
-                        //       onChanged: (value) {
-                        //         setState(() {});
-                        //       },
-                        //       controller: _textController2,
-                        //     ),
-                        //   ),
-                        // if (widget.dropdown == true)
-                        //   Padding(
-                        //       padding: const EdgeInsets.only(bottom: 12),
-                        //       child: CustomDropdown(
-                        //         hintText: 'Estado',
-                        //         options: widget.options,
-                        //         onChanged: (value) {
-                        //           setState(() {
-                        //             _dropdownValue = value;
-                        //           });
-                        //         },
-                        //         selectedValue: _dropdownValue,
-                        //         itemValueMapper: (option) =>
-                        //             option['tagStatus']!,
-                        //         itemLabelMapper: (option) =>
-                        //             option['nameStatus']!,
-                        //         autoSelectFirst: false,
-                        //         optionsTextsStyle:
-                        //             textStyle.bodySmall!.copyWith(fontSize: 14),
-                        //       )),
-                        // if (widget.date == true)
-                        //   Padding(
-                        //     padding: const EdgeInsets.only(bottom: 12),
-                        //     child: DateInput(
-                        //       controller: _textController3,
-                        //       rangeDate: true,
-                        //     ),
-                        //   ),
-                        // CustomButton(
-                        //     title: 'Buscar',
-                        //     isPrimaryColor: true,
-                        //     isOutline: false,
-                        //     onTap: () {
-                        //       if (form.currentState?.validate() ?? false) {
-                        //         if (widget.getdata != null) {
-                        //           final filters = {
-                        //             'idOrder': _textController1.text.isNotEmpty
-                        //                 ? _textController1.text
-                        //                 : null,
-                        //             'phoneNumber':
-                        //                 _textController2.text.isNotEmpty
-                        //                     ? _textController2.text
-                        //                     : null,
-                        //             'tagStatus': _dropdownValue,
-                        //             'startDate':
-                        //                 _textController3.text.isNotEmpty
-                        //                     ? _textController3.text
-                        //                     : null,
-                        //           };
-
-                        //           widget.getdata!(filters);
-                        //         }
-                        //       }
-                        //     },
-                        //     provider: provider)
-                        // ]
+      
                       ),
                     ),
                   )

@@ -21,6 +21,8 @@ const String unclaimedpaymentsScreen = '/Pagos no reclamadosScreen';
 const String refundpaymentsScreen = '/Envío de pago móvil (vuelto)Screen';
 const String createorderScreen = '/Crear orden pasarelaScreen';
 const String listprofitsScreen = '/Listado de aliadosScreen';
+const String orderdetailScreen = '/Detalle de orden';
+const String paymentHistory = '/Historial de pagos';
 
 //Onboarding
 const String verificationsScreen = '/VerificacionesScreen';
