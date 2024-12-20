@@ -14,6 +14,7 @@ import 'package:f_bapp/presentation/screens/modules/merchant/merchant_actions_sc
 import 'package:f_bapp/presentation/screens/modules/merchant/orders/list_orders_screen.dart';
 import 'package:f_bapp/presentation/screens/modules/merchant/orders/order_detail_screen.dart';
 import 'package:f_bapp/presentation/screens/modules/merchant/orders/payment_history_screen.dart';
+import 'package:f_bapp/presentation/screens/modules/merchant/orders/user_details_screen.dart';
 import 'package:f_bapp/presentation/screens/modules/merchant/refund_payments_screen.dart';
 import 'package:f_bapp/presentation/screens/modules/merchant/unclaimed_payments_screen.dart';
 import 'package:f_bapp/presentation/screens/modules/onboarding/onboarding_screen.dart';
@@ -101,10 +102,11 @@ class AppRouter {
         );
       
       case paymentHistory:
+      final String id = settings.arguments as String;
         return FadePageTransition(
-          builder: (_) => const MainScreen(
+          builder: (_) => MainScreen(
             selectedIndex: 2,
-            child: PaymentHistoryScreen(),
+            child: PaymentHistoryScreen(id: id,),
           ),
         );
 
@@ -142,6 +144,12 @@ class AppRouter {
         return FadePageTransition(
             builder: (_) =>
                 const MainScreen(selectedIndex: 2, child: TemplatesScreen()));
+      
+      case userdetailScreen:
+      final String id = settings.arguments as String;
+        return FadePageTransition(
+            builder: (_) =>
+                 MainScreen(selectedIndex: 2, child: UserDetailsScreen(id: id,)));
 
       default:
         return FadePageTransition(

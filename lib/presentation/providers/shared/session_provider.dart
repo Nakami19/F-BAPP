@@ -290,6 +290,12 @@ class SessionProvider extends GeneralProvider {
       super.setErrors(true);
       super.setErrorMessage(resp.message);
       super.setTrackingCode(resp.trackingCode);
+
+      Snackbars.customSnackbar(
+        navigatorKey.currentContext!,
+        title: resp.trackingCode,
+        message: resp.message
+      );
     }
     finally {
       super.setLoadingStatus(false);

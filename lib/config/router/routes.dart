@@ -3,6 +3,7 @@ const String secondLoginScreen = '/secondLogin';
 const String homeScreen = '/home1';
 const String termsConditionsScreen = '/termsConditionsScreen';
 const String tabsScreen = '/tabsScreen';
+const String userdetailScreen = '/Datos usuario';
 
 //Dashboard
 const String profileScreen = '/profileScrenn';

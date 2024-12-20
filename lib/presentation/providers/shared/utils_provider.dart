@@ -1,7 +1,9 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:f_bapp/app.dart';
 import 'package:f_bapp/common/providers/general_provider.dart';
+import 'package:f_bapp/common/widgets/shared/snackbars.dart';
 import 'package:f_bapp/infrastructure/shared/secure_storage_service.dart';
 import 'package:f_bapp/infrastructure/shared/storage_service_impl.dart';
 
@@ -136,6 +138,12 @@ class UtilsProvider extends GeneralProvider {
       super.setErrors(true);
       // super.setErrorMessage(error.message);
       super.setTrackingCode(error.toString());
+
+      Snackbars.customSnackbar(
+        navigatorKey.currentContext!,
+        title: error.toString(),
+        message: ""
+      );
     } finally {
       super.setLoadingStatus(false);
     }

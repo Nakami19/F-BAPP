@@ -1,5 +1,11 @@
 ## [F-APP]
 
+## [1.0.0+24] - 2024-12-20 - Natalia. R
+
+## Added 
+
+- Integrada api para el detalle de orden
+
 ## [1.0.0+23] - 2024-12-20 - Natalia. R
 
 ## Added

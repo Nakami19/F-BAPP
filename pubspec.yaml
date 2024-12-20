@@ -1,7 +1,7 @@
 name: f_bapp
 description: Chinchin Business App flutter 
 publish_to: 'none'
-version: 1.0.0+23
+version: 1.0.0+24
 
 environment:
   sdk: ^3.5.3

@@ -1,10 +1,13 @@
 import 'package:f_bapp/common/data/date_formatter.dart';
 import 'package:f_bapp/common/data/digit_formatter.dart';
+import 'package:f_bapp/common/providers/pagination_provider.dart';
 import 'package:f_bapp/common/widgets/cards/text_card.dart';
 import 'package:f_bapp/common/widgets/inputs/custom_dropdown.dart';
 import 'package:f_bapp/common/widgets/inputs/date_input.dart';
 import 'package:f_bapp/common/widgets/inputs/filter_container.dart';
+import 'package:f_bapp/common/widgets/shared/custom_skeleton.dart';
 import 'package:f_bapp/config/router/routes.dart';
+import 'package:f_bapp/presentation/providers/modules/merchant_provider.dart';
 import 'package:f_bapp/presentation/providers/shared/navigation_provider.dart';
 import 'package:f_bapp/presentation/widgets/shared/drawer_menu.dart';
 import 'package:f_bapp/presentation/widgets/shared/screens_appbar.dart';
@@ -12,8 +15,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class PaymentHistoryScreen extends StatefulWidget {
-  const PaymentHistoryScreen({super.key});
+  const PaymentHistoryScreen({super.key, required this.id});
 
+  final String id;
   @override
   State<PaymentHistoryScreen> createState() => _PaymentHistoryScreenState();
 }
@@ -34,11 +38,28 @@ class _PaymentHistoryScreenState extends State<PaymentHistoryScreen> {
     {'icon': Icons.refresh_rounded, 'onPressed': () {}}
   ];
 
+  List<dynamic>? typePayment = [];
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     dateController = TextEditingController(text: '$startDate - $endDate');
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final merchantProvider = context.read<MerchantProvider>();
+      final paginationProvider = context.read<PaginationProvider>();
+
+      //se reinicia la paginacion
+      // paginationProvider.resetPagination();
+
+      //peticiones para obtener  la lista de estatus
+      await merchantProvider.listStatus('PAYMENT');
+
+      typePayment = await merchantProvider.typePayment();
+
+      //el total de elementos para la paginacion sera igual a la cantidad de ordenes que halla
+    });
   }
 
 //Reinicio de los valores de los filtros
@@ -56,6 +77,7 @@ class _PaymentHistoryScreenState extends State<PaymentHistoryScreen> {
   Widget build(BuildContext context) {
     final navProvider = context.watch<NavigationProvider>();
     final textStyle = Theme.of(context).textTheme;
+    final merchantProvider = context.watch<MerchantProvider>();
 
     //Componentes que tendra el filtro
     final List<Widget> filters = [
@@ -63,7 +85,7 @@ class _PaymentHistoryScreenState extends State<PaymentHistoryScreen> {
         padding: const EdgeInsets.symmetric(horizontal: 3),
         child: CustomDropdown(
           hintText: 'Estado',
-          options: [],
+          options: merchantProvider.status ?? [],
           onChanged: (value) {
             setState(() {
               dropdownValue = value;
@@ -80,17 +102,15 @@ class _PaymentHistoryScreenState extends State<PaymentHistoryScreen> {
         padding: const EdgeInsets.symmetric(horizontal: 3),
         child: CustomDropdown(
           hintText: 'Tipo de pago',
-          options: [
-            
-          ],
+          options: typePayment ?? [],
           onChanged: (value) {
             setState(() {
               dropdownValue = value;
             });
           },
           selectedValue: dropdownValue,
-          itemValueMapper: (option) => option['tagStatus']!,
-          itemLabelMapper: (option) => option['nameStatus']!,
+          itemValueMapper: (option) => option['tag']!,
+          itemLabelMapper: (option) => option['name']!,
           autoSelectFirst: false,
           optionsTextsStyle: textStyle.bodySmall!.copyWith(fontSize: 14),
         ),
@@ -126,49 +146,89 @@ class _PaymentHistoryScreenState extends State<PaymentHistoryScreen> {
           )),
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 35, vertical: 15),
-            child: Filter(
-              icons: filterIcons,
-              inputs: filters,
-              onReset: resetFilters,
-              onApply: applyFilters,
-            ),
-          ),
 
-
-
-          Expanded(
-                  child: ListView.builder(
-                      controller: _scrollController,
-                      itemCount: 3,
-                      itemBuilder: (context, index) {
-                        
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 15, horizontal: 35),
-                          child: TextCard(
-                            texts: [
-                              {'label': 'id: ', 'value': 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'},
-                  {'label': 'Monto: ', 'value': '100'},
-                  {'label': 'Comision: ', 'value': '2'},
-                  {'label': 'Fecha: ', 'value': '19/12/2024 5:46 PM'},
-                  {'label': 'Metodo de pago: ', 'value': 'Transferencia inmediata'},
-                  {'label': 'Tipo de pago: ', 'value': 'pasarela'},
-                  {'label': 'status', 'value': 'Rechazado', 'statusColor': Colors.red},
-               
-            
-                            ], 
-                            onTap: () {
-                              Navigator.pushNamed(
-                                context,
-                                '/Detalle de orden',
-                              );
-                            },
-                          ),
-                        );
-                      }),
+          //No ha cargado
+          if (merchantProvider.isLoading) ...[
+            const SizedBox(
+                height: 15,
+              ),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 35, vertical: 15),
+                child: Center(
+                  child: CustomSkeleton(
+                    height: 65,
+                  ),
                 ),
+              ),
+
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 15, horizontal: 35),
+                child: CustomSkeleton(height: 160),
+              ),
+
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 15, horizontal: 35),
+                child: CustomSkeleton(height: 160),
+              ),
+          ],
+
+
+          //Ya cargo
+          if (!merchantProvider.isLoading) ...[
+            Center(
+              child: Text("#${widget.id}",
+                  style: textStyle.titleMedium!
+                      .copyWith(fontWeight: FontWeight.w600)),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 35, vertical: 15),
+              child: Filter(
+                icons: filterIcons,
+                inputs: filters,
+                onReset: resetFilters,
+                onApply: applyFilters,
+              ),
+            ),
+            Expanded(
+              child: ListView.builder(
+                  controller: _scrollController,
+                  itemCount: 3,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 15, horizontal: 35),
+                      child: TextCard(
+                        texts: [
+                          {
+                            'label': 'id: ',
+                            'value':
+                                '676597d4a00d5c4307c9b61e'
+                          },
+                          {'label': 'Monto: ', 'value': '100'},
+                          {'label': 'Comision: ', 'value': '2'},
+                          {'label': 'Fecha: ', 'value': '19/12/2024 5:46 PM'},
+                          {
+                            'label': 'Metodo de pago: ',
+                            'value': 'Transferencia inmediata'
+                          },
+                          {'label': 'Tipo de pago: ', 'value': 'pasarela'},
+                          {
+                            'label': 'status',
+                            'value': 'Rechazado',
+                            'statusColor': Colors.red
+                          },
+                        ],
+                        onTap: () {
+                          Navigator.pushNamed(
+                            context,
+                            '/Detalle de orden',
+                          );
+                        },
+                      ),
+                    );
+                  }),
+            ),
+          ],
         ],
       ),
     );

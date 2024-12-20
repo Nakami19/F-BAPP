@@ -76,8 +76,8 @@ class _ListOrdersScreenState extends State<ListOrdersScreen> {
       paginationProvider.resetPagination();
 
       //peticiones para obtener la lista de ordenes y la lista de estatus
-      await merchantProvider.ListStatus('ORDER');
-      await merchantProvider.Listorders(
+      await merchantProvider.listStatus('ORDER');
+      await merchantProvider.listorders(
           limit: 5,
           page: 0,
           startDate: DateFormatter.formatDate2(DateTime.now()).toString(),
@@ -118,7 +118,7 @@ class _ListOrdersScreenState extends State<ListOrdersScreen> {
 
     //se hace la peticion con los filtros aplicados
     final merchantProvider = context.read<MerchantProvider>();
-    await merchantProvider.Listorders(
+    await merchantProvider.listorders(
         page: 0,
         limit: 5,
         startDate: startDate,
@@ -236,8 +236,7 @@ class _ListOrdersScreenState extends State<ListOrdersScreen> {
             if (merchantProvider.isLoading == false &&
                 merchantProvider.orders != null) ...[
               //Si no hay ordenes
-              if (merchantProvider.orders?['count'] == 0 ||
-                  merchantProvider.haveSimpleError == true) ...[
+              if (merchantProvider.orders?['count'] == 0 ) ...[
                 //Filtro
                 Padding(
                   padding:
@@ -300,6 +299,7 @@ class _ListOrdersScreenState extends State<ListOrdersScreen> {
                             texts: buildTextsFromOrder(order,
                                 statusColors), // Lista con los textos generada
                             onTap: () {
+                              merchantProvider.infoOrder = order;
                               Navigator.pushNamed(
                                 context,
                                 '/Detalle de orden',
@@ -315,7 +315,7 @@ class _ListOrdersScreenState extends State<ListOrdersScreen> {
                 Pagination(
                   //Funcion al pasar a la siguiente pagina
                   onNextPressed: () {
-                    merchantProvider.Listorders(
+                    merchantProvider.listorders(
                         page: paginationProvider.page,
                         limit: 5,
                         startDate: startDate,
@@ -326,7 +326,7 @@ class _ListOrdersScreenState extends State<ListOrdersScreen> {
 
                   //Funcion al pasar a la pagina anterior
                   onPreviousPressed: () {
-                    merchantProvider.Listorders(
+                    merchantProvider.listorders(
                         page: paginationProvider.page,
                         limit: 5,
                         startDate: startDate,

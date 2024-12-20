@@ -12,26 +12,46 @@ class MerchantProvider extends GeneralProvider {
   //para realizar las peticiones
   final merchantService = MerchantServices();
 
-  //ordenes para el listado
+  //id de orden para el detalle
+  Map<String, dynamic>? orderInfo;
+
+  Map<String, dynamic>? get infoOrder => orderInfo;
+
+  set infoOrder(Map<String, dynamic>? newinfo) {
+    orderInfo=newinfo;
+    notifyListeners();
+  }
+
+   //ordenes del listado de ordenes
   Map<String, dynamic>? orders;
 
   Map<String, dynamic>? get order => orders;
-
-  //estados en las acciones de merchant
-  List<dynamic>? status;
 
   set setOrders(Map<String, dynamic>? neworders) {
     orders = neworders;
     notifyListeners();
   }
 
+//estados en las acciones de merchant
+  List<dynamic>? status;
+
   set setStatus(List<dynamic>? newStatus) {
     status = newStatus;
     notifyListeners();
   }
 
+
+  Map<String, dynamic>? userData;
+
+  Map<String, dynamic>? get dataUser => userData;
+
+  set setuserData(Map<String, dynamic>? newdata) {
+    userData = newdata;
+    notifyListeners();
+  }
+
   //se obtienen los listados de estatus 
-  Future <void> ListStatus (String tagstatus) async {
+  Future <void> listStatus (String tagstatus) async {
 
     super.setLoadingStatus(true);
     notifyListeners();
@@ -94,7 +114,7 @@ class MerchantProvider extends GeneralProvider {
   } 
 
 //Obtener el listado de ordenes
-  Future <void> Listorders (
+  Future <void> listorders (
     {int? limit,
     int? page,
     String? startDate,
@@ -162,6 +182,129 @@ class MerchantProvider extends GeneralProvider {
         message: error.toString()
       );
       notifyListeners();
+    } finally {
+      super.setLoadingStatus(false);
+      notifyListeners();
+    }
+
+  }
+
+
+  //Obtener detalle de orden
+  Future <Map<String, dynamic>> orderDetail (String idOrder) async { 
+    super.setLoadingStatus(true);
+    notifyListeners();
+
+    try {
+
+      final response = await merchantService.getOrderDetail(idOrder);
+
+      final data = jsonDecode(response.toString());
+
+      return data['data'];
+
+    } on DioError catch (error) {
+      final response = error.response;
+      final data = response?.data as Map<String, dynamic>;
+
+      final resp = ApiResponse.fromJson(
+        response?.data as Map<String, dynamic>,
+        (json) => data['data'], // No hay data para el caso de error
+        (json) => ApiError(
+          message: json['message'],
+          value: json['value'],
+          trackingCode: json['trackingCode'],
+        ),
+      );
+
+      super.setSimpleError(true);
+      super.setErrorMessage(resp.message);
+      
+
+      super.setTrackingCode(resp.trackingCode);
+
+      Snackbars.customSnackbar(
+        navigatorKey.currentContext!,
+        title: resp.trackingCode,
+        message: resp.message
+      );
+      
+      notifyListeners();
+
+      rethrow;
+      
+    }catch (error) {
+      super.setSimpleError(true);
+      super.setErrorMessage("Ocurrió un error inesperado");
+      super.setTrackingCode(error.toString());
+      Snackbars.customSnackbar(
+        navigatorKey.currentContext!,
+        title: "Ocurrió un error inesperado",
+        message: error.toString()
+      );
+      notifyListeners();
+      rethrow;
+    } finally {
+      super.setLoadingStatus(false);
+      notifyListeners();
+    }
+
+  }
+
+  //obtener tipos de pagos
+  Future <List<dynamic>> typePayment () async { 
+    super.setLoadingStatus(true);
+    notifyListeners();
+
+    try {
+
+      final response = await merchantService.getTypePayments();
+
+      final data = jsonDecode(response.toString());
+
+      return data['data'];
+
+    } on DioError catch (error) {
+      final response = error.response;
+      final data = response?.data as Map<String, dynamic>;
+
+      final resp = ApiResponse.fromJson(
+        response?.data as Map<String, dynamic>,
+        (json) => data['data'], // No hay data para el caso de error
+        (json) => ApiError(
+          message: json['message'],
+          value: json['value'],
+          trackingCode: json['trackingCode'],
+        ),
+      );
+
+      super.setSimpleError(true);
+      super.setErrorMessage(resp.message);
+      
+
+      super.setTrackingCode(resp.trackingCode);
+
+      Snackbars.customSnackbar(
+        navigatorKey.currentContext!,
+        title: resp.trackingCode,
+        message: resp.message
+      );
+      
+      notifyListeners();
+
+      rethrow;
+      
+    }catch (error) {
+      super.setSimpleError(true);
+      super.setErrorMessage("Ocurrió un error inesperado");
+      super.setTrackingCode(error.toString());
+      Snackbars.customSnackbar(
+        navigatorKey.currentContext!,
+        title: "Ocurrió un error inesperado",
+        message: error.toString()
+      );
+      notifyListeners();
+      rethrow;
     } finally {
       super.setLoadingStatus(false);
       notifyListeners();
