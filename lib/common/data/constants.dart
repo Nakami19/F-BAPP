@@ -22,3 +22,5 @@ List<String> typeDocuments = [
   'P',
   'Cancelar', // Cancelar
 ];
+
+final phoneRegex = RegExp(r'^(0424|0414|0412|0426|0416|424|414|412|426|416)[0-9]{6}$');

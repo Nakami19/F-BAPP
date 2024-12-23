@@ -7,7 +7,8 @@ import 'package:f_bapp/presentation/screens/main_screen.dart';
 import 'package:f_bapp/presentation/screens/modules/administration/administration_screen.dart';
 import 'package:f_bapp/presentation/screens/modules/ldap/ldap_screen.dart';
 import 'package:f_bapp/presentation/screens/modules/merchant/create_order_screen.dart';
-import 'package:f_bapp/presentation/screens/modules/merchant/list_devolutions_screen.dart';
+import 'package:f_bapp/presentation/screens/modules/merchant/devolutions/devolution_detail_screen.dart';
+import 'package:f_bapp/presentation/screens/modules/merchant/devolutions/list_devolutions_screen.dart';
 import 'package:f_bapp/presentation/screens/modules/merchant/list_mobile_payments.dart';
 import 'package:f_bapp/presentation/screens/modules/merchant/list_profits_screen.dart';
 import 'package:f_bapp/presentation/screens/modules/merchant/merchant_actions_screen.dart';
@@ -86,6 +87,11 @@ class AppRouter {
         return FadePageTransition(
             builder: (_) => const MainScreen(
                 selectedIndex: 2, child: ListDevolutionsScreen()));
+
+      case refunddetailScreen:
+        return FadePageTransition(
+            builder: (_) => const MainScreen(
+                selectedIndex: 2, child: DevolutionDetailScreen()));
 
       case listmerchantordersScreen:
         return FadePageTransition(

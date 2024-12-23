@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
@@ -8,6 +9,7 @@ import 'package:f_bapp/common/widgets/shared/dialogs.dart';
 import 'package:f_bapp/config/network/api_error.dart';
 import 'package:f_bapp/config/network/api_response.dart';
 import 'package:f_bapp/infrastructure/services/auth/login_services.dart';
+import 'package:f_bapp/infrastructure/services/shared/shared_services.dart';
 import 'package:f_bapp/infrastructure/shared/secure_storage_service.dart';
 import 'package:flutter/material.dart';
 import '../../../app.dart';
@@ -29,6 +31,20 @@ class SessionProvider extends GeneralProvider {
   bool _isMaintenanceMode = false;
   bool get isMaintenanceMode => _isMaintenanceMode;
   static const int maxSeconds = 20;
+
+  //para hacer peticiones
+  final sharedService = SharedServices();
+
+  List<dynamic>? documentsType;
+
+ List<dynamic>? get getdocumentsType => documentsType;
+
+  set setDocumentsType(List<dynamic>? newDocument) {
+    documentsType = newDocument;
+    notifyListeners();
+  }
+
+
 
   void setMaintenanceMode(bool value) {
     _isMaintenanceMode = value;
@@ -310,4 +326,75 @@ class SessionProvider extends GeneralProvider {
     _isAuthenticated = false;
     super.dispose();
   }
+
+
+//obtener tipos de documentos de identidad
+  Future <void> documentType () async { 
+    super.setLoadingStatus(true);
+    notifyListeners();
+
+    try {
+
+      final response = await sharedService.getDocumentType();
+
+      final data = jsonDecode(response.toString());
+
+      setDocumentsType = data['data'];
+
+
+    } on DioError catch (error) {
+      onDioerror(error);
+      
+      notifyListeners();
+
+      rethrow;
+      
+    }catch (error) {
+      super.setSimpleError(true);
+      super.setErrorMessage("Ocurrió un error inesperado");
+      super.setTrackingCode(error.toString());
+      Snackbars.customSnackbar(
+        navigatorKey.currentContext!,
+        title: "Ocurrió un error inesperado",
+        message: error.toString()
+      );
+      notifyListeners();
+      rethrow;
+    } finally {
+      super.setLoadingStatus(false);
+      notifyListeners();
+    }
+
+  }
+
+
+  void onDioerror(error) {
+     final response = error.response;
+      final data = response?.data as Map<String, dynamic>;
+
+      final resp = ApiResponse.fromJson(
+        response?.data as Map<String, dynamic>,
+        (json) => data['data'], // No hay data para el caso de error
+        (json) => ApiError(
+          message: json['message'],
+          value: json['value'],
+          trackingCode: json['trackingCode'],
+        ),
+      );
+
+      super.setSimpleError(true);
+      super.setErrorMessage(resp.message);
+      
+
+      super.setTrackingCode(resp.trackingCode);
+
+      Snackbars.customSnackbar(
+        navigatorKey.currentContext!,
+        title: resp.trackingCode,
+        message: resp.message
+      );
+  }
+
+
+
 }

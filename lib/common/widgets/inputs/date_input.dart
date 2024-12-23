@@ -127,12 +127,6 @@ class DateInput extends StatelessWidget {
                   })
                 }
             },
-        validator: (value) {
-          if (value == null || value.isEmpty) {
-            return 'Campo requerido';
-          }
-
-          return null;
-        });
+       );
   }
 }

@@ -68,17 +68,6 @@ class UtilsProvider extends GeneralProvider {
       final data = error.response?.data as Map<String, dynamic>;
       super.setStatusCode(response!.statusCode!);
 
-      // resp = ApiResponse.fromJson(
-      //   data,
-      //   (json) => null, // No hay data para el caso de error
-      //   (json) => ApiError(
-      //     message: json['message'],
-      //     value: json['value'],
-      //     trackingCode: json['trackingCode'],
-      //   ),
-      // );
-
-
       // Obtengo igualmente los datos del usuario
       final userData = await storage.getValue(
         'userData',

@@ -6,12 +6,14 @@ import 'package:f_bapp/common/providers/general_provider.dart';
 import 'package:f_bapp/common/widgets/shared/snackbars.dart';
 import 'package:f_bapp/config/network/api_error.dart';
 import 'package:f_bapp/config/network/api_response.dart';
-import 'package:f_bapp/infrastructure/services/modules/merchant_services.dart';
+import 'package:f_bapp/infrastructure/services/modules/merchant/merchant_services.dart';
+import 'package:f_bapp/infrastructure/services/shared/shared_services.dart';
 
 class MerchantProvider extends GeneralProvider {
   //para realizar las peticiones
   final merchantService = MerchantServices();
 
+  //Listado de pagos
   Map<String, dynamic>? payments;
 
   Map<String, dynamic>? get getpayment => payments;
@@ -31,13 +33,34 @@ class MerchantProvider extends GeneralProvider {
     notifyListeners();
   }
 
-   //ordenes del listado de ordenes
+  //ordenes del listado de ordenes
   Map<String, dynamic>? orders;
 
   Map<String, dynamic>? get order => orders;
 
   set setOrders(Map<String, dynamic>? neworders) {
     orders = neworders;
+    notifyListeners();
+  }
+
+
+  //listado de devoluciones
+  Map<String, dynamic>? refunds;
+
+  Map<String, dynamic>? get refund => refunds;
+
+  set setRefunds(Map<String, dynamic>? newRefund) {
+    refunds = newRefund;
+    notifyListeners();
+  }
+
+ //informacion de la devolucion para el detalle
+  Map<String, dynamic>? refundInfo;
+
+  Map<String, dynamic>? get infoRefund => refundInfo;
+
+  set infoRefund(Map<String, dynamic>? newinfo) {
+    refundInfo=newinfo;
     notifyListeners();
   }
 
@@ -49,7 +72,7 @@ class MerchantProvider extends GeneralProvider {
     notifyListeners();
   }
 
-//informacion del usuario 
+//informacion del usuario que realizo la orden
   Map<String, dynamic>? userData;
 
   Map<String, dynamic>? get dataUser => userData;
@@ -262,6 +285,110 @@ class MerchantProvider extends GeneralProvider {
     final data = jsonDecode(response.toString());
     
     setPaymentslist = data['data'];
+
+    } on DioError catch (error) {
+      onDioerror(error);
+      
+      notifyListeners();
+      
+    }catch (error) {
+      super.setSimpleError(true);
+      super.setErrorMessage("Ocurrió un error inesperado");
+      super.setTrackingCode(error.toString());
+      Snackbars.customSnackbar(
+        navigatorKey.currentContext!,
+        title: "Ocurrió un error inesperado",
+        message: error.toString()
+      );
+      notifyListeners();
+    } finally {
+      super.setLoadingStatus(false);
+      notifyListeners();
+    }
+
+  }
+
+    // Llama al API para revertir orden
+  Future <void> revertOrder (
+    {
+    String? documentNumber,
+    String? idDocumentType,
+    String idOrder="",}
+    ) async { 
+    super.setLoadingStatus(true);
+    notifyListeners();
+
+    try {
+      //se construyen los parametros 
+      final params = <String, dynamic>{};
+      params['idOrder'] = idOrder;
+      if (documentNumber != null) params['documentId'] = documentNumber;
+      if (idDocumentType != null) params['documentTypeId'] = idDocumentType;
+
+      
+      final response = await merchantService.postRevertOrder(params);
+
+      final data = jsonDecode(response.toString());
+
+
+    } on DioError catch (error) {
+      onDioerror(error);
+      
+      notifyListeners();
+      
+    }catch (error) {
+      super.setSimpleError(true);
+      super.setErrorMessage("Ocurrió un error inesperado");
+      super.setTrackingCode(error.toString());
+      Snackbars.customSnackbar(
+        navigatorKey.currentContext!,
+        title: "Ocurrió un error inesperado",
+        message: error.toString()
+      );
+      notifyListeners();
+    } finally {
+      super.setLoadingStatus(false);
+      notifyListeners();
+    }
+
+  }
+
+
+  //Obtener el listado de devoluciones
+  Future <void> listRefunds (
+    {int? limit,
+    int? page,
+    String? startDate,
+    String? endDate,
+    bool? refunds,
+    String? tagStatus,
+    String? idPaymentType,
+    String? phoneNumber,
+    String? idOrder,}
+    ) async { 
+    super.setLoadingStatus(true);
+    notifyListeners();
+
+    try {
+      //se construyen los parametros para la peticion
+      final params = <String, dynamic>{};
+
+      if (limit != null) params['limit'] = limit;
+      if (page != null) params['page'] = page;
+      if (startDate != null && startDate !="") params['startDate'] = startDate;
+      if (endDate != null && endDate !="") params['endDate'] = endDate;
+      if (tagStatus != null && tagStatus !="") params['tagStatus'] = tagStatus;
+      if (idPaymentType != null && idPaymentType !="") params['idTypeOrder'] = idPaymentType;
+      if (idOrder != null && idOrder !="") params['idOrder'] = idOrder;
+      if (phoneNumber != null && phoneNumber !="") params['phoneNumber'] = phoneNumber;
+
+      final response = await merchantService.getRefunds(params);
+
+      final data = jsonDecode(response.toString());
+
+
+      setRefunds = data['data'];
+
 
     } on DioError catch (error) {
       onDioerror(error);

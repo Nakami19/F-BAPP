@@ -11,13 +11,12 @@ import 'package:provider/provider.dart';
 import '../../providers/pagination_provider.dart';
 
 class Filter<T> extends StatefulWidget {
-  const Filter({
-    super.key,
-    required this.inputs,
-    required this.onApply,
-    required this.onReset,
-    required this.icons
-  });
+  const Filter(
+      {super.key,
+      required this.inputs,
+      required this.onApply,
+      required this.onReset,
+      required this.icons});
 
   final List<T> inputs;
   final VoidCallback onReset; // Acción al presionar icono de papelera
@@ -31,7 +30,6 @@ class Filter<T> extends StatefulWidget {
 class _FilterState extends State<Filter> {
   final form = GlobalKey<FormState>();
   bool _isFilterVisible = false;
-
 
   @override
   Widget build(BuildContext context) {
@@ -57,12 +55,11 @@ class _FilterState extends State<Filter> {
             padding: const EdgeInsets.all(5),
             child: Row(
               children: [
-                
                 //botones pasados como parametros a la izquierda
                 Row(
-                  children:widget.icons.map((icon){
-                  return icon;
-                }).toList() ,
+                  children: widget.icons.map((icon) {
+                    return icon;
+                  }).toList(),
                 ),
 
                 Spacer(),
@@ -105,26 +102,24 @@ class _FilterState extends State<Filter> {
                     key: form,
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        children: [
-                          ... widget.inputs.map((widget) {
+                      child: Column(children: [
+                        ...widget.inputs.map((widget) {
                           return Padding(
                             padding: const EdgeInsets.only(bottom: 12),
                             child: widget,
                           );
                         }),
-                        
-                          CustomButton(
+                        CustomButton(
                             title: 'Buscar',
                             isPrimaryColor: true,
                             isOutline: false,
                             onTap: () {
-                              widget.onApply?.call();
+                              if (form.currentState!.validate()) {
+                                widget.onApply();
+                              }
                             },
                             provider: provider)
-                        ]
-      
-                      ),
+                      ]),
                     ),
                   )
                 : SizedBox.shrink(),

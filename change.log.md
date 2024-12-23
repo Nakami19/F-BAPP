@@ -1,5 +1,11 @@
 ## [F-APP]
 
+## [1.0.0+27] - 2024-12-23 - Natalia. R
+
+## Added 
+
+- Añadida vista de listado de devoluciones y detalle de devolucion
+
 ## [1.0.0+26] - 2024-12-23 - Natalia. R
 
 ## Added 

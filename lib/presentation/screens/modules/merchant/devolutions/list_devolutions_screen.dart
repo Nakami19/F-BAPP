@@ -1,7 +1,8 @@
-import 'package:f_bapp/common/assets/theme/app_colors.dart';
+import 'package:f_bapp/common/data/constants.dart';
 import 'package:f_bapp/common/data/date_formatter.dart';
 import 'package:f_bapp/common/data/digit_formatter.dart';
 import 'package:f_bapp/common/providers/pagination_provider.dart';
+import 'package:f_bapp/common/widgets/cards/text_card.dart';
 import 'package:f_bapp/common/widgets/inputs/custom_dropdown.dart';
 import 'package:f_bapp/common/widgets/inputs/custom_text_form_field.dart';
 import 'package:f_bapp/common/widgets/inputs/date_input.dart';
@@ -14,36 +15,37 @@ import 'package:f_bapp/config/theme/business_app_colors.dart';
 import 'package:f_bapp/presentation/providers/modules/merchant_provider.dart';
 import 'package:f_bapp/presentation/providers/shared/navigation_provider.dart';
 import 'package:f_bapp/presentation/providers/shared/utils_provider.dart';
+import 'package:f_bapp/presentation/widgets/shared/custom_navbar.dart';
 import 'package:f_bapp/presentation/widgets/shared/drawer_menu.dart';
 import 'package:f_bapp/presentation/widgets/shared/screens_appbar.dart';
-import 'package:f_bapp/common/widgets/cards/text_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
-class ListOrdersScreen extends StatefulWidget {
-  const ListOrdersScreen({super.key});
+class ListDevolutionsScreen extends StatefulWidget {
+  const ListDevolutionsScreen({super.key});
 
   @override
-  State<ListOrdersScreen> createState() => _ListOrdersScreenState();
+  State<ListDevolutionsScreen> createState() => _ListDevolutionsScreenState();
 }
 
-class _ListOrdersScreenState extends State<ListOrdersScreen> {
-  final GlobalKey<ScaffoldState> _listordersScaffoldKey =
+class _ListDevolutionsScreenState extends State<ListDevolutionsScreen> {
+  final GlobalKey<ScaffoldState> _listdevolutionsScaffoldKey =
       GlobalKey<ScaffoldState>();
-
   final ScrollController _scrollController = ScrollController();
 
 //Controladores para los inputs del filtro
-  late TextEditingController idController;
+  late TextEditingController idOrderController;
   late TextEditingController dateController;
+  late TextEditingController phoneNumberController;
 
   //Variables del filtro de busqueda
   String? dropdownValue;
+  String phoneNumber = "";
+  String idOrder = "";
+  String endDate = "";
+  String startDate = "";
   String status = "";
-  String id = "";
-  String endDate = DateFormatter.formatDate2(DateTime.now()).toString();
-  String startDate = DateFormatter.formatDate2(DateTime.now()).toString();
 
   List<Map<String, dynamic>> filterIcons = [];
 
@@ -51,14 +53,15 @@ class _ListOrdersScreenState extends State<ListOrdersScreen> {
   void initState() {
     super.initState();
 
-    idController = TextEditingController();
-    dateController = TextEditingController(text: '$startDate - $endDate');
+    idOrderController = TextEditingController();
+    dateController = TextEditingController();
+    phoneNumberController = TextEditingController();
 
     filterIcons = [
       {'icon': Icons.download_rounded, 'onPressed': () {}},
       {
         'icon': Icons.refresh_rounded,
-        'onPressed': refreshOrders,
+        'onPressed': refreshDevolutions,
       },
     ];
 
@@ -66,28 +69,27 @@ class _ListOrdersScreenState extends State<ListOrdersScreen> {
       final merchantProvider = context.read<MerchantProvider>();
       final paginationProvider = context.read<PaginationProvider>();
 
-      //se reinicia la paginacion
       paginationProvider.resetPagination();
 
-      //peticiones para obtener la lista de ordenes y la lista de estatus
-      await merchantProvider.listStatus('ORDER');
-      await merchantProvider.listorders(
-          limit: 5,
-          page: 0,
-          startDate: DateFormatter.formatDate2(DateTime.now()).toString(),
-          endDate: DateFormatter.formatDate2(DateTime.now()).toString());
+      //peticiones para obtener la lista de devoluciones y la lista de estatus
+      await merchantProvider.listStatus('PAYMENT');
+      await merchantProvider.listRefunds(
+        limit: 5,
+        page: 0,
+      );
 
-      //el total de elementos para la paginacion sera igual a la cantidad de ordenes que halla
+      //el total de elementos para la paginacion sera igual a la cantidad de devoluciones que halla
       if (merchantProvider.orders != null) {
-        paginationProvider.setTotal(merchantProvider.orders!['count']);
+        paginationProvider.setTotal(merchantProvider.refunds!['count']);
       }
     });
   }
 
   @override
   void dispose() {
-    idController.dispose();
+    idOrderController.dispose();
     dateController.dispose();
+    phoneNumberController.dispose();
     super.dispose();
   }
 
@@ -95,29 +97,30 @@ class _ListOrdersScreenState extends State<ListOrdersScreen> {
   void resetFilters() async {
     final paginationProvider = context.read<PaginationProvider>();
     final merchantProvider = context.read<MerchantProvider>();
-
     setState(() {
-      idController.clear();
-      dateController.text =
-          '${DateFormatter.formatDate2(DateTime.now()).toString()} - ${DateFormatter.formatDate2(DateTime.now()).toString()}';
+      idOrderController.clear();
+      dateController.clear();
+      phoneNumberController.clear();
       dropdownValue = null;
     });
 
-    String status = "";
-    String id = "";
-    String endDate = DateFormatter.formatDate2(DateTime.now()).toString();
-    String startDate = DateFormatter.formatDate2(DateTime.now()).toString();
+    phoneNumber = "";
+    idOrder = "";
+    endDate = "";
+    startDate = "";
+    status = "";
 
-    await merchantProvider.listorders(
-        page: 0,
-        limit: 5,
-        startDate: startDate,
-        endDate: endDate,
-        idOrder: id,
-        tagStatus: status);
+    await merchantProvider.listRefunds(
+      limit: 5,
+      page: 0,
+      startDate: startDate,
+      endDate: endDate,
+      idOrder: idOrder,
+      tagStatus: status,
+    );
 
     paginationProvider.resetPagination();
-    paginationProvider.setTotal(merchantProvider.orders!['count']);
+    paginationProvider.setTotal(merchantProvider.refund!['count']);
   }
 
   void applyFilters() async {
@@ -125,22 +128,29 @@ class _ListOrdersScreenState extends State<ListOrdersScreen> {
 
     // Procesar filtros aquí
     status = dropdownValue ?? "";
-    id = idController.text;
-    endDate = dateController.text.split(" - ")[1];
-    startDate = dateController.text.split(" - ")[0];
+    idOrder = idOrderController.text;
+    phoneNumber = phoneNumberController.text;
+    endDate =
+        dateController.text != "" ? dateController.text.split(" - ")[1] : "";
+    startDate =
+        dateController.text != "" ? dateController.text.split(" - ")[0] : "";
+
+    print("Holaaaaa ${phoneNumber} + ${idOrder}");
 
     //se hace la peticion con los filtros aplicados
     final merchantProvider = context.read<MerchantProvider>();
-    await merchantProvider.listorders(
-        page: 0,
-        limit: 5,
-        startDate: startDate,
-        endDate: endDate,
-        idOrder: id,
-        tagStatus: status);
+    await merchantProvider.listRefunds(
+      limit: 5,
+      page: 0,
+      startDate: startDate,
+      endDate: endDate,
+      phoneNumber: phoneNumber,
+      idOrder: idOrder,
+      tagStatus: status,
+    );
 
     paginationProvider.resetPagination();
-    paginationProvider.setTotal(merchantProvider.orders!['count']);
+    paginationProvider.setTotal(merchantProvider.refund!['count']);
   }
 
   @override
@@ -154,8 +164,8 @@ class _ListOrdersScreenState extends State<ListOrdersScreen> {
     //Componentes que tendra el filtro
     final List<Widget> filters = [
       CustomTextFormField(
-          controller: idController,
-          hintText: 'Buscar id',
+          controller: idOrderController,
+          hintText: 'Buscar num.orden',
           hintStyle:
               textStyle.bodySmall!.copyWith(fontSize: 17, color: Colors.grey),
           enabled: true,
@@ -168,6 +178,28 @@ class _ListOrdersScreenState extends State<ListOrdersScreen> {
 
             return null;
           }),
+      CustomTextFormField(
+          controller: phoneNumberController,
+          hintText: 'Teléfono emisor',
+          inputType: TextInputType.number,
+          maxLength: 10,
+          hintStyle:
+              textStyle.bodySmall!.copyWith(fontSize: 17, color: Colors.grey),
+          enabled: true,
+          validator: (value) {
+            if (value != null && value != "") {
+              if (value.length < 10) {
+                return 'El formato no es válido ';
+              }
+
+              if (!phoneRegex.hasMatch(value)) {
+                return 'El código de área222 no es válido';
+              }
+            }
+
+            return null;
+          }
+          ),
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 3),
         child: CustomDropdown(
@@ -191,7 +223,7 @@ class _ListOrdersScreenState extends State<ListOrdersScreen> {
         child: DateInput(
           controller: dateController,
           rangeDate: true,
-          hintText: 'Fecha de emision',
+          hintText: 'Fechas relevantes',
         ),
       ),
     ];
@@ -203,7 +235,7 @@ class _ListOrdersScreenState extends State<ListOrdersScreen> {
       },
       child: Scaffold(
         drawer: DrawerMenu(),
-        key: _listordersScaffoldKey,
+        key: _listdevolutionsScaffoldKey,
         onDrawerChanged: (isOpened) {
           if (!isOpened) {
             Future.delayed(Duration(milliseconds: navProvider.showNavBarDelay),
@@ -217,19 +249,16 @@ class _ListOrdersScreenState extends State<ListOrdersScreen> {
         appBar: PreferredSize(
             preferredSize: Size.fromHeight(110),
             child: Screensappbar(
-              title: 'Listado de ordenes',
-              screenKey: _listordersScaffoldKey,
+              title: 'Listado de devoluciones',
+              screenKey: _listdevolutionsScaffoldKey,
               poproute: merchantScreen,
-              onBack: () {
-                merchantProvider.disposeValues();
-              },
             )),
         body: Column(
           children: [
-            //Si esta cargando o no se tienen valores de los estatus o las ordenes
+            //Si esta cargando o no se tienen valores de los estatus o las devoluciones
             if (merchantProvider.isLoading == true ||
                 merchantProvider.status == null ||
-                merchantProvider.orders == null) ...[
+                merchantProvider.refunds == null) ...[
               const SizedBox(
                 height: 15,
               ),
@@ -256,9 +285,9 @@ class _ListOrdersScreenState extends State<ListOrdersScreen> {
 
             //Ya cargo
             if (merchantProvider.isLoading == false &&
-                merchantProvider.orders != null) ...[
-              //Si no hay ordenes
-              if (merchantProvider.orders?['count'] == 0) ...[
+                merchantProvider.refunds != null) ...[
+              //si no hay devoluciones
+              if (merchantProvider.refunds!['count'] == 0) ...[
                 //Filtro
                 Padding(
                   padding:
@@ -290,15 +319,15 @@ class _ListOrdersScreenState extends State<ListOrdersScreen> {
                             fit: BoxFit.cover,
                           ),
                         ),
-                        Center(child: Text('No hay datos disponibles')),
+                        const Center(child: Text('No hay datos disponibles')),
                       ],
                     ),
                   ),
                 )
               ],
 
-              //si hay ordenes
-              if (merchantProvider.orders!['count'] > 0) ...[
+              //si hay devoluciones
+              if (merchantProvider.refunds!['count'] > 0) ...[
                 //Filtro
                 Padding(
                   padding:
@@ -316,25 +345,24 @@ class _ListOrdersScreenState extends State<ListOrdersScreen> {
                   ),
                 ),
 
-                //Tarjetas con informacion de las ordenes
+                //Tarjetas con informacion de las devoluciones
                 Expanded(
                   child: ListView.builder(
                       controller: _scrollController,
-                      itemCount: merchantProvider.orders!['rows'].length,
+                      itemCount: merchantProvider.refunds!['rows'].length,
                       itemBuilder: (context, index) {
-                        final order = merchantProvider.orders!['rows'][index];
+                        final refund = merchantProvider.refunds!['rows'][index];
                         return Padding(
                           padding: const EdgeInsets.symmetric(
                               vertical: 15, horizontal: 35),
                           child: TextCard(
-                            texts: buildTextsFromOrder(order,
+                            texts: buildTextsFromDevolutions(refund,
                                 statusColors), // Lista con los textos generada
                             onTap: () {
-                              merchantProvider.infoOrder = order;
+                              merchantProvider.refundInfo = refund;
                               Navigator.pushNamed(
                                 context,
-                                '/Detalle de orden',
-                                arguments: order['idOrder'],
+                                '/Detalle de devolucion',
                               );
                             },
                           ),
@@ -346,24 +374,26 @@ class _ListOrdersScreenState extends State<ListOrdersScreen> {
                 Pagination(
                   //Funcion al pasar a la siguiente pagina
                   onNextPressed: () {
-                    merchantProvider.listorders(
-                        page: paginationProvider.page,
-                        limit: 5,
-                        startDate: startDate,
-                        endDate: endDate,
-                        idOrder: id,
-                        tagStatus: status);
+                    merchantProvider.listRefunds(
+                      limit: 5,
+                      page: 0,
+                      startDate: startDate,
+                      endDate: endDate,
+                      idOrder: idOrder,
+                      tagStatus: status,
+                    );
                   },
 
                   //Funcion al pasar a la pagina anterior
                   onPreviousPressed: () {
-                    merchantProvider.listorders(
-                        page: paginationProvider.page,
-                        limit: 5,
-                        startDate: startDate,
-                        endDate: endDate,
-                        idOrder: id,
-                        tagStatus: status);
+                    merchantProvider.listRefunds(
+                      limit: 5,
+                      page: 0,
+                      startDate: startDate,
+                      endDate: endDate,
+                      idOrder: idOrder,
+                      tagStatus: status,
+                    );
                   },
                 )
               ]
@@ -374,55 +404,65 @@ class _ListOrdersScreenState extends State<ListOrdersScreen> {
     );
   }
 
-  //Se contruye el contenido de la lista textos que tendra la tarjeta
-  List<Map<String, dynamic>> buildTextsFromOrder(
-      Map<String, dynamic> order, Map<String, Color> statusColors) {
+  void refreshDevolutions() async {
+    final paginationProvider = context.read<PaginationProvider>();
+    final merchantProvider = context.read<MerchantProvider>();
+
+    await merchantProvider.listRefunds(
+      limit: 5,
+      page: 0,
+      startDate: startDate,
+      endDate: endDate,
+      idOrder: idOrder,
+      tagStatus: status,
+    );
+
+    paginationProvider.resetPagination();
+    paginationProvider.setTotal(merchantProvider.refund!['count']);
+  }
+
+  List<Map<String, dynamic>> buildTextsFromDevolutions(
+      Map<String, dynamic> devolution, Map<String, Color> statusColors) {
     List<Map<String, dynamic>> objects = [];
 
-    if (order['idOrder'] != null) {
-      objects.add({'label': 'ID Orden: ', 'value': order['idOrder']});
+    if (devolution['idOrder'] != null) {
+      objects.add({'label': 'Nro. orden: ', 'value': devolution['idOrder']});
     }
 
-    if (order['createdDate'] != null) {
+    if (devolution['createdDate'] != null) {
       objects.add({
         'label': 'Fecha: ',
         'value':
-            '${DateFormatter.formatDate(DateTime.parse(order['createdDate']))}'
+            DateFormatter.formatDate(DateTime.parse(devolution['createdDate']))
       });
     }
 
-    if (order['amount'] != null) {
+    if (devolution['phoneNumber'] != null) {
+      objects.add(
+          {'label': 'Nro. teléfono: ', 'value': devolution["phoneNumber"]});
+    }
+
+    if (devolution['totalAmount'] != null) {
       objects.add({
-        'label': 'Monto: ',
+        'label': 'Monto total: ',
         'value':
-            '${DigitFormatter.getMoneyFormatter(order['amount'].toString())} ${order['tagCurrency']}'
+            '${DigitFormatter.getMoneyFormatter(devolution['totalAmount'].toString())} ${devolution['tagCurrency']}'
+      });
+    }
+
+    if (devolution['namePaymentMethod'] != null) {
+      objects.add({
+        'label': 'Método de pago: ',
+        'value': devolution['namePaymentMethod']
       });
     }
 
     objects.add({
       'label': 'status',
-      'value': order['status'],
-      'statusColor': statusColors[order['status']]
+      'value': devolution['status'],
+      'statusColor': statusColors[devolution['status']]
     });
 
     return objects;
-  }
-
-  void refreshOrders() async {
-    final merchantProvider = context.read<MerchantProvider>();
-    final paginationProvider = context.read<PaginationProvider>();
-
-    // Llama a la API para obtener las transacciones nuevamente
-    await merchantProvider.listorders(
-        page: 0,
-        limit: 5,
-        startDate: startDate,
-        endDate: endDate,
-        idOrder: id,
-        tagStatus: status);
-
-    // Reinicia la paginación
-    paginationProvider.resetPagination();
-    paginationProvider.setTotal(merchantProvider.payments!['count']);
   }
 }

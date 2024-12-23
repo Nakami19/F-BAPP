@@ -4,11 +4,14 @@ import 'package:f_bapp/common/data/digit_formatter.dart';
 import 'package:f_bapp/common/providers/general_provider.dart';
 import 'package:f_bapp/common/widgets/buttons/custom_button.dart';
 import 'package:f_bapp/common/widgets/cards/information_card.dart';
+import 'package:f_bapp/common/widgets/inputs/custom_dropdown.dart';
+import 'package:f_bapp/common/widgets/inputs/custom_text_form_field.dart';
 import 'package:f_bapp/common/widgets/shared/custom_skeleton.dart';
 import 'package:f_bapp/common/widgets/shared/snackbars.dart';
 import 'package:f_bapp/config/router/routes.dart';
 import 'package:f_bapp/presentation/providers/modules/merchant_provider.dart';
 import 'package:f_bapp/presentation/providers/shared/navigation_provider.dart';
+import 'package:f_bapp/presentation/providers/shared/session_provider.dart';
 import 'package:f_bapp/presentation/widgets/shared/drawer_menu.dart';
 import 'package:f_bapp/presentation/widgets/shared/screens_appbar.dart';
 import 'package:flutter/material.dart';
@@ -48,11 +51,16 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final merchantProvider = context.read<MerchantProvider>();
+      final sessionProvider = context.read<SessionProvider>();
 
       order = await merchantProvider.orderDetail(
           merchantProvider.orderInfo?["idOrder"] ?? widget.orderId);
 
       merchantProvider.userData = order!['payingUserInformation'];
+
+      sessionProvider.documentType();
+
+      print(" Holaaaaa11 ${sessionProvider.documentsType}");
 
       qrCode = QrCode.fromData(
         data: merchantProvider.orderInfo!['urlOrder'],
@@ -159,7 +167,9 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                               colorFilledButton: errorColor,
                               icon: Icons.refresh_rounded,
                               isOutline: false,
-                              onTap: () {},
+                              onTap: () {
+                                revertPopup(context);
+                              },
                               provider: GeneralProvider()),
                         ),
                       ),
@@ -248,7 +258,8 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
               ],
             ]),
           ),
-        ));
+        )
+        );
   }
 
   List<Map<String, dynamic>> buildTextsFromOrder(Map<String, dynamic> order) {
@@ -344,7 +355,8 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
 
                 // QR
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 20),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 32, vertical: 20),
                   child: PrettyQrView(
                     qrImage: qrImage,
                     decoration: decoration,
@@ -361,15 +373,209 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                       iconColor: primaryColor,
                       isOutline: true,
                       onTap: () {
-                        Clipboard.setData(
-                            ClipboardData(text: order!['urlOrder']??merchantProvider.orderInfo!['urlOrder']));
-                        Snackbars.customSnackbar(context, message: 'Texto copiado al portapapeles');
+                        Clipboard.setData(ClipboardData(
+                            text: order!['urlOrder'] ??
+                                merchantProvider.orderInfo!['urlOrder']));
+                        Snackbars.customSnackbar(context,
+                            message: 'Texto copiado al portapapeles');
                       },
                       provider: GeneralProvider()),
                 ),
               ],
             ),
           ),
+        );
+      },
+    );
+  }
+
+  void revertPopup(BuildContext context) {
+    bool showFields = false; // Estado interno para mostrar o no los inputs.
+    final sessionProvider = context.read<SessionProvider>();
+    String? currentValue;
+    TextEditingController documentController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12)),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text(
+                    'Se va a retornar los fondos a la cuenta correspondiente',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 20),
+                  const Text(
+                    '¿Deseas intentar el reverso a una cédula distinta a la reportada por el cliente?',
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Row(
+                        children: [
+                          Radio<bool>(
+                            value: true,
+                            groupValue: showFields,
+                            onChanged: (value) {
+                              setState(() {
+                                showFields = value!;
+                              });
+                            },
+                          ),
+                          Text('Sí'),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Radio<bool>(
+                            value: false,
+                            groupValue: showFields,
+                            onChanged: (value) {
+                              setState(() {
+                                showFields = value!;
+                              });
+                            },
+                          ),
+                          Text('No'),
+                        ],
+                      ),
+                    ],
+                  ),
+                  AnimatedSwitcher(
+                    duration: Duration(milliseconds: 300),
+                    child: showFields
+                        ? Column(
+                            children: [
+                              SizedBox(height: 10),
+                              Row(
+                                children: [
+                                  SizedBox(
+                                    width: 80,
+                                    child: Expanded(
+                                      child: CustomDropdown(
+                                          autoSelectFirst: true,
+                                          options: sessionProvider
+                                              .documentsType!
+                                              .sublist(
+                                                  1,
+                                                  sessionProvider
+                                                      .documentsType!.length),
+                                          onChanged: (value) {
+                                            setState(() {
+                                              currentValue = value;
+                                            });
+                                          },
+                                          selectedValue: currentValue,
+                                          itemValueMapper: (option) =>
+                                              option['documentTypeId']!,
+                                          itemLabelMapper: (option) =>
+                                              option['documentTypeName']!),
+                                    ),
+                                  ),
+                                  Expanded(
+                                      child: CustomTextFormField(
+                                          controller: documentController,
+                                          hintText: 'CI/RIF',
+                                          enabled: true,
+                                          maxLength: 8,
+                                          validator: (value) {
+                                            if (value != null && value != "") {
+                                              if (value.length < 8) {
+                                                return 'El formato no es válido ';
+                                              }
+                                            }
+
+                                            return null;
+                                          })),
+                                ],
+                              ),
+                              SizedBox(height: 10),
+                            ],
+                          )
+                        : SizedBox.shrink(key: ValueKey('empty')),
+                  ),
+                  SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 5),
+                          child: CustomButton(
+                            title: 'CANCELAR',
+                            isPrimaryColor: false,
+                            isOutline: false,
+                            isText: true,
+                            width: 90,
+                            paddingH: 0,
+                            height: 50,
+                            styleText: Theme.of(context)
+                                .textTheme
+                                .labelMedium!
+                                .copyWith(
+                                  color: Color.fromRGBO(252, 198, 20, 100),
+                                  fontSize: 12,
+                                ),
+                            styleTextButton: TextButton.styleFrom(
+                              side: const BorderSide(
+                                color: Color.fromRGBO(252, 198, 20, 100),
+                                width: 2,
+                              ),
+                            ),
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                            provider: GeneralProvider(),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 5),
+                          child: CustomButton(
+                            title: 'Aceptar',
+                            isPrimaryColor: true,
+                            isOutline: false,
+                            width: 90,
+                            paddingH: 0,
+                            height: 50,
+                            onTap: () {
+                              final merchantProvider =
+                                  context.read<MerchantProvider>();
+
+                              merchantProvider.revertOrder(
+                                  idDocumentType: currentValue,
+                                  documentNumber: documentController.text,
+                                  idOrder: order?["idOrder"]);
+
+                              Navigator.pop(context);
+                            },
+                            styleText: Theme.of(context)
+                                .textTheme
+                                .labelMedium!
+                                .copyWith(
+                                  color: Colors.white,
+                                  fontSize: 13,
+                                ),
+                            provider: GeneralProvider(),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            );
+          },
         );
       },
     );

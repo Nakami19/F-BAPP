@@ -8,6 +8,7 @@ import 'package:f_bapp/common/widgets/inputs/date_input.dart';
 import 'package:f_bapp/common/widgets/inputs/filter_container.dart';
 import 'package:f_bapp/common/widgets/shared/custom_skeleton.dart';
 import 'package:f_bapp/common/widgets/shared/pagination.dart';
+import 'package:f_bapp/config/data_constants/data_constants.dart';
 import 'package:f_bapp/config/router/routes.dart';
 import 'package:f_bapp/config/theme/business_app_colors.dart';
 import 'package:f_bapp/presentation/providers/modules/merchant_provider.dart';
@@ -86,12 +87,31 @@ class _PaymentHistoryScreenState extends State<PaymentHistoryScreen> {
   }
 
 //Reinicio de los valores de los filtros
-  void resetFilters() {
+  void resetFilters() async {
+    final paginationProvider = context.read<PaginationProvider>();
+    final merchantProvider = context.read<MerchantProvider>();
     setState(() {
       dateController.text = "";
       dropdownValue = null;
       dropdownValue2 = null;
     });
+
+    String endDate = "";
+    String startDate = "";
+    String tagstatus = "";
+    String paymentType = "";
+
+    await merchantProvider.getTransactionsList(
+        idOrder: merchantProvider.orderInfo?["idOrder"],
+        limit: 5,
+        page: 0,
+        idPaymentType: paymentType,
+        tagStatus: tagstatus,
+        endDate: endDate,
+        startDate: startDate);
+
+    paginationProvider.resetPagination();
+    paginationProvider.setTotal(merchantProvider.orders!['count']);
   }
 
   void applyFilters() async {
@@ -100,8 +120,10 @@ class _PaymentHistoryScreenState extends State<PaymentHistoryScreen> {
     // Procesar filtros aquí
     tagstatus = dropdownValue ?? "";
     paymentType = dropdownValue2 ?? "";
-    endDate = dateController.text!=""? dateController.text.split(" - ")[1] : "";
-    startDate = dateController.text!=""? dateController.text.split(" - ")[0]: "";
+    endDate =
+        dateController.text != "" ? dateController.text.split(" - ")[1] : "";
+    startDate =
+        dateController.text != "" ? dateController.text.split(" - ")[0] : "";
 
     //se hace la peticion con los filtros aplicados
     final merchantProvider = context.read<MerchantProvider>();
@@ -140,7 +162,8 @@ class _PaymentHistoryScreenState extends State<PaymentHistoryScreen> {
           },
           selectedValue: dropdownValue,
           itemValueMapper: (option) => option['tagStatus']!,
-          itemLabelMapper: (option) => utilsProvider.capitalize(option['nameStatus']!),
+          itemLabelMapper: (option) =>
+              utilsProvider.capitalize(option['nameStatus']!),
           autoSelectFirst: false,
           optionsTextsStyle: textStyle.bodySmall!.copyWith(fontSize: 14),
         ),
@@ -157,7 +180,8 @@ class _PaymentHistoryScreenState extends State<PaymentHistoryScreen> {
           },
           selectedValue: dropdownValue2,
           itemValueMapper: (option) => option['tag']!,
-          itemLabelMapper: (option) => utilsProvider.capitalize(option['name']!),
+          itemLabelMapper: (option) =>
+              utilsProvider.capitalize(option['name']!),
           autoSelectFirst: false,
           optionsTextsStyle: textStyle.bodySmall!.copyWith(fontSize: 14),
         ),
@@ -252,7 +276,7 @@ class _PaymentHistoryScreenState extends State<PaymentHistoryScreen> {
                     children: [
                       Center(
                         child: SvgPicture.asset(
-                          'assets/chinchin/no_data.svg',
+                          '${DataConstant.imagesChinchin}/no-data.svg',
                           width: 200,
                           height: 200,
                           fit: BoxFit.cover,
