@@ -1,5 +1,11 @@
 ## [F-APP]
 
+## [1.0.0+26] - 2024-12-23 - Natalia. R
+
+## Added 
+
+- Añadida opcion de compartir orden mostrando Qr o copiando url
+
 ## [1.0.0+25] - 2024-12-23 - Natalia. R
 
 ## Added 

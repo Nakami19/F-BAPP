@@ -56,19 +56,23 @@ class _FilterState extends State<Filter> {
           Padding(
             padding: const EdgeInsets.all(5),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                ...widget.icons.map((icon){
+                
+                //botones pasados como parametros a la izquierda
+                Row(
+                  children:widget.icons.map((icon){
                   return icon;
-                }),
-                // IconButton(
-                //     onPressed: () {}, icon: Icon(Icons.download_rounded)),
+                }).toList() ,
+                ),
+
+                Spacer(),
+
+                //botones para limpiar filtro y mostrar/ocultar filtro a la derecha
                 Row(
                   children: [
                     _isFilterVisible
                         ? IconButton(
                             onPressed: widget.onReset,
-                            // _resetFilters, // Reinicia filtros aquí,
                             icon: Icon(Icons.delete_outline_rounded))
                         : Container(),
                     SizedBox(

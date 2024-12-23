@@ -5,12 +5,15 @@ import 'package:f_bapp/common/providers/general_provider.dart';
 import 'package:f_bapp/common/widgets/buttons/custom_button.dart';
 import 'package:f_bapp/common/widgets/cards/information_card.dart';
 import 'package:f_bapp/common/widgets/shared/custom_skeleton.dart';
+import 'package:f_bapp/common/widgets/shared/snackbars.dart';
 import 'package:f_bapp/config/router/routes.dart';
 import 'package:f_bapp/presentation/providers/modules/merchant_provider.dart';
 import 'package:f_bapp/presentation/providers/shared/navigation_provider.dart';
 import 'package:f_bapp/presentation/widgets/shared/drawer_menu.dart';
 import 'package:f_bapp/presentation/widgets/shared/screens_appbar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:pretty_qr_code/pretty_qr_code.dart';
 import 'package:provider/provider.dart';
 
 class OrderDetailScreen extends StatefulWidget {
@@ -24,7 +27,19 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
   final GlobalKey<ScaffoldState> _orderScaffoldKey = GlobalKey<ScaffoldState>();
   final ScrollController _scrollController = ScrollController();
 
+  //detalle de la orden
   Map<String, dynamic>? order = {};
+
+  //Qr
+
+  @protected
+  late QrCode qrCode;
+
+  @protected
+  late QrImage qrImage;
+
+  @protected
+  late PrettyQrDecoration decoration;
 
   @override
   void initState() {
@@ -38,6 +53,21 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
           merchantProvider.orderInfo?["idOrder"] ?? widget.orderId);
 
       merchantProvider.userData = order!['payingUserInformation'];
+
+      qrCode = QrCode.fromData(
+        data: merchantProvider.orderInfo!['urlOrder'],
+        errorCorrectLevel: QrErrorCorrectLevel.H,
+      );
+
+      qrImage = QrImage(qrCode);
+
+      decoration = const PrettyQrDecoration(
+        shape: PrettyQrSmoothSymbol(
+          color: Colors.black,
+          roundFactor: 0,
+        ),
+        background: Colors.white,
+      );
     });
   }
 
@@ -149,7 +179,9 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                 icon: Icons.share,
                                 iconColor: primaryColor,
                                 isOutline: true,
-                                onTap: () {},
+                                onTap: () {
+                                  sharePopup(context);
+                                },
                                 provider: GeneralProvider()),
                           ),
                         ),
@@ -279,5 +311,67 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     }
 
     return objects;
+  }
+
+  void sharePopup(BuildContext context) {
+    final merchantProvider = context.read<MerchantProvider>();
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                //Boton para cerrar
+                Align(
+                  alignment: Alignment.topRight,
+                  child: IconButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      icon: Icon(Icons.close_rounded)),
+                ),
+
+                const Text(
+                  "Compartir orden",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+
+                // QR
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 20),
+                  child: PrettyQrView(
+                    qrImage: qrImage,
+                    decoration: decoration,
+                  ),
+                ),
+
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                  child: CustomButton(
+                      title: 'Compartir',
+                      isPrimaryColor: true,
+                      icon: Icons.share,
+                      iconColor: primaryColor,
+                      isOutline: true,
+                      onTap: () {
+                        Clipboard.setData(
+                            ClipboardData(text: order!['urlOrder']??merchantProvider.orderInfo!['urlOrder']));
+                        Snackbars.customSnackbar(context, message: 'Texto copiado al portapapeles');
+                      },
+                      provider: GeneralProvider()),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 }
