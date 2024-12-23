@@ -20,13 +20,23 @@ class UserProvider extends GeneralProvider {
 
   List<Privilege>? get privilege => privileges;
 
-  List<PrivilegesActions> actions = [];
+  List<PrivilegesActions> privilegeActions = [];
 
-  List<PrivilegesActions> get privilegeActions => actions;
+  List<PrivilegesActions> get actionsPrivilege => privilegeActions;
+
+  List<Map<String, dynamic>>? allActions;
+
+  List<Map<String, dynamic>>? get actions => allActions;
+
+  set setUserActions(List<Map<String, dynamic>>? newActions) {
+    allActions = newActions;
+    notifyListeners();
+  }
+
 
   //se guardan las acciones del privilegio al que se va a acceder
   void setActions(List<PrivilegesActions> newActions) {
-    actions = newActions;
+    privilegeActions = newActions;
     notifyListeners();
   }
 
@@ -52,29 +62,7 @@ class UserProvider extends GeneralProvider {
 
       notifyListeners();
     } on DioError catch (error) {
-      final response = error.response;
-      final data = response?.data as Map<String, dynamic>;
-
-      final resp = ApiResponse.fromJson(
-        response?.data as Map<String, dynamic>,
-        (json) => data['data'], // No hay data para el caso de error
-        (json) => ApiError(
-          message: json['message'],
-          value: json['value'],
-          trackingCode: json['trackingCode'],
-        ),
-      );
-
-    //Se establece que hay un error, el mensaje y el tracking code
-      super.setErrorMessage(resp.message);
-      super.setSimpleError(true);
-
-      super.setTrackingCode(resp.trackingCode);
-      Snackbars.customSnackbar(
-        navigatorKey.currentContext!,
-        title: resp.trackingCode,
-        message: resp.message
-      );
+      onDioerror(error);
       notifyListeners();
     } catch (error) {
       print('Unexpected error: $error');
@@ -107,29 +95,7 @@ class UserProvider extends GeneralProvider {
     
     notifyListeners();
   } on DioError catch (error) {
-    final response = error.response;
-    final data = response?.data as Map<String, dynamic>;
-
-    // Manejo de errores personalizado
-    final resp = ApiResponse.fromJson(
-      data,
-      (json) => json['data'],
-      (json) => ApiError(
-        message: json['message'],
-        value: json['value'],
-        trackingCode: json['trackingCode'],
-      ),
-    );
-
-    super.setErrorMessage(resp.message);
-    super.setSimpleError(true);
-    super.setTrackingCode(resp.trackingCode);
-
-    Snackbars.customSnackbar(
-        navigatorKey.currentContext!,
-        title: resp.trackingCode,
-        message: resp.message
-      );
+    onDioerror(error);
     notifyListeners();
   } catch (error) {
     print('Unexpected error: $error');
@@ -141,6 +107,33 @@ class UserProvider extends GeneralProvider {
     setLoadingStatus(false);
   }
 
+  }
+
+  void onDioerror(error) {
+     final response = error.response;
+      final data = response?.data as Map<String, dynamic>;
+
+      final resp = ApiResponse.fromJson(
+        response?.data as Map<String, dynamic>,
+        (json) => data['data'], // No hay data para el caso de error
+        (json) => ApiError(
+          message: json['message'],
+          value: json['value'],
+          trackingCode: json['trackingCode'],
+        ),
+      );
+
+      super.setSimpleError(true);
+      super.setErrorMessage(resp.message);
+      
+
+      super.setTrackingCode(resp.trackingCode);
+
+      Snackbars.customSnackbar(
+        navigatorKey.currentContext!,
+        title: resp.trackingCode,
+        message: resp.message
+      );
   }
 
 }

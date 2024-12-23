@@ -9,8 +9,10 @@ import 'package:f_bapp/common/widgets/inputs/filter_container.dart';
 import 'package:f_bapp/common/widgets/shared/custom_skeleton.dart';
 import 'package:f_bapp/common/widgets/shared/pagination.dart';
 import 'package:f_bapp/config/router/routes.dart';
+import 'package:f_bapp/config/theme/business_app_colors.dart';
 import 'package:f_bapp/presentation/providers/modules/merchant_provider.dart';
 import 'package:f_bapp/presentation/providers/shared/navigation_provider.dart';
+import 'package:f_bapp/presentation/providers/shared/utils_provider.dart';
 import 'package:f_bapp/presentation/widgets/shared/drawer_menu.dart';
 import 'package:f_bapp/presentation/widgets/shared/screens_appbar.dart';
 import 'package:f_bapp/common/widgets/cards/text_card.dart';
@@ -31,17 +33,6 @@ class _ListOrdersScreenState extends State<ListOrdersScreen> {
 
   final ScrollController _scrollController = ScrollController();
 
-  //Colores para los estados (Activo, Pagado...)
-  final Map<String, Color> statusColors = {
-    "ACTIVO": Color(0xff02a8f5),
-    "PAGADA": primaryColor,
-    "PAGADA CON SOBRANTE": Colors.green,
-    "PAGADA CON FALTANTE": Colors.orange,
-    "EXPIRADA": Color(0xff595959),
-    "REVERSADA": Color.fromARGB(219, 246, 195, 26),
-    "RECHAZADO": Color(0xffff0000),
-  };
-
 //Controladores para los inputs del filtro
   late TextEditingController idController;
   late TextEditingController dateController;
@@ -53,12 +44,7 @@ class _ListOrdersScreenState extends State<ListOrdersScreen> {
   String endDate = DateFormatter.formatDate2(DateTime.now()).toString();
   String startDate = DateFormatter.formatDate2(DateTime.now()).toString();
 
-  List<Map<String, dynamic>> filterIcons = [
-    {
-      'icon': Icons.download_rounded,
-      'onPressed': (){}
-    }
-  ];
+  List<Map<String, dynamic>> filterIcons = [];
 
   @override
   void initState() {
@@ -66,7 +52,14 @@ class _ListOrdersScreenState extends State<ListOrdersScreen> {
 
     idController = TextEditingController();
     dateController = TextEditingController(text: '$startDate - $endDate');
-    // '${DateFormatter.formatDate2(DateTime.now()).toString()} - ${DateFormatter.formatDate2(DateTime.now()).toString()}');
+
+    filterIcons = [
+    {'icon': Icons.download_rounded, 'onPressed': () {}},
+    {
+        'icon': Icons.refresh_rounded,
+        'onPressed': refreshOrders,
+      },
+  ];
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final merchantProvider = context.read<MerchantProvider>();
@@ -135,6 +128,7 @@ class _ListOrdersScreenState extends State<ListOrdersScreen> {
     final paginationProvider = context.watch<PaginationProvider>();
     final navProvider = context.watch<NavigationProvider>();
     final merchantProvider = context.watch<MerchantProvider>();
+    final utilsProvider = context.watch<UtilsProvider>();
     final textStyle = Theme.of(context).textTheme;
 
     //Componentes que tendra el filtro
@@ -159,7 +153,7 @@ class _ListOrdersScreenState extends State<ListOrdersScreen> {
           },
           selectedValue: dropdownValue,
           itemValueMapper: (option) => option['tagStatus']!,
-          itemLabelMapper: (option) => option['nameStatus']!,
+          itemLabelMapper: (option) => utilsProvider.capitalize(option['nameStatus']!),
           autoSelectFirst: false,
           optionsTextsStyle: textStyle.bodySmall!.copyWith(fontSize: 14),
         ),
@@ -236,13 +230,18 @@ class _ListOrdersScreenState extends State<ListOrdersScreen> {
             if (merchantProvider.isLoading == false &&
                 merchantProvider.orders != null) ...[
               //Si no hay ordenes
-              if (merchantProvider.orders?['count'] == 0 ) ...[
+              if (merchantProvider.orders?['count'] == 0) ...[
                 //Filtro
                 Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 35, vertical: 15),
                   child: Filter(
-                    icons: filterIcons,
+                    icons: filterIcons.map((iconConfig) {
+                      return IconButton(
+                        icon: Icon(iconConfig['icon']),
+                        onPressed: iconConfig['onPressed'],
+                      );
+                    }).toList(),
                     inputs: filters,
                     onReset: resetFilters,
                     onApply: applyFilters,
@@ -271,14 +270,18 @@ class _ListOrdersScreenState extends State<ListOrdersScreen> {
               ],
 
               //si hay ordenes y no hay errores
-              if (merchantProvider.orders!['count'] > 0 &&
-                  merchantProvider.haveSimpleError == false) ...[
+              if (merchantProvider.orders!['count'] > 0) ...[
                 //Filtro
                 Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 35, vertical: 15),
                   child: Filter(
-                    icons: filterIcons,
+                    icons: filterIcons.map((iconConfig) {
+                      return IconButton(
+                        icon: Icon(iconConfig['icon']),
+                        onPressed: iconConfig['onPressed'],
+                      );
+                    }).toList(),
                     inputs: filters,
                     onReset: resetFilters,
                     onApply: applyFilters,
@@ -339,11 +342,6 @@ class _ListOrdersScreenState extends State<ListOrdersScreen> {
             ]
           ],
         ),
-        // bottomNavigationBar: Customnavbar(
-        //     selectedIndex: 2,
-        //     onDestinationSelected: (index) {
-        //       navProvider.updateIndex(index);
-        //     }),
       ),
     );
   }
@@ -369,7 +367,7 @@ class _ListOrdersScreenState extends State<ListOrdersScreen> {
       objects.add({
         'label': 'Monto: ',
         'value':
-            '${DigitFormatter.getMoneyFormatter(order['amount'].toString())} BS'
+            '${DigitFormatter.getMoneyFormatter(order['amount'].toString())} ${order['tagCurrency']}'
       });
     }
 
@@ -380,5 +378,23 @@ class _ListOrdersScreenState extends State<ListOrdersScreen> {
     });
 
     return objects;
+  }
+
+  void refreshOrders() async {
+    final merchantProvider = context.read<MerchantProvider>();
+    final paginationProvider = context.read<PaginationProvider>();
+
+    // Llama a la API para obtener las transacciones nuevamente
+    await merchantProvider.listorders(
+        page: 0,
+        limit: 5,
+        startDate: startDate,
+        endDate: endDate,
+        idOrder: id,
+        tagStatus: search);
+
+    // Reinicia la paginación
+    paginationProvider.resetPagination();
+    paginationProvider.setTotal(merchantProvider.payments!['count']);
   }
 }

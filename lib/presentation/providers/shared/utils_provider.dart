@@ -19,53 +19,6 @@ class UtilsProvider extends GeneralProvider {
   String? personLastName = '';
 
 
-
-  // int _total = 0; // Total de elementos
-  // int _limit = 5; // Límites por página
-  // int _page = 0;   // Página actual
-
-  // List<TextCard> elements=[];
-
-  // List<TextCard> get elementsList => elements;
-
-  // // List<String> get elementsList =>
-  // //     List.generate(_total, (index) => 'Elemento #${index + 1}');
-
-  // int get total => _total;
-  // int get limit => _limit;
-  // int get page => _page;
-
-  // void setTotal(int value) {
-  //     _total = value;
-  //     notifyListeners(); 
-    
-  // }
-
-  // List<TextCard> getCurrentPage() {
-  //   int start = _page * _limit;
-  //   int end = start + _limit;
-  //   if (end > total) end = total;
-  //   return elements.sublist(start, end);
-  // }
-
-  // int getNumPages() => (total / limit).ceil();
-
-  // void nextPage() {
-  //   if ((_page + 1) * limit < total) {
-  //     _page++;
-  //     notifyListeners();
-  //   }
-  // }
-
-  // void previousPage() {
-  //   if (_page > 0) {
-  //     _page--;
-  //     notifyListeners();
-  //   }
-  // }
-
-
-
     Future<void> getUserinfo() async {
     try {
       super.setLoadingStatus(true);

@@ -39,7 +39,6 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
 
       merchantProvider.userData = order!['payingUserInformation'];
     });
-    
   }
 
   @override
@@ -135,23 +134,26 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                         ),
                       ),
                     ),
-                    Expanded(
-                      child: SizedBox(
-                        height: 70,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 8, vertical: 5),
-                          child: CustomButton(
-                              title: 'Compartir',
-                              isPrimaryColor: true,
-                              icon: Icons.share,
-                              iconColor: primaryColor,
-                              isOutline: true,
-                              onTap: () {},
-                              provider: GeneralProvider()),
+
+                    //Solo se muestra compartir para las ordenes activas
+                    if (merchantProvider.orderInfo!['status'] == 'ACTIVO')
+                      Expanded(
+                        child: SizedBox(
+                          height: 70,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 5),
+                            child: CustomButton(
+                                title: 'Compartir',
+                                isPrimaryColor: true,
+                                icon: Icons.share,
+                                iconColor: primaryColor,
+                                isOutline: true,
+                                onTap: () {},
+                                provider: GeneralProvider()),
+                          ),
                         ),
                       ),
-                    ),
                     SizedBox(
                       width: 5,
                     )

@@ -22,7 +22,7 @@ class Filter<T> extends StatefulWidget {
   final List<T> inputs;
   final VoidCallback onReset; // Acción al presionar icono de papelera
   final VoidCallback onApply; // Acción al presionar "Buscar"
-  final List<Map<String,dynamic>> icons;
+  final List<IconButton> icons;
 
   @override
   State<Filter> createState() => _FilterState();
@@ -59,9 +59,7 @@ class _FilterState extends State<Filter> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 ...widget.icons.map((icon){
-                  return IconButton(
-                    onPressed: icon['onPressed'], icon: Icon(icon['icon'])
-                    );
+                  return icon;
                 }),
                 // IconButton(
                 //     onPressed: () {}, icon: Icon(Icons.download_rounded)),

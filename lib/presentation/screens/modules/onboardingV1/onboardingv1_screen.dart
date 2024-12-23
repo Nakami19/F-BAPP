@@ -29,7 +29,7 @@ class _Onboardingv1ScreenState extends State<Onboardingv1Screen> {
 
     //se filtran las acciones que deben mostrarse
     final userProvider = context.read<UserProvider>();
-    showactions = userProvider.actions
+    showactions = userProvider.privilegeActions
         .where((action) => action.showInMenu == true)
         .toList();
   }

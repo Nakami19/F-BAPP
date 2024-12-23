@@ -1,5 +1,11 @@
 ## [F-APP]
 
+## [1.0.0+25] - 2024-12-23 - Natalia. R
+
+## Added 
+
+- Vista historial de pagos de una orden
+
 ## [1.0.0+24] - 2024-12-20 - Natalia. R
 
 ## Added 

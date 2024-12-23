@@ -12,7 +12,16 @@ class MerchantProvider extends GeneralProvider {
   //para realizar las peticiones
   final merchantService = MerchantServices();
 
-  //id de orden para el detalle
+  Map<String, dynamic>? payments;
+
+  Map<String, dynamic>? get getpayment => payments;
+
+  set setPaymentslist(Map<String, dynamic>? newPayment) {
+    payments = newPayment;
+    notifyListeners();
+  }
+
+  //informacion de la orden para el detalle en caso de no tener respuesta de api
   Map<String, dynamic>? orderInfo;
 
   Map<String, dynamic>? get infoOrder => orderInfo;
@@ -40,7 +49,7 @@ class MerchantProvider extends GeneralProvider {
     notifyListeners();
   }
 
-
+//informacion del usuario 
   Map<String, dynamic>? userData;
 
   Map<String, dynamic>? get dataUser => userData;
@@ -66,30 +75,7 @@ class MerchantProvider extends GeneralProvider {
       
     } on DioError catch (error) {
 
-      final response = error.response;
-      final data = response?.data as Map<String, dynamic>;
-
-      final resp = ApiResponse.fromJson(
-        response?.data as Map<String, dynamic>,
-        (json) => data['data'], // No hay data para el caso de error
-        (json) => ApiError(
-          message: json['message'],
-          value: json['value'],
-          trackingCode: json['trackingCode'],
-        ),
-      );
-
-      super.setSimpleError(true);
-      super.setErrorMessage(resp.message);
-      
-
-      super.setTrackingCode(resp.trackingCode);
-
-      Snackbars.customSnackbar(
-        navigatorKey.currentContext!,
-        title: resp.trackingCode,
-        message: resp.message
-      );
+     onDioerror(error);
 
       
       notifyListeners();
@@ -145,30 +131,7 @@ class MerchantProvider extends GeneralProvider {
       setOrders = data['data'];
 
     } on DioError catch (error) {
-      final response = error.response;
-      final data = response?.data as Map<String, dynamic>;
-
-      final resp = ApiResponse.fromJson(
-        response?.data as Map<String, dynamic>,
-        (json) => data['data'], // No hay data para el caso de error
-        (json) => ApiError(
-          message: json['message'],
-          value: json['value'],
-          trackingCode: json['trackingCode'],
-        ),
-      );
-
-      super.setSimpleError(true);
-      super.setErrorMessage(resp.message);
-      
-
-      super.setTrackingCode(resp.trackingCode);
-
-      Snackbars.customSnackbar(
-        navigatorKey.currentContext!,
-        title: resp.trackingCode,
-        message: resp.message
-      );
+      onDioerror(error);
       
       notifyListeners();
       
@@ -204,30 +167,7 @@ class MerchantProvider extends GeneralProvider {
       return data['data'];
 
     } on DioError catch (error) {
-      final response = error.response;
-      final data = response?.data as Map<String, dynamic>;
-
-      final resp = ApiResponse.fromJson(
-        response?.data as Map<String, dynamic>,
-        (json) => data['data'], // No hay data para el caso de error
-        (json) => ApiError(
-          message: json['message'],
-          value: json['value'],
-          trackingCode: json['trackingCode'],
-        ),
-      );
-
-      super.setSimpleError(true);
-      super.setErrorMessage(resp.message);
-      
-
-      super.setTrackingCode(resp.trackingCode);
-
-      Snackbars.customSnackbar(
-        navigatorKey.currentContext!,
-        title: resp.trackingCode,
-        message: resp.message
-      );
+      onDioerror(error);
       
       notifyListeners();
 
@@ -265,7 +205,88 @@ class MerchantProvider extends GeneralProvider {
       return data['data'];
 
     } on DioError catch (error) {
-      final response = error.response;
+      onDioerror(error);
+      
+      notifyListeners();
+
+      rethrow;
+      
+    }catch (error) {
+      super.setSimpleError(true);
+      super.setErrorMessage("Ocurrió un error inesperado");
+      super.setTrackingCode(error.toString());
+      Snackbars.customSnackbar(
+        navigatorKey.currentContext!,
+        title: "Ocurrió un error inesperado",
+        message: error.toString()
+      );
+      notifyListeners();
+      rethrow;
+    } finally {
+      super.setLoadingStatus(false);
+      notifyListeners();
+    }
+
+  }
+
+  //Obtener las devoluciones de un usuario
+  Future<void> getTransactionsList({
+  int? limit,
+  int? page,
+  String? startDate,
+  String? endDate,
+  bool? refunds,
+  String? idOrder,
+  String? idPaymentType,
+  String? tagStatus,
+}) async {
+  super.setLoadingStatus(true);
+  notifyListeners();
+
+  try {
+    // Construir los parámetros para la petición
+    final params = <String, dynamic>{};
+
+    if (limit != null) params['limit'] = limit;
+    if (page != null) params['page'] = page;
+    if (startDate != null && startDate.isNotEmpty) params['startDate'] = startDate;
+    if (endDate != null && endDate.isNotEmpty) params['endDate'] = endDate;
+    if (refunds != null) params['refunds'] = refunds;
+    if (idOrder != null && idOrder.isNotEmpty) params['idOrder'] = idOrder;
+    if (idPaymentType != null && idPaymentType.isNotEmpty) params['idPaymentType'] = idPaymentType;
+    if (tagStatus != null && tagStatus.isNotEmpty) params['tagStatus'] = tagStatus;
+
+    // Realizar la petición
+    final response = await merchantService.getTransactions(params);
+
+    final data = jsonDecode(response.toString());
+    
+    setPaymentslist = data['data'];
+
+    } on DioError catch (error) {
+      onDioerror(error);
+      
+      notifyListeners();
+      
+    }catch (error) {
+      super.setSimpleError(true);
+      super.setErrorMessage("Ocurrió un error inesperado");
+      super.setTrackingCode(error.toString());
+      Snackbars.customSnackbar(
+        navigatorKey.currentContext!,
+        title: "Ocurrió un error inesperado",
+        message: error.toString()
+      );
+      notifyListeners();
+    } finally {
+      super.setLoadingStatus(false);
+      notifyListeners();
+    }
+
+  }
+
+  void onDioerror(error) {
+     final response = error.response;
       final data = response?.data as Map<String, dynamic>;
 
       final resp = ApiResponse.fromJson(
@@ -289,26 +310,5 @@ class MerchantProvider extends GeneralProvider {
         title: resp.trackingCode,
         message: resp.message
       );
-      
-      notifyListeners();
-
-      rethrow;
-      
-    }catch (error) {
-      super.setSimpleError(true);
-      super.setErrorMessage("Ocurrió un error inesperado");
-      super.setTrackingCode(error.toString());
-      Snackbars.customSnackbar(
-        navigatorKey.currentContext!,
-        title: "Ocurrió un error inesperado",
-        message: error.toString()
-      );
-      notifyListeners();
-      rethrow;
-    } finally {
-      super.setLoadingStatus(false);
-      notifyListeners();
-    }
-
   }
 }

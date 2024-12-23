@@ -2,39 +2,36 @@ import 'package:dio/dio.dart';
 import 'package:f_bapp/common/data/enviroment.dart';
 import '../../../config/network/dio_client.dart';
 
-
-
 class LoginServices {
-
 //Verifica que el usuario existe
-Future<Response> getVerifyMember(String member) async {
-  // Verificar que el parámetro 'member' no sea nulo o vacío
-  if (member.isEmpty) {
-    throw Exception('El parámetro "member" no puede estar vacío');
-  }
+  Future<Response> getVerifyMember(String member) async {
+    // Verificar que el parámetro 'member' no sea nulo o vacío
+    if (member.isEmpty) {
+      throw Exception('El parámetro "member" no puede estar vacío');
+    }
 
-  // Asegurar que recaptcha esté configurado
-  final recaptcha = Enviroment.recaptcha;
-if (recaptcha == null || recaptcha.isEmpty) {
-  throw Exception('Recaptcha no está configurado');
-}
+    // Asegurar que recaptcha esté configurado
+    final recaptcha = Enviroment.recaptcha;
+    if (recaptcha == null || recaptcha.isEmpty) {
+      throw Exception('Recaptcha no está configurado');
+    }
 
-  try {
-    final response = await dio.get(
-      '${Enviroment.ccFbusGateway}/v1/auth/business/verify/member',
-      queryParameters: {'member': member},
-      options: Options(headers: {
-        'recaptcha': recaptcha,
-        'Content-Type': 'application/json',
-      }),
-    );
-    return response;
-  } catch (e, stackTrace) {
-    print('Error al verificar miembro: $e');
-  print('Stack trace: $stackTrace');
-    rethrow;
+    try {
+      final response = await dio.get(
+        '${Enviroment.ccFbusGateway}/v1/auth/business/verify/member',
+        queryParameters: {'member': member},
+        options: Options(headers: {
+          'recaptcha': recaptcha,
+          'Content-Type': 'application/json',
+        }),
+      );
+      return response;
+    } catch (e, stackTrace) {
+      print('Error al verificar miembro: $e');
+      print('Stack trace: $stackTrace');
+      rethrow;
+    }
   }
-}
 
   //Envía todas las credenciales para loguearse y recibe el token
   Future<Response> postLogin(Map<String, dynamic> data) async {
@@ -68,21 +65,35 @@ if (recaptcha == null || recaptcha.isEmpty) {
 
   //Llama al API de cambiar de miembro
   Future<Response> getMemberTypeChange({required String idPrivileges}) async {
-  try {
-    final response = await dio.get(
-      '${Enviroment.ccFbusGateway}/v1/auth/business/change',
-      queryParameters: {'idPrivileges': idPrivileges},
-    );
-    return response;
-  } catch (e) {
-    rethrow;
+    try {
+      final response = await dio.get(
+        '${Enviroment.ccFbusGateway}/v1/auth/business/change',
+        queryParameters: {'idPrivileges': idPrivileges},
+      );
+      return response;
+    } catch (e) {
+      rethrow;
+    }
   }
-}
+
+
+//Obtiene todas las acciones que existen en f-bus
+  Future<Response> getAllActions() async {
+    try {
+      final response = await dio.get(
+        '${Enviroment.ccFbusGateway}/v1/list/actions',
+      );
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
 
   // Llama al API para refrescar sesión
   Future<Response> refreshSession() async {
     try {
-      final response = await dio.get('${Enviroment.ccFbusGateway}/v1/profile/token/refresh');
+      final response =
+          await dio.get('${Enviroment.ccFbusGateway}/v1/profile/token/refresh');
       return response;
     } catch (e) {
       rethrow;
@@ -92,7 +103,8 @@ if (recaptcha == null || recaptcha.isEmpty) {
   //Hace el llamado para enviar token de actualización de contraseña
   Future<Response> sendUpdatePasswordToken() async {
     try {
-      final response = await dio.get('${Enviroment.ccFbusGateway}/v1/profile/password/change/token');
+      final response = await dio
+          .get('${Enviroment.ccFbusGateway}/v1/profile/password/change/token');
       return response;
     } catch (e) {
       rethrow;
@@ -103,7 +115,7 @@ if (recaptcha == null || recaptcha.isEmpty) {
   Future<Response> putUpdatePassword(Map<String, dynamic> form) async {
     try {
       final response = await dio.put(
-       '${Enviroment.ccFbusGateway}/v1/profile/password/change',
+        '${Enviroment.ccFbusGateway}/v1/profile/password/change',
         data: form,
       );
       return response;
@@ -113,10 +125,11 @@ if (recaptcha == null || recaptcha.isEmpty) {
   }
 
   // Solicita token de recuperación de contraseña
-  Future<Response> getRecoverPasswordToken(String sender, String recaptcha) async {
+  Future<Response> getRecoverPasswordToken(
+      String sender, String recaptcha) async {
     try {
       final response = await dio.get(
-       '${Enviroment.ccFbusGateway}/v1/auth/business/password/recovery/token',
+        '${Enviroment.ccFbusGateway}/v1/auth/business/password/recovery/token',
         queryParameters: {'sender': sender},
         options: Options(headers: {
           'recaptcha': recaptcha,
@@ -130,7 +143,8 @@ if (recaptcha == null || recaptcha.isEmpty) {
   }
 
   // Envía la recuperación de contraseña
-  Future<Response> postRecoverPassword(Map<String, dynamic> form, String recaptcha) async {
+  Future<Response> postRecoverPassword(
+      Map<String, dynamic> form, String recaptcha) async {
     try {
       final response = await dio.post(
         '${Enviroment.ccFbusGateway}/v1/auth/business/password/recovery',
@@ -145,5 +159,4 @@ if (recaptcha == null || recaptcha.isEmpty) {
       rethrow;
     }
   }
-
 }

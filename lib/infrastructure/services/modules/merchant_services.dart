@@ -68,4 +68,19 @@ class MerchantServices {
 
   }
 
+   Future<Response> getTransactions(Map<String, dynamic> params) async {
+    try {
+
+    final response = await dio.get(
+      '${Enviroment.ccFbusGateway}/v1/list/payments',
+      queryParameters: params
+    );
+    
+    return response;
+    } catch (e) {
+      rethrow;
+    }
+
+  }
+
 }
