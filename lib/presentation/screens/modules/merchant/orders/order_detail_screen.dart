@@ -20,8 +20,8 @@ import 'package:pretty_qr_code/pretty_qr_code.dart';
 import 'package:provider/provider.dart';
 
 class OrderDetailScreen extends StatefulWidget {
-  const OrderDetailScreen({super.key, required this.orderId});
-  final String orderId;
+  const OrderDetailScreen({super.key});
+
   @override
   State<OrderDetailScreen> createState() => _OrderDetailScreenState();
 }
@@ -54,7 +54,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
       final sessionProvider = context.read<SessionProvider>();
 
       order = await merchantProvider.orderDetail(
-          merchantProvider.orderInfo?["idOrder"] ?? widget.orderId);
+          merchantProvider.orderInfo?["idOrder"]);
 
       merchantProvider.userData = order!['payingUserInformation'];
 
@@ -218,8 +218,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                     nextPage: 'Datos del usuario',
                     nextPageRoute: userdetailScreen,
                     onTapnextPage: () {
-                      Navigator.pushNamed(context, userdetailScreen,
-                          arguments: widget.orderId);
+                      Navigator.pushNamed(context, userdetailScreen);
                     },
                     texts: buildTextsFromOrder(
                         order ?? merchantProvider.infoOrder!),
@@ -237,7 +236,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                   child: GestureDetector(
                     onTap: () {
                       Navigator.pushNamed(context, '/Historial de pagos',
-                          arguments: widget.orderId);
+                          );
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,

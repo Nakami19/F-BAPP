@@ -21,9 +21,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
 class PaymentHistoryScreen extends StatefulWidget {
-  const PaymentHistoryScreen({super.key, required this.id});
+  const PaymentHistoryScreen({super.key});
 
-  final String id;
   @override
   State<PaymentHistoryScreen> createState() => _PaymentHistoryScreenState();
 }
@@ -72,11 +71,15 @@ class _PaymentHistoryScreenState extends State<PaymentHistoryScreen> {
 
       typePayment = await merchantProvider.typePayment();
 
-      await merchantProvider.getTransactionsList(
+      if (merchantProvider.orderInfo!=null) {
+        await merchantProvider.getTransactionsList(
         limit: 5,
         page: 0,
         idOrder: merchantProvider.orderInfo?["idOrder"],
       );
+      }
+
+      
 
       //el total de elementos para la paginacion sera igual a la cantidad elementos que halla
 
@@ -214,6 +217,7 @@ class _PaymentHistoryScreenState extends State<PaymentHistoryScreen> {
           child: Screensappbar(
             title: 'Historial de pagos',
             screenKey: _paymentHistoryScaffoldKey,
+            poproute: orderdetailScreen,
           )),
       body: Column(
         children: [
@@ -246,7 +250,7 @@ class _PaymentHistoryScreenState extends State<PaymentHistoryScreen> {
           if (!merchantProvider.isLoading &&
               merchantProvider.payments != null) ...[
             Center(
-              child: Text("#${widget.id}",
+              child: Text("#${merchantProvider.orderInfo!["idOrder"]}",
                   style: textStyle.titleMedium!
                       .copyWith(fontWeight: FontWeight.w600)),
             ),
@@ -320,6 +324,7 @@ class _PaymentHistoryScreenState extends State<PaymentHistoryScreen> {
                               statusColors), // Lista con los textos generada
                           onTap: () {
                             merchantProvider.paymentInfo = payment;
+                             merchantProvider.paymentInfo!['popRoute'] = paymentHistory;
                               Navigator.pushNamed(
                                 context,
                                 paymentDetail,

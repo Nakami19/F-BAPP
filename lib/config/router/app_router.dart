@@ -100,20 +100,18 @@ class AppRouter {
                 const MainScreen(selectedIndex: 2, child: ListOrdersScreen()));
 
       case orderdetailScreen:
-        final String orderId = settings.arguments as String;
         return FadePageTransition(
           builder: (_) => MainScreen(
             selectedIndex: 2,
-            child: OrderDetailScreen(orderId: orderId),
+            child: OrderDetailScreen(),
           ),
         );
       
       case paymentHistory:
-      final String id = settings.arguments as String;
         return FadePageTransition(
           builder: (_) => MainScreen(
             selectedIndex: 2,
-            child: PaymentHistoryScreen(id: id,),
+            child: PaymentHistoryScreen(),
           ),
         );
 
@@ -158,10 +156,9 @@ class AppRouter {
                 const MainScreen(selectedIndex: 2, child: TemplatesScreen()));
       
       case userdetailScreen:
-      final String id = settings.arguments as String;
         return FadePageTransition(
             builder: (_) =>
-                 MainScreen(selectedIndex: 2, child: UserDetailsScreen(id: id,)));
+                 MainScreen(selectedIndex: 2, child: UserDetailsScreen()));
 
       default:
         return FadePageTransition(

@@ -1,5 +1,11 @@
 ## [F-APP]
 
+## [1.0.0+29] - 2024-12-26 - Natalia. R
+
+## Added 
+
+- Añadida e integrada vista de detalle de un pago
+
 ## [1.0.0+28] - 2024-12-26 - Natalia. R
 
 ## Added 

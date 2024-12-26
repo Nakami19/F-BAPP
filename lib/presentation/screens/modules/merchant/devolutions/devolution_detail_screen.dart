@@ -19,130 +19,117 @@ class DevolutionDetailScreen extends StatefulWidget {
 }
 
 class _DevolutionDetailScreenState extends State<DevolutionDetailScreen> {
-  final GlobalKey<ScaffoldState> _devolutionScaffoldKey = GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _devolutionScaffoldKey =
+      GlobalKey<ScaffoldState>();
   final ScrollController _scrollController = ScrollController();
 
   @override
   Widget build(BuildContext context) {
-
-     final navProvider = context.watch<NavigationProvider>();
+    final navProvider = context.watch<NavigationProvider>();
     final textStyle = Theme.of(context).textTheme;
     final merchantProvider = context.watch<MerchantProvider>();
-    
+
     return Scaffold(
-
-drawer: DrawerMenu(),
-        key: _devolutionScaffoldKey,
-        onDrawerChanged: (isOpened) {
-          if (!isOpened) {
-            Future.delayed(Duration(milliseconds: navProvider.showNavBarDelay),
-                () {
-              navProvider.updateShowNavBar(true);
-            });
-          } else {
-            navProvider.updateShowNavBar(false);
-          }
-        },
-        appBar: PreferredSize(
-            preferredSize: const Size.fromHeight(110),
-            child: Screensappbar(
-              title: 'Detalle de devolución',
-              screenKey: _devolutionScaffoldKey,
-              poproute: listmerchantdevolutionsScreen,
-            )),
-        body: Padding(
-          padding: const EdgeInsets.only(bottom: 10),
-          child: SingleChildScrollView(
-            controller: _scrollController,
-            child: Column(
-              children: [
-
-              if (merchantProvider.isLoading) ...[
-                SizedBox(
-                  height: 10,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width / 2.5,
-                      child: Center(
-                        child: CustomSkeleton(
-                          height: 50,
-                        ),
+      drawer: DrawerMenu(),
+      key: _devolutionScaffoldKey,
+      onDrawerChanged: (isOpened) {
+        if (!isOpened) {
+          Future.delayed(Duration(milliseconds: navProvider.showNavBarDelay),
+              () {
+            navProvider.updateShowNavBar(true);
+          });
+        } else {
+          navProvider.updateShowNavBar(false);
+        }
+      },
+      appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(110),
+          child: Screensappbar(
+            title: 'Detalle de devolución',
+            screenKey: _devolutionScaffoldKey,
+            poproute: listmerchantdevolutionsScreen,
+          )),
+      body: Padding(
+        padding: const EdgeInsets.only(bottom: 10),
+        child: SingleChildScrollView(
+          controller: _scrollController,
+          child: Column(children: [
+            if (merchantProvider.isLoading) ...[
+              SizedBox(
+                height: 10,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width / 2.5,
+                    child: Center(
+                      child: CustomSkeleton(
+                        height: 50,
                       ),
                     ),
-                    SizedBox(
-                      width: 30,
-                    ),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width / 2.5,
-                      child: Center(
-                        child: CustomSkeleton(
-                          height: 50,
-                        ),
+                  ),
+                  SizedBox(
+                    width: 30,
+                  ),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width / 2.5,
+                    child: Center(
+                      child: CustomSkeleton(
+                        height: 50,
                       ),
                     ),
-                  ],
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width / 1.2,
-                  child: Center(
-                    child: CustomSkeleton(
-                      height: MediaQuery.of(context).size.height / 1.2,
-                    ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              SizedBox(
+                width: MediaQuery.of(context).size.width / 1.2,
+                child: Center(
+                  child: CustomSkeleton(
+                    height: MediaQuery.of(context).size.height / 1.2,
                   ),
                 ),
-              ],
-
-              if (!merchantProvider.isLoading) ...[
-        
-
-                //Card con la informacion de la orden
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                  child: InformationCard(
-                    title: "#${merchantProvider.refundInfo!["idPaymentAttempt"]}",
-                    subtitle: merchantProvider.refundInfo!['createdDate'] != null
-                        ? 'Fecha de creacion: ${DateFormatter.formatDate(DateTime.parse(merchantProvider.refundInfo!['createdDate']))}'
-                        : "",
-                    texts: buildTextsFromDetail(
-                         merchantProvider.refundInfo!),
-                  ),
+              ),
+            ],
+            if (!merchantProvider.isLoading) ...[
+              //Card con la informacion de la orden
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                child: InformationCard(
+                  title: "#${merchantProvider.refundInfo!["idPaymentAttempt"]}",
+                  subtitle: merchantProvider.refundInfo!['createdDate'] != null
+                      ? 'Fecha de creacion: ${DateFormatter.formatDate(DateTime.parse(merchantProvider.refundInfo!['createdDate']))}'
+                      : "",
+                  texts: buildTextsFromDetail(merchantProvider.refundInfo!),
                 ),
+              ),
 
-                SizedBox(
-                  height: 20,
-                ),
-
-              ],
-            ]),
-          ),
+              SizedBox(
+                height: 20,
+              ),
+            ],
+          ]),
         ),
+      ),
     );
   }
 
-   List<Map<String, dynamic>> buildTextsFromDetail(Map<String, dynamic> refund) {
+  List<Map<String, dynamic>> buildTextsFromDetail(Map<String, dynamic> refund) {
     List<Map<String, dynamic>> objects = [];
     final utilsProvider = context.read<UtilsProvider>();
 
     if (refund['idOrder'] != null) {
-      objects.add({
-        'label': 'Nro. de orden: ',
-        'value': refund['idOrder']
-      });
+      objects.add({'label': 'Nro. de orden: ', 'value': refund['idOrder']});
     }
 
-     if (refund['phoneNumber'] != null) {
-      objects.add({
-        'label': 'Nro. de teléfono: ',
-        'value': refund['phoneNumber']
-      });
+    if (refund['phoneNumber'] != null) {
+      objects
+          .add({'label': 'Nro. de teléfono: ', 'value': refund['phoneNumber']});
     }
 
     if (refund['amount'] != null) {
@@ -170,26 +157,21 @@ drawer: DrawerMenu(),
     }
 
     if (refund['namePaymentMethod'] != null) {
-      objects.add({
-        'label': 'Método de pago: ',
-        'value': refund['namePaymentMethod'] 
-      });
+      objects.add(
+          {'label': 'Método de pago: ', 'value': refund['namePaymentMethod']});
     }
 
     if (refund['namePaymentType'] != null) {
-      objects.add({
-        'label': 'Tipo de pago: ',
-        'value': refund['namePaymentType'] 
-      });
+      objects
+          .add({'label': 'Tipo de pago: ', 'value': refund['namePaymentType']});
     }
 
     if (refund['status'] != null) {
       objects.add({
         'label': 'Estado: ',
-        'value': utilsProvider.capitalize(refund['status'])  
+        'value': utilsProvider.capitalize(refund['status'])
       });
     }
-
 
     return objects;
   }

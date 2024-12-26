@@ -140,7 +140,7 @@ class _ListMobilePaymentsState extends State<ListMobilePayments> {
     //se hace la peticion con los filtros aplicados
     final merchantProvider = context.read<MerchantProvider>();
 
-   await merchantProvider.listMobilePayments(
+    await merchantProvider.listMobilePayments(
       limit: 5,
       page: 0,
       endDate: endDate,
@@ -182,7 +182,6 @@ class _ListMobilePaymentsState extends State<ListMobilePayments> {
               textStyle.bodySmall!.copyWith(fontSize: 17, color: Colors.grey),
           enabled: true,
           validator: (value) {
-
             if (value != null && value != "") {
               if (value.length < 11) {
                 return 'El formato no es válido ';
@@ -235,7 +234,7 @@ class _ListMobilePaymentsState extends State<ListMobilePayments> {
         padding: const EdgeInsets.symmetric(horizontal: 3),
         child: CustomDropdown(
           hintText: 'Banco receptor',
-          options:merchantProvider.banks ?? [],
+          options: merchantProvider.banks ?? [],
           onChanged: (value) {
             setState(() {
               dropdownValueReceivingBank = value;
@@ -384,10 +383,21 @@ class _ListMobilePaymentsState extends State<ListMobilePayments> {
                           onTap: () {
                             // merchantProvider.refundInfo = refund;
                             merchantProvider.paymentInfo = payment;
-                              Navigator.pushNamed(
-                                context,
-                                paymentDetail,
-                              );
+
+                            merchantProvider.paymentInfo!['popRoute'] =
+                                listmobilepaymentsScreen;
+                            Map<String, dynamic> status =
+                                merchantProvider.status!.firstWhere(
+                              (status) =>
+                                  status["idStatus"] == payment['idStatus'],
+                            );
+
+                            merchantProvider.paymentInfo!['status'] =
+                                status['name'];
+                            Navigator.pushNamed(
+                              context,
+                              paymentDetail,
+                            );
                           },
                         ),
                       );
