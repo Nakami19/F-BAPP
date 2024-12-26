@@ -9,9 +9,10 @@ import 'package:f_bapp/presentation/screens/modules/ldap/ldap_screen.dart';
 import 'package:f_bapp/presentation/screens/modules/merchant/create_order_screen.dart';
 import 'package:f_bapp/presentation/screens/modules/merchant/devolutions/devolution_detail_screen.dart';
 import 'package:f_bapp/presentation/screens/modules/merchant/devolutions/list_devolutions_screen.dart';
-import 'package:f_bapp/presentation/screens/modules/merchant/list_mobile_payments.dart';
+import 'package:f_bapp/presentation/screens/modules/merchant/mobile_payments/list_mobile_payments.dart';
 import 'package:f_bapp/presentation/screens/modules/merchant/list_profits_screen.dart';
 import 'package:f_bapp/presentation/screens/modules/merchant/merchant_actions_screen.dart';
+import 'package:f_bapp/presentation/screens/modules/merchant/mobile_payments/payment_detail_screen.dart';
 import 'package:f_bapp/presentation/screens/modules/merchant/orders/list_orders_screen.dart';
 import 'package:f_bapp/presentation/screens/modules/merchant/orders/order_detail_screen.dart';
 import 'package:f_bapp/presentation/screens/modules/merchant/orders/payment_history_screen.dart';
@@ -115,6 +116,11 @@ class AppRouter {
             child: PaymentHistoryScreen(id: id,),
           ),
         );
+
+      case paymentDetail:
+        return FadePageTransition(
+            builder: (_) => const MainScreen(
+                selectedIndex: 2, child: PaymentDetailScreen()));
 
       case listmobilepaymentsScreen:
         return FadePageTransition(

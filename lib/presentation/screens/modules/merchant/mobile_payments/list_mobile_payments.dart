@@ -1,9 +1,10 @@
-import 'package:f_bapp/common/assets/theme/app_colors.dart';
+import 'package:f_bapp/common/data/constants.dart';
 import 'package:f_bapp/common/data/date_formatter.dart';
 import 'package:f_bapp/common/data/digit_formatter.dart';
 import 'package:f_bapp/common/providers/pagination_provider.dart';
 import 'package:f_bapp/common/widgets/cards/text_card.dart';
 import 'package:f_bapp/common/widgets/inputs/custom_dropdown.dart';
+import 'package:f_bapp/common/widgets/inputs/custom_text_form_field.dart';
 import 'package:f_bapp/common/widgets/inputs/date_input.dart';
 import 'package:f_bapp/common/widgets/inputs/filter_container.dart';
 import 'package:f_bapp/common/widgets/shared/custom_skeleton.dart';
@@ -14,49 +15,54 @@ import 'package:f_bapp/config/theme/business_app_colors.dart';
 import 'package:f_bapp/presentation/providers/modules/merchant_provider.dart';
 import 'package:f_bapp/presentation/providers/shared/navigation_provider.dart';
 import 'package:f_bapp/presentation/providers/shared/utils_provider.dart';
+import 'package:f_bapp/presentation/widgets/shared/custom_navbar.dart';
 import 'package:f_bapp/presentation/widgets/shared/drawer_menu.dart';
 import 'package:f_bapp/presentation/widgets/shared/screens_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
-class PaymentHistoryScreen extends StatefulWidget {
-  const PaymentHistoryScreen({super.key, required this.id});
+class ListMobilePayments extends StatefulWidget {
+  const ListMobilePayments({super.key});
 
-  final String id;
   @override
-  State<PaymentHistoryScreen> createState() => _PaymentHistoryScreenState();
+  State<ListMobilePayments> createState() => _ListMobilePaymentsState();
 }
 
-class _PaymentHistoryScreenState extends State<PaymentHistoryScreen> {
-  final GlobalKey<ScaffoldState> _paymentHistoryScaffoldKey =
+class _ListMobilePaymentsState extends State<ListMobilePayments> {
+  final GlobalKey<ScaffoldState> _listmobilepaymentScaffoldKey =
       GlobalKey<ScaffoldState>();
 
   final ScrollController _scrollController = ScrollController();
 
-  String? dropdownValue;
-  String? dropdownValue2;
-  String tagstatus = "";
-  String paymentType = "";
-  late TextEditingController dateController;
-
-  String endDate = "";
-  String startDate = "";
-
   List<Map<String, dynamic>> filterIcons = [];
 
-  List<dynamic>? typePayment = [];
+  String? dropdownValueStatus;
+  String? dropdownValueIssuinBank;
+  String? dropdownValueReceivingBank;
+  String status = "";
+  String issuinBank = "";
+  String receivingBank = "";
+  late TextEditingController dateController;
+  late TextEditingController idController;
+  late TextEditingController phoneController;
+  String id = "";
+  String endDate = "";
+  String startDate = "";
+  String phoneNumber = "";
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     dateController = TextEditingController(text: "");
+    idController = TextEditingController(text: "");
+    phoneController = TextEditingController(text: "");
 
     filterIcons = [
+      {'icon': Icons.download_rounded, 'onPressed': () {}},
       {
         'icon': Icons.refresh_rounded,
-        'onPressed': refreshTransactions,
+        'onPressed': refreshPayments,
       },
     ];
 
@@ -64,62 +70,68 @@ class _PaymentHistoryScreenState extends State<PaymentHistoryScreen> {
       final merchantProvider = context.read<MerchantProvider>();
       final paginationProvider = context.read<PaginationProvider>();
 
-      //se reinicia la paginacion
       paginationProvider.resetPagination();
 
-      //peticiones para obtener  la lista de estatus
-      await merchantProvider.listStatus('PAYMENT');
-
-      typePayment = await merchantProvider.typePayment();
-
-      await merchantProvider.getTransactionsList(
+      //peticiones para obtener la lista de devoluciones y la lista de estatus
+      await merchantProvider.listMobilePaymentsStatus();
+      await merchantProvider.getlistBanks();
+      await merchantProvider.listMobilePayments(
         limit: 5,
         page: 0,
-        idOrder: merchantProvider.orderInfo?["idOrder"],
       );
 
-      //el total de elementos para la paginacion sera igual a la cantidad elementos que halla
-
+      //el total de elementos para la paginacion sera igual a la cantidad de devoluciones que halla
       if (merchantProvider.payments != null) {
         paginationProvider.setTotal(merchantProvider.payments!['count']);
       }
     });
   }
 
-//Reinicio de los valores de los filtros
   void resetFilters() async {
     final paginationProvider = context.read<PaginationProvider>();
     final merchantProvider = context.read<MerchantProvider>();
     setState(() {
       dateController.text = "";
-      dropdownValue = null;
-      dropdownValue2 = null;
+      phoneController.text = "";
+      idController.text = "";
+      dropdownValueStatus = null;
+      dropdownValueReceivingBank = null;
+      dropdownValueIssuinBank = null;
     });
 
     endDate = "";
     startDate = "";
-    tagstatus = "";
-    paymentType = "";
+    status = "";
+    id = "";
+    phoneNumber = "";
+    issuinBank = "";
+    receivingBank = "";
 
-    await merchantProvider.getTransactionsList(
-        idOrder: merchantProvider.orderInfo?["idOrder"],
-        limit: 5,
-        page: 0,
-        idPaymentType: paymentType,
-        tagStatus: tagstatus,
-        endDate: endDate,
-        startDate: startDate);
+    await merchantProvider.listMobilePayments(
+      limit: 5,
+      page: 0,
+      endDate: endDate,
+      idIssuingBank: issuinBank,
+      idReceivingBank: receivingBank,
+      idStatus: status,
+      startDate: startDate,
+      issuingPhone: phoneNumber,
+      transactionNumber: id,
+    );
 
     paginationProvider.resetPagination();
-    paginationProvider.setTotal(merchantProvider.orders!['count']);
+    paginationProvider.setTotal(merchantProvider.payments!['count']);
   }
 
   void applyFilters() async {
     final paginationProvider = context.read<PaginationProvider>();
 
     // Procesar filtros aquí
-    tagstatus = dropdownValue ?? "";
-    paymentType = dropdownValue2 ?? "";
+    status = dropdownValueStatus ?? "";
+    issuinBank = dropdownValueIssuinBank ?? "";
+    receivingBank = dropdownValueReceivingBank ?? "";
+    id = idController.text;
+    phoneNumber = phoneController.text;
     endDate =
         dateController.text != "" ? dateController.text.split(" - ")[1] : "";
     startDate =
@@ -127,17 +139,21 @@ class _PaymentHistoryScreenState extends State<PaymentHistoryScreen> {
 
     //se hace la peticion con los filtros aplicados
     final merchantProvider = context.read<MerchantProvider>();
-    await merchantProvider.getTransactionsList(
-        idOrder: merchantProvider.orderInfo?["idOrder"],
-        limit: 5,
-        page: 0,
-        idPaymentType: paymentType,
-        tagStatus: tagstatus,
-        endDate: endDate,
-        startDate: startDate);
+
+   await merchantProvider.listMobilePayments(
+      limit: 5,
+      page: 0,
+      endDate: endDate,
+      idIssuingBank: issuinBank,
+      idReceivingBank: receivingBank,
+      idStatus: status,
+      startDate: startDate,
+      issuingPhone: phoneNumber,
+      transactionNumber: id,
+    );
 
     paginationProvider.resetPagination();
-    paginationProvider.setTotal(merchantProvider.orders!['count']);
+    paginationProvider.setTotal(merchantProvider.payments!['count']);
   }
 
   @override
@@ -150,6 +166,35 @@ class _PaymentHistoryScreenState extends State<PaymentHistoryScreen> {
 
     //Componentes que tendra el filtro
     final List<Widget> filters = [
+      CustomTextFormField(
+        controller: idController,
+        hintText: 'Nro de referencia',
+        hintStyle:
+            textStyle.bodySmall!.copyWith(fontSize: 17, color: Colors.grey),
+        enabled: true,
+      ),
+      CustomTextFormField(
+          controller: phoneController,
+          hintText: 'Teléfono emisor',
+          inputType: TextInputType.number,
+          maxLength: 11,
+          hintStyle:
+              textStyle.bodySmall!.copyWith(fontSize: 17, color: Colors.grey),
+          enabled: true,
+          validator: (value) {
+
+            if (value != null && value != "") {
+              if (value.length < 11) {
+                return 'El formato no es válido ';
+              }
+
+              if (phoneRegex.hasMatch(value.trim())) {
+                return 'El código de área no es válido';
+              }
+            }
+
+            return null;
+          }),
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 3),
         child: CustomDropdown(
@@ -157,13 +202,13 @@ class _PaymentHistoryScreenState extends State<PaymentHistoryScreen> {
           options: merchantProvider.status ?? [],
           onChanged: (value) {
             setState(() {
-              dropdownValue = value;
+              dropdownValueStatus = value;
             });
           },
-          selectedValue: dropdownValue,
-          itemValueMapper: (option) => option['tagStatus']!,
+          selectedValue: dropdownValueStatus,
+          itemValueMapper: (option) => option['idStatus']!,
           itemLabelMapper: (option) =>
-              utilsProvider.capitalize(option['nameStatus']!),
+              utilsProvider.capitalize(option['name']!),
           autoSelectFirst: false,
           optionsTextsStyle: textStyle.bodySmall!.copyWith(fontSize: 14),
         ),
@@ -171,17 +216,35 @@ class _PaymentHistoryScreenState extends State<PaymentHistoryScreen> {
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 3),
         child: CustomDropdown(
-          hintText: 'Tipo de pago',
-          options: typePayment ?? [],
+          hintText: 'Banco emisor',
+          options: merchantProvider.banks ?? [],
           onChanged: (value) {
             setState(() {
-              dropdownValue2 = value;
+              dropdownValueIssuinBank = value;
             });
           },
-          selectedValue: dropdownValue2,
-          itemValueMapper: (option) => option['tag']!,
+          selectedValue: dropdownValueIssuinBank,
+          itemValueMapper: (option) => option['bankId']!,
           itemLabelMapper: (option) =>
-              utilsProvider.capitalize(option['name']!),
+              utilsProvider.capitalize(option['bankDescription']!),
+          autoSelectFirst: false,
+          optionsTextsStyle: textStyle.bodySmall!.copyWith(fontSize: 14),
+        ),
+      ),
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 3),
+        child: CustomDropdown(
+          hintText: 'Banco receptor',
+          options:merchantProvider.banks ?? [],
+          onChanged: (value) {
+            setState(() {
+              dropdownValueReceivingBank = value;
+            });
+          },
+          selectedValue: dropdownValueReceivingBank,
+          itemValueMapper: (option) => option['bankId']!,
+          itemLabelMapper: (option) =>
+              utilsProvider.capitalize(option['bankDescription']!),
           autoSelectFirst: false,
           optionsTextsStyle: textStyle.bodySmall!.copyWith(fontSize: 14),
         ),
@@ -191,14 +254,14 @@ class _PaymentHistoryScreenState extends State<PaymentHistoryScreen> {
         child: DateInput(
           controller: dateController,
           rangeDate: true,
-          hintText: 'Fechas de relevantes',
+          hintText: 'Fechas relevantes',
         ),
       ),
     ];
 
     return Scaffold(
       drawer: DrawerMenu(),
-      key: _paymentHistoryScaffoldKey,
+      key: _listmobilepaymentScaffoldKey,
       onDrawerChanged: (isOpened) {
         if (!isOpened) {
           Future.delayed(Duration(milliseconds: navProvider.showNavBarDelay),
@@ -212,15 +275,17 @@ class _PaymentHistoryScreenState extends State<PaymentHistoryScreen> {
       appBar: PreferredSize(
           preferredSize: Size.fromHeight(110),
           child: Screensappbar(
-            title: 'Historial de pagos',
-            screenKey: _paymentHistoryScaffoldKey,
+            title: 'Listado de pagos móviles',
+            screenKey: _listmobilepaymentScaffoldKey,
+            poproute: merchantScreen,
           )),
       body: Column(
         children: [
           //No ha cargado
           if (merchantProvider.isLoading ||
               merchantProvider.payments == null ||
-              merchantProvider.status == null) ...[
+              merchantProvider.status == null ||
+              merchantProvider.banks == null) ...[
             const SizedBox(
               height: 15,
             ),
@@ -244,12 +309,9 @@ class _PaymentHistoryScreenState extends State<PaymentHistoryScreen> {
 
           //Ya cargo
           if (!merchantProvider.isLoading &&
-              merchantProvider.payments != null) ...[
-            Center(
-              child: Text("#${widget.id}",
-                  style: textStyle.titleMedium!
-                      .copyWith(fontWeight: FontWeight.w600)),
-            ),
+              merchantProvider.payments != null &&
+              merchantProvider.status != null &&
+              merchantProvider.banks != null) ...[
             if (merchantProvider.payments?['count'] == 0) ...[
               //Filtro
               Padding(
@@ -289,6 +351,7 @@ class _PaymentHistoryScreenState extends State<PaymentHistoryScreen> {
               )
             ],
             if (merchantProvider.payments!['count'] > 0) ...[
+              //filtro
               Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 35, vertical: 15),
@@ -319,6 +382,7 @@ class _PaymentHistoryScreenState extends State<PaymentHistoryScreen> {
                           texts: buildTextsFromPayments(payment,
                               statusColors), // Lista con los textos generada
                           onTap: () {
+                            // merchantProvider.refundInfo = refund;
                             merchantProvider.paymentInfo = payment;
                               Navigator.pushNamed(
                                 context,
@@ -334,24 +398,32 @@ class _PaymentHistoryScreenState extends State<PaymentHistoryScreen> {
               Pagination(
                 //Funcion al pasar a la siguiente pagina
                 onNextPressed: () {
-                  merchantProvider.getTransactionsList(
-                      limit: 5,
-                      page: paginationProvider.page,
-                      idOrder: merchantProvider.orderInfo?["idOrder"],
-                      tagStatus: tagstatus,
-                      idPaymentType: paymentType,
-                      startDate: startDate);
+                  merchantProvider.listMobilePayments(
+                    limit: 5,
+                    page: paginationProvider.page,
+                    endDate: endDate,
+                    idIssuingBank: issuinBank,
+                    idReceivingBank: receivingBank,
+                    idStatus: status,
+                    startDate: startDate,
+                    issuingPhone: phoneNumber,
+                    transactionNumber: id,
+                  );
                 },
 
                 //Funcion al pasar a la pagina anterior
                 onPreviousPressed: () {
-                  merchantProvider.getTransactionsList(
-                      limit: 5,
-                      page: paginationProvider.page,
-                      idOrder: merchantProvider.orderInfo?["idOrder"],
-                      tagStatus: tagstatus,
-                      idPaymentType: paymentType,
-                      startDate: startDate);
+                  merchantProvider.listMobilePayments(
+                    limit: 5,
+                    page: paginationProvider.page,
+                    endDate: endDate,
+                    idIssuingBank: issuinBank,
+                    idReceivingBank: receivingBank,
+                    idStatus: status,
+                    startDate: startDate,
+                    issuingPhone: phoneNumber,
+                    transactionNumber: id,
+                  );
                 },
               )
             ],
@@ -361,70 +433,81 @@ class _PaymentHistoryScreenState extends State<PaymentHistoryScreen> {
     );
   }
 
+  void refreshPayments() async {
+    final paginationProvider = context.read<PaginationProvider>();
+    final merchantProvider = context.read<MerchantProvider>();
+
+    merchantProvider.listMobilePayments(
+      limit: 5,
+      page: paginationProvider.page,
+      endDate: endDate,
+      idIssuingBank: issuinBank,
+      idReceivingBank: receivingBank,
+      idStatus: status,
+      startDate: startDate,
+      issuingPhone: phoneNumber,
+      transactionNumber: id,
+    );
+
+    paginationProvider.resetPagination();
+    paginationProvider.setTotal(merchantProvider.payments!['count']);
+  }
+
   List<Map<String, dynamic>> buildTextsFromPayments(
       Map<String, dynamic> payment, Map<String, Color> statusColors) {
     List<Map<String, dynamic>> objects = [];
+    final merchantProvider = context.read<MerchantProvider>();
 
-    if (payment['idPaymentAttempt'] != null) {
-      objects.add({'label': 'Id pago: ', 'value': payment['idPaymentAttempt']});
-    }
+    Map<String, dynamic> status = merchantProvider.status!.firstWhere(
+      (status) => status["idStatus"] == payment['idStatus'],
+    );
 
-    if (payment['amount'] != null) {
+    payment['idStatus'];
+
+    if (payment['transactionNumber'] != null) {
       objects.add({
-        'label': 'Monto: ',
-        'value':
-            '${DigitFormatter.getMoneyFormatter(payment['amount'].toString())} ${payment['nameCurrency']}'
+        'label': 'Número de referencia: ',
+        'value': payment['transactionNumber']
       });
     }
 
-    if (payment['totalAmount'] != null) {
-      objects.add({
-        'label': 'Monto total: ',
-        'value':
-            '${DigitFormatter.getMoneyFormatter(payment['totalAmount'].toString())} ${payment['nameCurrency']}'
-      });
+    if (payment['issuingPhone'] != null) {
+      objects.add(
+          {'label': 'Teléfono emisor: ', 'value': payment['issuingPhone']});
     }
 
-    if (payment['totalCommission'] != null) {
-      objects.add({
-        'label': 'Comisión: ',
-        'value':
-            '${DigitFormatter.getMoneyFormatter(payment['totalCommission'].toString())} ${payment['nameCurrency']}'
-      });
+    if (payment['issuingBankName'] != null) {
+      objects.add(
+          {'label': 'Banco emisor: ', 'value': payment['issuingBankName']});
+    }
+
+    if (payment['receivingBankName'] != null) {
+      objects.add(
+          {'label': 'Banco receptor: ', 'value': payment['receivingBankName']});
     }
 
     if (payment['createdDate'] != null) {
       objects.add({
         'label': 'Fecha: ',
         'value':
-            '${DateFormatter.formatDate(DateTime.parse(payment['createdDate']))}'
+            DateFormatter.formatDate(DateTime.parse(payment['createdDate']))
+      });
+    }
+
+    if (payment['amount'] != null) {
+      objects.add({
+        'label': 'Monto: ',
+        'value':
+            '${DigitFormatter.getMoneyFormatter(payment['amount'])} ${payment['prefixCurrency']}'
       });
     }
 
     objects.add({
       'label': 'status',
-      'value': payment['status'],
-      'statusColor': statusColors[payment['status']]
+      'value': status['name'],
+      'statusColor': statusColors[status['name']]
     });
 
     return objects;
-  }
-
-  void refreshTransactions() async {
-    final merchantProvider = context.read<MerchantProvider>();
-    final paginationProvider = context.read<PaginationProvider>();
-
-    // Llama a la API para obtener las transacciones nuevamente
-    await merchantProvider.getTransactionsList(
-      idOrder: merchantProvider.orderInfo?["idOrder"],
-      limit: 5,
-      page: 0,
-      tagStatus: tagstatus,
-      startDate: startDate,
-    );
-
-    // Reinicia la paginación
-    paginationProvider.resetPagination();
-    paginationProvider.setTotal(merchantProvider.payments!['count']);
   }
 }

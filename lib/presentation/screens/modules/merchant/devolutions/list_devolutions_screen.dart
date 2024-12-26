@@ -79,7 +79,7 @@ class _ListDevolutionsScreenState extends State<ListDevolutionsScreen> {
       );
 
       //el total de elementos para la paginacion sera igual a la cantidad de devoluciones que halla
-      if (merchantProvider.orders != null) {
+      if (merchantProvider.refunds != null) {
         paginationProvider.setTotal(merchantProvider.refunds!['count']);
       }
     });
@@ -135,7 +135,6 @@ class _ListDevolutionsScreenState extends State<ListDevolutionsScreen> {
     startDate =
         dateController.text != "" ? dateController.text.split(" - ")[0] : "";
 
-    print("Holaaaaa ${phoneNumber} + ${idOrder}");
 
     //se hace la peticion con los filtros aplicados
     final merchantProvider = context.read<MerchantProvider>();
@@ -182,18 +181,18 @@ class _ListDevolutionsScreenState extends State<ListDevolutionsScreen> {
           controller: phoneNumberController,
           hintText: 'Teléfono emisor',
           inputType: TextInputType.number,
-          maxLength: 10,
+          maxLength: 11,
           hintStyle:
               textStyle.bodySmall!.copyWith(fontSize: 17, color: Colors.grey),
           enabled: true,
           validator: (value) {
             if (value != null && value != "") {
-              if (value.length < 10) {
+              if (value.length < 11) {
                 return 'El formato no es válido ';
               }
 
-              if (!phoneRegex.hasMatch(value)) {
-                return 'El código de área222 no es válido';
+              if (phoneRegex.hasMatch(value)) {
+                return 'El código de área no es válido';
               }
             }
 
@@ -376,7 +375,7 @@ class _ListDevolutionsScreenState extends State<ListDevolutionsScreen> {
                   onNextPressed: () {
                     merchantProvider.listRefunds(
                       limit: 5,
-                      page: 0,
+                      page: paginationProvider.page,
                       startDate: startDate,
                       endDate: endDate,
                       idOrder: idOrder,
@@ -388,7 +387,7 @@ class _ListDevolutionsScreenState extends State<ListDevolutionsScreen> {
                   onPreviousPressed: () {
                     merchantProvider.listRefunds(
                       limit: 5,
-                      page: 0,
+                      page: paginationProvider.page,
                       startDate: startDate,
                       endDate: endDate,
                       idOrder: idOrder,

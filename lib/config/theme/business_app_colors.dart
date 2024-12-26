@@ -14,5 +14,7 @@ import 'package:flutter/material.dart';
     "PAGADA CON FALTANTE": Colors.orange,
     "EXPIRADA": Color(0xff595959),
     "REVERSADA": Color.fromARGB(219, 246, 195, 26),
+    'Confirmada': primaryColor,
+    "Por Confirmar":Color.fromARGB(219, 246, 195, 26),
   };
 

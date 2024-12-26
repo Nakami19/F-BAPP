@@ -24,6 +24,7 @@ const String createorderScreen = '/Crear orden pasarelaScreen';
 const String listprofitsScreen = '/Listado de aliadosScreen';
 const String orderdetailScreen = '/Detalle de orden';
 const String paymentHistory = '/Historial de pagos';
+const String paymentDetail = '/Detalle de pago';
 const String refunddetailScreen = '/Detalle de devolucion';
 
 //Onboarding

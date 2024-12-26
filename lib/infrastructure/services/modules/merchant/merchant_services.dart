@@ -4,7 +4,7 @@ import 'package:f_bapp/config/network/dio_client.dart';
 
 class MerchantServices {
 
-  //Api obtener estatus
+  //Api obtener estatus listado de ordenes/devoluciones/pagos
   Future<Response> getListStatus (String tagstatus) async {
     try {
       final response = await dio.get(
@@ -101,7 +101,7 @@ class MerchantServices {
 
   }
 
-
+  //obtener listado de devoluciones
   Future<Response> getRefunds(Map<String, dynamic> params) async {
     try {
 
@@ -117,7 +117,7 @@ class MerchantServices {
 
   }
 
-
+//api para revertir orden
 Future<Response> postRevertOrder(Map<String, dynamic> params) async {
     try {
 
@@ -133,6 +133,34 @@ Future<Response> postRevertOrder(Map<String, dynamic> params) async {
 
   }
 
+  //estatus de pagos moviles
+  Future<Response> getListMobilePaymentsStatus () async {
+    try {
+      final response = await dio.get(
+        '${Enviroment.ccFbusGateway}/v1/list/bank_mobile/statuses',
+        
+      );
 
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  //obtener listado de pagos moviles
+  Future<Response> getListBankMobiles(Map<String, dynamic> params) async {
+    try {
+
+    final response = await dio.get(
+      '${Enviroment.ccFbusGateway}/v1/operation/bank_mobiles',
+      queryParameters: params
+    );
+    
+    return response;
+    } catch (e) {
+      rethrow;
+    }
+
+  }
 
 }

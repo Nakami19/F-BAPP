@@ -102,24 +102,37 @@ class _FilterState extends State<Filter> {
                     key: form,
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
-                      child: Column(children: [
-                        ...widget.inputs.map((widget) {
-                          return Padding(
-                            padding: const EdgeInsets.only(bottom: 12),
-                            child: widget,
-                          );
-                        }),
-                        CustomButton(
-                            title: 'Buscar',
-                            isPrimaryColor: true,
-                            isOutline: false,
-                            onTap: () {
-                              if (form.currentState!.validate()) {
-                                widget.onApply();
-                              }
-                            },
-                            provider: provider)
-                      ]),
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(
+                          maxHeight: MediaQuery.of(context).size.height *
+                              0.43, // Altura máxima
+                        ),
+                        child: SingleChildScrollView(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              ...widget.inputs.map((widget) {
+                                return Padding(
+                                  padding: const EdgeInsets.only(bottom: 12),
+                                  child: widget,
+                                );
+                              }).toList(),
+                              CustomButton(
+                                title: 'Buscar',
+                                isPrimaryColor: true,
+                                isOutline: false,
+                                onTap: () {
+                                  if (form.currentState!.validate()) {
+                                    widget.onApply();
+                                  }
+                                },
+                                provider: provider,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                     ),
                   )
                 : SizedBox.shrink(),

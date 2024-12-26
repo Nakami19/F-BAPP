@@ -1,5 +1,15 @@
 ## [F-APP]
 
+## [1.0.0+28] - 2024-12-26 - Natalia. R
+
+## Added 
+
+- Añadida e integrada vista de listado de pagos moviles
+
+## FIX
+
+- Se cambio el tamaño del contenedor del filtro
+
 ## [1.0.0+27] - 2024-12-23 - Natalia. R
 
 ## Added 
