@@ -1,5 +1,13 @@
 ## [F-APP]
 
+## [1.0.0+31] - 2024-12-27 - Natalia. R
+
+## Added
+
+- Añadida vista de envio de pago movil
+- Añadido input de monto
+
+
 ## [1.0.0+30] - 2024-12-26 - Natalia. R
 
 ## Fix 

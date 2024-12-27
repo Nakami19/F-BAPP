@@ -9,6 +9,8 @@ class CustomTextFormField extends StatelessWidget {
     this.node,
     this.hintText,
     this.hintStyle,
+    this.suffixText,
+    this.suffixTextStyle,
     this.inputType,
     this.suffixIcon,
     this.preffixIcon,
@@ -34,6 +36,8 @@ class CustomTextFormField extends StatelessWidget {
   final FocusNode? node;
   final String? hintText;
   final TextStyle? hintStyle;
+  final String? suffixText;
+  final TextStyle? suffixTextStyle;
   final TextInputType? inputType;
   final Widget? suffixIcon;
   final Widget? preffixIcon;
@@ -60,7 +64,7 @@ class CustomTextFormField extends StatelessWidget {
     final colors = Theme.of(context).colorScheme;
     
     return Padding(
-
+      // padding: EdgeInsets.zero,
       padding: isPaddingZero
           ? EdgeInsets.zero
           : EdgeInsets.symmetric(vertical: paddingV, horizontal: paddingH),
@@ -84,8 +88,10 @@ class CustomTextFormField extends StatelessWidget {
             fillColor: Colors.white,
               floatingLabelBehavior: FloatingLabelBehavior.always,
               counterText: '',
-              prefixIcon: preffixIcon ?? null,
+              prefixIcon: preffixIcon,
               suffixIcon: suffixIcon,
+              suffixText: suffixText,
+              suffixStyle: suffixTextStyle,
               isDense: true,
 
               label: label != null

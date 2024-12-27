@@ -52,7 +52,7 @@ class LoadingButtonText extends StatelessWidget {
                   color: iconColor ?? Colors.white,
                   size: 20,
                 ),
-                const SizedBox(width: 15), // Espacio entre ícono y texto
+                const SizedBox(width: 15), 
               ],
               Flexible(
                 child: Text(

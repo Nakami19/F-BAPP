@@ -5,7 +5,6 @@ import 'package:f_bapp/config/data_constants/data_constants.dart';
 import 'package:f_bapp/presentation/providers/auth/login_provider.dart';
 import 'package:f_bapp/presentation/providers/shared/navigation_provider.dart';
 import 'package:f_bapp/presentation/providers/shared/user_provider.dart';
-import 'package:f_bapp/presentation/widgets/shared/custom_navbar.dart';
 import 'package:f_bapp/presentation/widgets/shared/dashboard_appbar.dart';
 import 'package:f_bapp/presentation/widgets/shared/drawer_menu.dart';
 import 'package:f_bapp/presentation/widgets/shared/user_data.dart';

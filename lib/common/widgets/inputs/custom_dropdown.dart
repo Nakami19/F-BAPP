@@ -12,11 +12,14 @@ class CustomDropdown<T> extends StatefulWidget {
        this.showError,
        this.errorText,
       this.title,
+      this.titleTextStyle,
       this.hintText,
+      this.hintTextStyle,
       required this.itemValueMapper,
       required this.itemLabelMapper,
       this.selectedValue,
       this.optionsTextsStyle,
+      this.titleAlignment,
       this.label,
       super.key});
 
@@ -30,6 +33,10 @@ class CustomDropdown<T> extends StatefulWidget {
   final String? selectedValue;
   final bool autoSelectFirst;
   final TextStyle? optionsTextsStyle;
+  final TextStyle? hintTextStyle;
+  final TextStyle? titleTextStyle;
+  final AlignmentGeometry? titleAlignment;
+
 
   //Funciones que toma un objeto option y devuelve un String, permiten que el widget sea reutilizable
   final String Function(dynamic option) itemValueMapper;
@@ -77,7 +84,7 @@ class _CustomDropdownState extends State<CustomDropdown> {
         //Si hay un titulo se muestra sobre el dropdown
         if(widget.title!=null)
           Align(
-            alignment: Alignment.centerLeft,
+            alignment: widget.titleAlignment ?? Alignment.centerLeft,
             child: Text(
               widget.title??"",
               style: GoogleFonts.lato(
@@ -104,7 +111,7 @@ class _CustomDropdownState extends State<CustomDropdown> {
                 isExpanded: true, //se ocupa todo el ancho
                 hint: Text(
                     widget.hintText??"",
-                    style: TextStyle(color: hintTextColor),
+                    style: widget.hintTextStyle?? TextStyle(color: hintTextColor),
                   ),
 
                 value: value, //valor seleccionado
