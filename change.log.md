@@ -1,5 +1,11 @@
 ## [F-APP]
 
+## [1.0.0+30] - 2024-12-26 - Natalia. R
+
+## Fix 
+
+- Se cambio el manejo de rutas, en vez de un switch se tiene un objeto con la ruta y el widget
+
 ## [1.0.0+29] - 2024-12-26 - Natalia. R
 
 ## Added 

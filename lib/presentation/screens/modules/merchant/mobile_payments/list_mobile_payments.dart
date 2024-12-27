@@ -167,6 +167,7 @@ class _ListMobilePaymentsState extends State<ListMobilePayments> {
     //Componentes que tendra el filtro
     final List<Widget> filters = [
       CustomTextFormField(
+        inputType: TextInputType.number,
         controller: idController,
         hintText: 'Nro de referencia',
         hintStyle:

@@ -483,6 +483,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                   Expanded(
                                       child: CustomTextFormField(
                                           controller: documentController,
+                                          inputType: TextInputType.number,
                                           hintText: 'CI/RIF',
                                           enabled: true,
                                           maxLength: 8,
