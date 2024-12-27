@@ -60,8 +60,6 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
 
       sessionProvider.documentType();
 
-      print(" Holaaaaa11 ${sessionProvider.documentsType}");
-
       qrCode = QrCode.fromData(
         data: merchantProvider.orderInfo!['urlOrder'],
         errorCorrectLevel: QrErrorCorrectLevel.H,

@@ -26,7 +26,6 @@ class _DevolutionDetailScreenState extends State<DevolutionDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final navProvider = context.watch<NavigationProvider>();
-    final textStyle = Theme.of(context).textTheme;
     final merchantProvider = context.watch<MerchantProvider>();
 
     return Scaffold(

@@ -1,5 +1,11 @@
 ## [F-APP]
 
+## [1.0.0+32] - 2024-12-27 - Natalia. R
+
+## Added
+
+- Añadidos endpoints de listado de bancos y tipos de documentos
+
 ## [1.0.0+31] - 2024-12-27 - Natalia. R
 
 ## Added

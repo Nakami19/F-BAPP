@@ -1,4 +1,3 @@
-import 'package:f_bapp/common/assets/theme/app_colors.dart';
 import 'package:f_bapp/common/data/date_formatter.dart';
 import 'package:f_bapp/common/data/digit_formatter.dart';
 import 'package:f_bapp/common/providers/pagination_provider.dart';

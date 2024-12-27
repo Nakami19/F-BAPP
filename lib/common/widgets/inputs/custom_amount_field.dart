@@ -4,7 +4,7 @@ import 'package:f_bapp/common/data/digit_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class CustomAmountField extends StatelessWidget {
+class CustomAmountField extends StatefulWidget {
   const CustomAmountField(
       {this.hintText = 'Ej: 10',
       this.hintStyle,
@@ -47,11 +47,39 @@ class CustomAmountField extends StatelessWidget {
   final String? Function(String?)? validator;
 
   @override
+  State<CustomAmountField> createState() => _CustomAmountFieldState();
+}
+
+class _CustomAmountFieldState extends State<CustomAmountField> {
+  late FocusNode focusNode;
+  late String currentHintText;
+
+  @override
+  void initState() {
+    super.initState();
+    focusNode = widget.node ?? FocusNode();
+    currentHintText = widget.hintText;
+
+    focusNode.addListener(() {
+      setState(() {
+        // Cambiar el hintText cuando el campo gana o pierde foco
+        currentHintText = focusNode.hasFocus ? '00,00' : widget.hintText;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    focusNode.dispose();
+    super.dispose();
+  }
+  
+  @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
 
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: paddingV, horizontal: paddingH),
+      padding: EdgeInsets.symmetric(vertical: widget.paddingV, horizontal: widget.paddingH),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -60,38 +88,38 @@ class CustomAmountField extends StatelessWidget {
               Expanded(
                 child: TextFormField(
                   //configura con las opciones proporcionadas
-                  controller: amountcontroller,
+                  controller: widget.amountcontroller,
                   //input numerico
                   keyboardType:
-                      TextInputType.numberWithOptions(decimal: useDecimals),
+                      TextInputType.numberWithOptions(decimal: widget.useDecimals),
                   inputFormatters: [
                     //formato 00,00
                     DigitFormatter.inputMoneyFormatter,
                   ],
 
-                  readOnly: readOnly,
+                  readOnly: widget.readOnly,
                   showCursor: true,
 
                   //validaciones
-                  validator: validator,
-                  focusNode: node,
+                  validator: widget.validator,
+                  focusNode: focusNode,
                   decoration: InputDecoration(
                     contentPadding: const EdgeInsets.symmetric(
                         horizontal: 23, vertical: 13),
                     fillColor: Colors.white,
                     floatingLabelBehavior: FloatingLabelBehavior.always,
                     counterText: '',
-                    suffixIcon: suffixIcon,
-                    suffixText: currencyName,
-                    suffixStyle: suffixTextStyle,
+                    suffixIcon: widget.suffixIcon,
+                    suffixText: widget.currencyName,
+                    suffixStyle: widget.suffixTextStyle,
                     isDense: true,
-                    hintText: hintText,
-                    hintStyle: hintStyle ??
+                    hintText: currentHintText,
+                    hintStyle: widget.hintStyle ??
                         const TextStyle(
                           color: hintTextColor,
                         ),
 
-                    errorText: errorMessage,
+                    errorText: widget.errorMessage,
                     focusColor: colors.primary,
 
                     // Bordes según el estado del campo.
@@ -140,21 +168,21 @@ class CustomAmountField extends StatelessWidget {
 
                     FocusScope.of(context).unfocus();
                   },
-                  onChanged: onChanged,
+                  onChanged: widget.onChanged,
                 ),
               ),
-              if (showMaxFundsButton)
+              if (widget.showMaxFundsButton)
                 TextButton(
-                  onPressed: onMaxFunds,
+                  onPressed: widget.onMaxFunds,
                   child: Text('Máx'),
                 ),
             ],
           ),
-          if (errorMessage != null)
+          if (widget.errorMessage != null)
             Padding(
               padding: const EdgeInsets.only(top: 8.0),
               child: Text(
-                errorMessage!,
+                widget.errorMessage!,
                 style: TextStyle(color: Colors.red),
               ),
             ),
