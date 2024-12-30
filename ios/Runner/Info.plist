@@ -24,6 +24,14 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Requiere autenticación biométrica para iniciar sesión.</string>
+	<key>NSBiometricUsageDescription</key>
+	<string>Requiere autenticación biométrica para iniciar sesión.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>La aplicación necesita acceso a la galería de fotos para cargar o guardar imágenes.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Chinchin requiere permisos a la cámara para obtener los datos necesarios que el usuario desea cargar.</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

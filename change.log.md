@@ -1,5 +1,11 @@
 ## [F-APP]
 
+## [1.0.0+33] - 2024-12-27 - Natalia. R
+
+## Added
+
+- Añadidos permisos para ios
+
 ## [1.0.0+32] - 2024-12-27 - Natalia. R
 
 ## Added

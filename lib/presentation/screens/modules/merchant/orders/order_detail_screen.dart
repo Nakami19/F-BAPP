@@ -12,6 +12,7 @@ import 'package:f_bapp/config/router/routes.dart';
 import 'package:f_bapp/presentation/providers/modules/merchant_provider.dart';
 import 'package:f_bapp/presentation/providers/shared/navigation_provider.dart';
 import 'package:f_bapp/presentation/providers/shared/session_provider.dart';
+import 'package:f_bapp/presentation/widgets/shared/app_dialogs.dart';
 import 'package:f_bapp/presentation/widgets/shared/drawer_menu.dart';
 import 'package:f_bapp/presentation/widgets/shared/screens_appbar.dart';
 import 'package:flutter/material.dart';
@@ -166,7 +167,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                               icon: Icons.refresh_rounded,
                               isOutline: false,
                               onTap: () {
-                                revertPopup(context);
+                               AppDialogs.revertPopup(context, order!);
                               },
                               provider: GeneralProvider()),
                         ),
@@ -386,196 +387,196 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     );
   }
 
-  void revertPopup(BuildContext context) {
-    bool showFields = false; // Estado interno para mostrar o no los inputs.
-    final sessionProvider = context.read<SessionProvider>();
-    String? currentValue;
-    TextEditingController documentController = TextEditingController();
+  // void revertPopup(BuildContext context) {
+  //   bool showFields = false; // Estado interno para mostrar o no los inputs.
+  //   final sessionProvider = context.read<SessionProvider>();
+  //   String? currentValue;
+  //   TextEditingController documentController = TextEditingController();
 
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return StatefulBuilder(
-          builder: (context, setState) {
-            return AlertDialog(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12)),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Text(
-                    'Se va a retornar los fondos a la cuenta correspondiente',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(height: 20),
-                  const Text(
-                    '¿Deseas intentar el reverso a una cédula distinta a la reportada por el cliente?',
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Row(
-                        children: [
-                          Radio<bool>(
-                            value: true,
-                            groupValue: showFields,
-                            onChanged: (value) {
-                              setState(() {
-                                showFields = value!;
-                              });
-                            },
-                          ),
-                          Text('Sí'),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Radio<bool>(
-                            value: false,
-                            groupValue: showFields,
-                            onChanged: (value) {
-                              setState(() {
-                                showFields = value!;
-                              });
-                            },
-                          ),
-                          Text('No'),
-                        ],
-                      ),
-                    ],
-                  ),
-                  AnimatedSwitcher(
-                    duration: Duration(milliseconds: 300),
-                    child: showFields
-                        ? Column(
-                            children: [
-                              SizedBox(height: 10),
-                              Row(
-                                children: [
-                                  SizedBox(
-                                    width: 80,
-                                    child: Expanded(
-                                      child: CustomDropdown(
-                                          autoSelectFirst: true,
-                                          options: sessionProvider
-                                              .documentsType!
-                                              .sublist(
-                                                  1,
-                                                  sessionProvider
-                                                      .documentsType!.length),
-                                          onChanged: (value) {
-                                            setState(() {
-                                              currentValue = value;
-                                            });
-                                          },
-                                          selectedValue: currentValue,
-                                          itemValueMapper: (option) =>
-                                              option['documentTypeId']!,
-                                          itemLabelMapper: (option) =>
-                                              option['documentTypeName']!),
-                                    ),
-                                  ),
-                                  Expanded(
-                                      child: CustomTextFormField(
-                                          controller: documentController,
-                                          inputType: TextInputType.number,
-                                          hintText: 'CI/RIF',
-                                          enabled: true,
-                                          maxLength: 8,
-                                          validator: (value) {
-                                            if (value != null && value != "") {
-                                              if (value.length < 8) {
-                                                return 'El formato no es válido ';
-                                              }
-                                            }
+  //   showDialog(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return StatefulBuilder(
+  //         builder: (context, setState) {
+  //           return AlertDialog(
+  //             shape: RoundedRectangleBorder(
+  //                 borderRadius: BorderRadius.circular(12)),
+  //             content: Column(
+  //               mainAxisSize: MainAxisSize.min,
+  //               children: [
+  //                 const Text(
+  //                   'Se va a retornar los fondos a la cuenta correspondiente',
+  //                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+  //                   textAlign: TextAlign.center,
+  //                 ),
+  //                 SizedBox(height: 20),
+  //                 const Text(
+  //                   '¿Deseas intentar el reverso a una cédula distinta a la reportada por el cliente?',
+  //                   textAlign: TextAlign.center,
+  //                 ),
+  //                 SizedBox(height: 20),
+  //                 Row(
+  //                   mainAxisAlignment: MainAxisAlignment.center,
+  //                   children: [
+  //                     Row(
+  //                       children: [
+  //                         Radio<bool>(
+  //                           value: true,
+  //                           groupValue: showFields,
+  //                           onChanged: (value) {
+  //                             setState(() {
+  //                               showFields = value!;
+  //                             });
+  //                           },
+  //                         ),
+  //                         Text('Sí'),
+  //                       ],
+  //                     ),
+  //                     Row(
+  //                       children: [
+  //                         Radio<bool>(
+  //                           value: false,
+  //                           groupValue: showFields,
+  //                           onChanged: (value) {
+  //                             setState(() {
+  //                               showFields = value!;
+  //                             });
+  //                           },
+  //                         ),
+  //                         Text('No'),
+  //                       ],
+  //                     ),
+  //                   ],
+  //                 ),
+  //                 AnimatedSwitcher(
+  //                   duration: Duration(milliseconds: 300),
+  //                   child: showFields
+  //                       ? Column(
+  //                           children: [
+  //                             SizedBox(height: 10),
+  //                             Row(
+  //                               children: [
+  //                                 SizedBox(
+  //                                   width: 80,
+  //                                   child: Expanded(
+  //                                     child: CustomDropdown(
+  //                                         autoSelectFirst: true,
+  //                                         options: sessionProvider
+  //                                             .documentsType!
+  //                                             .sublist(
+  //                                                 1,
+  //                                                 sessionProvider
+  //                                                     .documentsType!.length),
+  //                                         onChanged: (value) {
+  //                                           setState(() {
+  //                                             currentValue = value;
+  //                                           });
+  //                                         },
+  //                                         selectedValue: currentValue,
+  //                                         itemValueMapper: (option) =>
+  //                                             option['documentTypeId']!,
+  //                                         itemLabelMapper: (option) =>
+  //                                             option['documentTypeName']!),
+  //                                   ),
+  //                                 ),
+  //                                 Expanded(
+  //                                     child: CustomTextFormField(
+  //                                         controller: documentController,
+  //                                         inputType: TextInputType.number,
+  //                                         hintText: 'CI/RIF',
+  //                                         enabled: true,
+  //                                         maxLength: 8,
+  //                                         validator: (value) {
+  //                                           if (value != null && value != "") {
+  //                                             if (value.length < 8) {
+  //                                               return 'El formato no es válido ';
+  //                                             }
+  //                                           }
 
-                                            return null;
-                                          })),
-                                ],
-                              ),
-                              SizedBox(height: 10),
-                            ],
-                          )
-                        : SizedBox.shrink(key: ValueKey('empty')),
-                  ),
-                  SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 5),
-                          child: CustomButton(
-                            title: 'CANCELAR',
-                            isPrimaryColor: false,
-                            isOutline: false,
-                            isText: true,
-                            width: 90,
-                            paddingH: 0,
-                            height: 50,
-                            styleText: Theme.of(context)
-                                .textTheme
-                                .labelMedium!
-                                .copyWith(
-                                  color: Color.fromRGBO(252, 198, 20, 100),
-                                  fontSize: 12,
-                                ),
-                            styleTextButton: TextButton.styleFrom(
-                              side: const BorderSide(
-                                color: Color.fromRGBO(252, 198, 20, 100),
-                                width: 2,
-                              ),
-                            ),
-                            onTap: () {
-                              Navigator.pop(context);
-                            },
-                            provider: GeneralProvider(),
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 5),
-                          child: CustomButton(
-                            title: 'Aceptar',
-                            isPrimaryColor: true,
-                            isOutline: false,
-                            width: 90,
-                            paddingH: 0,
-                            height: 50,
-                            onTap: () {
-                              final merchantProvider =
-                                  context.read<MerchantProvider>();
+  //                                           return null;
+  //                                         })),
+  //                               ],
+  //                             ),
+  //                             SizedBox(height: 10),
+  //                           ],
+  //                         )
+  //                       : SizedBox.shrink(key: ValueKey('empty')),
+  //                 ),
+  //                 SizedBox(height: 20),
+  //                 Row(
+  //                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //                   children: [
+  //                     Expanded(
+  //                       child: Padding(
+  //                         padding: const EdgeInsets.symmetric(horizontal: 5),
+  //                         child: CustomButton(
+  //                           title: 'CANCELAR',
+  //                           isPrimaryColor: false,
+  //                           isOutline: false,
+  //                           isText: true,
+  //                           width: 90,
+  //                           paddingH: 0,
+  //                           height: 50,
+  //                           styleText: Theme.of(context)
+  //                               .textTheme
+  //                               .labelMedium!
+  //                               .copyWith(
+  //                                 color: Color.fromRGBO(252, 198, 20, 100),
+  //                                 fontSize: 12,
+  //                               ),
+  //                           styleTextButton: TextButton.styleFrom(
+  //                             side: const BorderSide(
+  //                               color: Color.fromRGBO(252, 198, 20, 100),
+  //                               width: 2,
+  //                             ),
+  //                           ),
+  //                           onTap: () {
+  //                             Navigator.pop(context);
+  //                           },
+  //                           provider: GeneralProvider(),
+  //                         ),
+  //                       ),
+  //                     ),
+  //                     Expanded(
+  //                       child: Padding(
+  //                         padding: const EdgeInsets.symmetric(horizontal: 5),
+  //                         child: CustomButton(
+  //                           title: 'Aceptar',
+  //                           isPrimaryColor: true,
+  //                           isOutline: false,
+  //                           width: 90,
+  //                           paddingH: 0,
+  //                           height: 50,
+  //                           onTap: () {
+  //                             final merchantProvider =
+  //                                 context.read<MerchantProvider>();
 
-                              merchantProvider.revertOrder(
-                                  idDocumentType: currentValue,
-                                  documentNumber: documentController.text,
-                                  idOrder: order?["idOrder"]);
+  //                             merchantProvider.revertOrder(
+  //                                 idDocumentType: currentValue,
+  //                                 documentNumber: documentController.text,
+  //                                 idOrder: order?["idOrder"]);
 
-                              Navigator.pop(context);
-                            },
-                            styleText: Theme.of(context)
-                                .textTheme
-                                .labelMedium!
-                                .copyWith(
-                                  color: Colors.white,
-                                  fontSize: 13,
-                                ),
-                            provider: GeneralProvider(),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
+  //                             Navigator.pop(context);
+  //                           },
+  //                           styleText: Theme.of(context)
+  //                               .textTheme
+  //                               .labelMedium!
+  //                               .copyWith(
+  //                                 color: Colors.white,
+  //                                 fontSize: 13,
+  //                               ),
+  //                           provider: GeneralProvider(),
+  //                         ),
+  //                       ),
+  //                     ),
+  //                   ],
+  //                 ),
+  //               ],
+  //             ),
+  //           );
+  //         },
+  //       );
+  //     },
+  //   );
+  // }
 }
