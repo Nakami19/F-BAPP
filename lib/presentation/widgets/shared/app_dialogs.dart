@@ -110,7 +110,7 @@ class AppDialogs {
                         message: 'Su sesión ha sido cerrada exitosamente.',
                       );
                     },
-                    styleText: textStyle.copyWith(
+                    styleText: textStyle!.copyWith(
                       color: Colors.white,
                       fontSize: 10,
                     ),
@@ -217,8 +217,7 @@ class AppDialogs {
     );
   }
 
-//dialogo para reversar una order
-static revertPopup(BuildContext context, Map<String, dynamic> order) {
+static revertPopup(BuildContext context, order) {
     bool showFields = false; // Estado interno para mostrar o no los inputs.
     final sessionProvider = context.read<SessionProvider>();
     String? currentValue;
@@ -235,7 +234,6 @@ static revertPopup(BuildContext context, Map<String, dynamic> order) {
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  //Texto
                   const Text(
                     'Se va a retornar los fondos a la cuenta correspondiente',
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
@@ -247,8 +245,6 @@ static revertPopup(BuildContext context, Map<String, dynamic> order) {
                     textAlign: TextAlign.center,
                   ),
                   SizedBox(height: 20),
-
-                  //botones de opciones 
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -282,8 +278,6 @@ static revertPopup(BuildContext context, Map<String, dynamic> order) {
                       ),
                     ],
                   ),
-
-                  //Mostrar el input en caso de que se seleccione "Si"
                   AnimatedSwitcher(
                     duration: Duration(milliseconds: 300),
                     child: showFields
@@ -292,8 +286,6 @@ static revertPopup(BuildContext context, Map<String, dynamic> order) {
                               SizedBox(height: 10),
                               Row(
                                 children: [
-
-                                  //Tipo de documento
                                   SizedBox(
                                     width: 80,
                                     child: Expanded(
@@ -317,8 +309,6 @@ static revertPopup(BuildContext context, Map<String, dynamic> order) {
                                               option['documentTypeName']!),
                                     ),
                                   ),
-
-                                  //input
                                   Expanded(
                                       child: CustomTextFormField(
                                           controller: documentController,
@@ -343,8 +333,6 @@ static revertPopup(BuildContext context, Map<String, dynamic> order) {
                         : SizedBox.shrink(key: ValueKey('empty')),
                   ),
                   SizedBox(height: 20),
-
-                  //Botones de cancelar y aceptar
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -396,7 +384,7 @@ static revertPopup(BuildContext context, Map<String, dynamic> order) {
                               merchantProvider.revertOrder(
                                   idDocumentType: currentValue,
                                   documentNumber: documentController.text,
-                                  idOrder: order["idOrder"]);
+                                  idOrder: order?["idOrder"]);
 
                               Navigator.pop(context);
                             },
@@ -421,5 +409,6 @@ static revertPopup(BuildContext context, Map<String, dynamic> order) {
       },
     );
   }
+
 
 }
