@@ -1,6 +1,12 @@
 ## [F-APP]
 
-## [1.0.0+33] - 2024-12-27 - Natalia. R
+## [1.0.0+34] - 2024-12-30 - Natalia. R
+
+## Added
+
+- Añadida vista de crear orden de pasarela
+
+## [1.0.0+33] - 2024-12-30 - Natalia. R
 
 ## Added
 

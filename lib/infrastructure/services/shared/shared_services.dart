@@ -18,4 +18,19 @@ class SharedServices {
     }
 
   }
+
+  //Listado de monedad
+  Future<Response> getCurrencies() async {
+    try {
+
+    final response = await dio.get(
+      '${Enviroment.ccFbusGateway}/v1/list/currencies',
+    );
+    
+    return response;
+    } catch (e) {
+      rethrow;
+    }
+
+  }
 }

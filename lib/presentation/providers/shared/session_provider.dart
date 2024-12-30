@@ -45,6 +45,17 @@ class SessionProvider extends GeneralProvider {
   }
 
 
+List<dynamic>? currencies;
+
+ List<dynamic>? get getcurrencies => currencies;
+
+  set setCurrencies(List<dynamic>? newCurrencies) {
+    currencies = newCurrencies;
+    notifyListeners();
+  }
+
+
+
 
   void setMaintenanceMode(bool value) {
     _isMaintenanceMode = value;
@@ -367,6 +378,44 @@ class SessionProvider extends GeneralProvider {
 
   }
 
+  //obtener listado de monedas
+  Future <void> listCurrencies () async { 
+    super.setLoadingStatus(true);
+    notifyListeners();
+
+    try {
+
+      final response = await sharedService.getCurrencies();
+
+      final data = jsonDecode(response.toString());
+
+      setCurrencies = data['data'];
+
+
+    } on DioError catch (error) {
+      onDioerror(error);
+      
+      notifyListeners();
+
+      rethrow;
+      
+    }catch (error) {
+      super.setSimpleError(true);
+      super.setErrorMessage("Ocurrió un error inesperado");
+      super.setTrackingCode(error.toString());
+      Snackbars.customSnackbar(
+        navigatorKey.currentContext!,
+        title: "Ocurrió un error inesperado",
+        message: error.toString()
+      );
+      notifyListeners();
+      rethrow;
+    } finally {
+      super.setLoadingStatus(false);
+      notifyListeners();
+    }
+
+  }
 
   void onDioerror(error) {
      final response = error.response;

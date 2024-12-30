@@ -38,7 +38,7 @@ class CustomDropdown<T> extends StatefulWidget {
   final AlignmentGeometry? titleAlignment;
 
 
-  //Funciones que toma un objeto option y devuelve un String, permiten que el widget sea reutilizable
+  //Funciones que toman un objeto option y devuelve un String, permiten que el widget sea reutilizable
   final String Function(dynamic option) itemValueMapper;
   final String Function(dynamic option) itemLabelMapper;
 

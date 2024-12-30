@@ -29,7 +29,7 @@ class MerchantProvider extends GeneralProvider {
   Map<String, dynamic>? get infoPayment => paymentInfo;
 
   set infoPayment(Map<String, dynamic>? newinfo) {
-    paymentInfo=newinfo;
+    paymentInfo = newinfo;
     notifyListeners();
   }
 
@@ -39,7 +39,7 @@ class MerchantProvider extends GeneralProvider {
   Map<String, dynamic>? get infoOrder => orderInfo;
 
   set infoOrder(Map<String, dynamic>? newinfo) {
-    orderInfo=newinfo;
+    orderInfo = newinfo;
     notifyListeners();
   }
 
@@ -53,7 +53,6 @@ class MerchantProvider extends GeneralProvider {
     notifyListeners();
   }
 
-
   //listado de devoluciones
   Map<String, dynamic>? refunds;
 
@@ -64,13 +63,13 @@ class MerchantProvider extends GeneralProvider {
     notifyListeners();
   }
 
- //informacion de la devolucion para el detalle
+  //informacion de la devolucion para el detalle
   Map<String, dynamic>? refundInfo;
 
   Map<String, dynamic>? get infoRefund => refundInfo;
 
   set infoRefund(Map<String, dynamic>? newinfo) {
-    refundInfo=newinfo;
+    refundInfo = newinfo;
     notifyListeners();
   }
 
@@ -93,7 +92,7 @@ class MerchantProvider extends GeneralProvider {
   }
 
 //bancos en el sistema
- List<dynamic>? banks;
+  List<dynamic>? banks;
 
   List<dynamic>? get listBanks => banks;
 
@@ -102,56 +101,48 @@ class MerchantProvider extends GeneralProvider {
     notifyListeners();
   }
 
-  //se obtienen los listados de estatus 
-  Future <void> listStatus (String tagstatus) async {
-
+  //se obtienen los listados de estatus
+  Future<void> listStatus(String tagstatus) async {
     super.setLoadingStatus(true);
     notifyListeners();
 
     try {
-
       final response = await merchantService.getListStatus(tagstatus);
 
       final data = jsonDecode(response.toString());
 
       setStatus = data['data'];
-      
     } on DioError catch (error) {
+      onDioerror(error);
 
-     onDioerror(error);
-
-      
       notifyListeners();
-      
+
       rethrow;
-    }catch (error) {
+    } catch (error) {
       super.setSimpleError(true);
       super.setErrorMessage("Ocurrió un error inesperado");
       super.setTrackingCode(error.toString());
 
-      Snackbars.customSnackbar(
-        navigatorKey.currentContext!,
-        title: "Ocurrió un error inesperado",
-        message: error.toString()
-      );
+      Snackbars.customSnackbar(navigatorKey.currentContext!,
+          title: "Ocurrió un error inesperado", message: error.toString());
       notifyListeners();
       rethrow;
     } finally {
       super.setLoadingStatus(false);
       notifyListeners();
     }
-  } 
+  }
 
 //Obtener el listado de ordenes
-  Future <void> listorders (
-    {int? limit,
+  Future<void> listorders({
+    int? limit,
     int? page,
     String? startDate,
     String? endDate,
     String? tagStatus,
     String? idTypeOrder,
-    String? idOrder,}
-    ) async { 
+    String? idOrder,
+  }) async {
     super.setLoadingStatus(true);
     notifyListeners();
 
@@ -161,222 +152,189 @@ class MerchantProvider extends GeneralProvider {
 
       if (limit != null) params['limit'] = limit;
       if (page != null) params['page'] = page;
-      if (startDate != null && startDate !="") params['startDate'] = startDate;
-      if (endDate != null && endDate !="") params['endDate'] = endDate;
-      if (tagStatus != null && tagStatus !="") params['tagStatus'] = tagStatus;
-      if (idTypeOrder != null && idTypeOrder !="") params['idTypeOrder'] = idTypeOrder;
-      if (idOrder != null && idOrder !="") params['idOrder'] = idOrder;
+      if (startDate != null && startDate != "") params['startDate'] = startDate;
+      if (endDate != null && endDate != "") params['endDate'] = endDate;
+      if (tagStatus != null && tagStatus != "") params['tagStatus'] = tagStatus;
+      if (idTypeOrder != null && idTypeOrder != "")
+        params['idTypeOrder'] = idTypeOrder;
+      if (idOrder != null && idOrder != "") params['idOrder'] = idOrder;
 
       final response = await merchantService.getOrders(params);
 
       final data = jsonDecode(response.toString());
 
       setOrders = data['data'];
-
     } on DioError catch (error) {
       onDioerror(error);
-      
+
       notifyListeners();
-      
-    }catch (error) {
+    } catch (error) {
       super.setSimpleError(true);
       super.setErrorMessage("Ocurrió un error inesperado");
       super.setTrackingCode(error.toString());
-      Snackbars.customSnackbar(
-        navigatorKey.currentContext!,
-        title: "Ocurrió un error inesperado",
-        message: error.toString()
-      );
+      Snackbars.customSnackbar(navigatorKey.currentContext!,
+          title: "Ocurrió un error inesperado", message: error.toString());
       notifyListeners();
     } finally {
       super.setLoadingStatus(false);
       notifyListeners();
     }
-
   }
 
-
   //Obtener detalle de orden
-  Future <Map<String, dynamic>> orderDetail (String idOrder) async { 
+  Future<Map<String, dynamic>> orderDetail(String idOrder) async {
     super.setLoadingStatus(true);
     notifyListeners();
 
     try {
-
       final response = await merchantService.getOrderDetail(idOrder);
 
       final data = jsonDecode(response.toString());
 
       return data['data'];
-
     } on DioError catch (error) {
       onDioerror(error);
-      
+
       notifyListeners();
 
       rethrow;
-      
-    }catch (error) {
+    } catch (error) {
       super.setSimpleError(true);
       super.setErrorMessage("Ocurrió un error inesperado");
       super.setTrackingCode(error.toString());
-      Snackbars.customSnackbar(
-        navigatorKey.currentContext!,
-        title: "Ocurrió un error inesperado",
-        message: error.toString()
-      );
+      Snackbars.customSnackbar(navigatorKey.currentContext!,
+          title: "Ocurrió un error inesperado", message: error.toString());
       notifyListeners();
       rethrow;
     } finally {
       super.setLoadingStatus(false);
       notifyListeners();
     }
-
   }
 
   //obtener tipos de pagos
-  Future <List<dynamic>> typePayment () async { 
+  Future<List<dynamic>> typePayment() async {
     super.setLoadingStatus(true);
     notifyListeners();
 
     try {
-
       final response = await merchantService.getTypePayments();
 
       final data = jsonDecode(response.toString());
 
       return data['data'];
-
     } on DioError catch (error) {
       onDioerror(error);
-      
+
       notifyListeners();
 
       rethrow;
-      
-    }catch (error) {
+    } catch (error) {
       super.setSimpleError(true);
       super.setErrorMessage("Ocurrió un error inesperado");
       super.setTrackingCode(error.toString());
-      Snackbars.customSnackbar(
-        navigatorKey.currentContext!,
-        title: "Ocurrió un error inesperado",
-        message: error.toString()
-      );
+      Snackbars.customSnackbar(navigatorKey.currentContext!,
+          title: "Ocurrió un error inesperado", message: error.toString());
       notifyListeners();
       rethrow;
     } finally {
       super.setLoadingStatus(false);
       notifyListeners();
     }
-
   }
 
   //Obtener las devoluciones de un usuario
   Future<void> getTransactionsList({
-  int? limit,
-  int? page,
-  String? startDate,
-  String? endDate,
-  bool? refunds,
-  String? idOrder,
-  String? idPaymentType,
-  String? tagStatus,
-}) async {
-  super.setLoadingStatus(true);
-  notifyListeners();
+    int? limit,
+    int? page,
+    String? startDate,
+    String? endDate,
+    bool? refunds,
+    String? idOrder,
+    String? idPaymentType,
+    String? tagStatus,
+  }) async {
+    super.setLoadingStatus(true);
+    notifyListeners();
 
-  try {
-    // Construir los parámetros para la petición
-    final params = <String, dynamic>{};
+    try {
+      // Construir los parámetros para la petición
+      final params = <String, dynamic>{};
 
-    if (limit != null) params['limit'] = limit;
-    if (page != null) params['page'] = page;
-    if (startDate != null && startDate.isNotEmpty) params['startDate'] = startDate;
-    if (endDate != null && endDate.isNotEmpty) params['endDate'] = endDate;
-    if (refunds != null) params['refunds'] = refunds;
-    if (idOrder != null && idOrder.isNotEmpty) params['idOrder'] = idOrder;
-    if (idPaymentType != null && idPaymentType.isNotEmpty) params['idPaymentType'] = idPaymentType;
-    if (tagStatus != null && tagStatus.isNotEmpty) params['tagStatus'] = tagStatus;
+      if (limit != null) params['limit'] = limit;
+      if (page != null) params['page'] = page;
+      if (startDate != null && startDate.isNotEmpty)
+        params['startDate'] = startDate;
+      if (endDate != null && endDate.isNotEmpty) params['endDate'] = endDate;
+      if (refunds != null) params['refunds'] = refunds;
+      if (idOrder != null && idOrder.isNotEmpty) params['idOrder'] = idOrder;
+      if (idPaymentType != null && idPaymentType.isNotEmpty)
+        params['idPaymentType'] = idPaymentType;
+      if (tagStatus != null && tagStatus.isNotEmpty)
+        params['tagStatus'] = tagStatus;
 
-    // Realizar la petición
-    final response = await merchantService.getTransactions(params);
+      // Realizar la petición
+      final response = await merchantService.getTransactions(params);
 
-    final data = jsonDecode(response.toString());
-    
-    setPaymentslist = data['data'];
+      final data = jsonDecode(response.toString());
 
+      setPaymentslist = data['data'];
     } on DioError catch (error) {
       onDioerror(error);
-      
+
       notifyListeners();
-      
-    }catch (error) {
+    } catch (error) {
       super.setSimpleError(true);
       super.setErrorMessage("Ocurrió un error inesperado");
       super.setTrackingCode(error.toString());
-      Snackbars.customSnackbar(
-        navigatorKey.currentContext!,
-        title: "Ocurrió un error inesperado",
-        message: error.toString()
-      );
+      Snackbars.customSnackbar(navigatorKey.currentContext!,
+          title: "Ocurrió un error inesperado", message: error.toString());
       notifyListeners();
     } finally {
       super.setLoadingStatus(false);
       notifyListeners();
     }
-
   }
 
-    // Llama al API para revertir orden
-  Future <void> revertOrder (
-    {
+  // Llama al API para revertir orden
+  Future<void> revertOrder({
     String? documentNumber,
     String? idDocumentType,
-    String idOrder="",}
-    ) async { 
+    String idOrder = "",
+  }) async {
     super.setLoadingStatus(true);
     notifyListeners();
 
     try {
-      //se construyen los parametros 
+      //se construyen los parametros
       final params = <String, dynamic>{};
       params['idOrder'] = idOrder;
       if (documentNumber != null) params['documentId'] = documentNumber;
       if (idDocumentType != null) params['documentTypeId'] = idDocumentType;
 
-      
       final response = await merchantService.postRevertOrder(params);
 
       final data = jsonDecode(response.toString());
-
-
     } on DioError catch (error) {
       onDioerror(error);
-      
+
       notifyListeners();
-      
-    }catch (error) {
+    } catch (error) {
       super.setSimpleError(true);
       super.setErrorMessage("Ocurrió un error inesperado");
       super.setTrackingCode(error.toString());
-      Snackbars.customSnackbar(
-        navigatorKey.currentContext!,
-        title: "Ocurrió un error inesperado",
-        message: error.toString()
-      );
+      Snackbars.customSnackbar(navigatorKey.currentContext!,
+          title: "Ocurrió un error inesperado", message: error.toString());
       notifyListeners();
     } finally {
       super.setLoadingStatus(false);
       notifyListeners();
     }
-
   }
 
-
   //Obtener el listado de devoluciones
-  Future <void> listRefunds (
-    {int? limit,
+  Future<void> listRefunds({
+    int? limit,
     int? page,
     String? startDate,
     String? endDate,
@@ -384,8 +342,8 @@ class MerchantProvider extends GeneralProvider {
     String? tagStatus,
     String? idPaymentType,
     String? phoneNumber,
-    String? idOrder,}
-    ) async { 
+    String? idOrder,
+  }) async {
     super.setLoadingStatus(true);
     notifyListeners();
 
@@ -395,126 +353,110 @@ class MerchantProvider extends GeneralProvider {
 
       if (limit != null) params['limit'] = limit;
       if (page != null) params['page'] = page;
-      if (startDate != null && startDate !="") params['startDate'] = startDate;
-      if (endDate != null && endDate !="") params['endDate'] = endDate;
-      if (tagStatus != null && tagStatus !="") params['tagStatus'] = tagStatus;
-      if (idPaymentType != null && idPaymentType !="") params['idTypeOrder'] = idPaymentType;
-      if (idOrder != null && idOrder !="") params['idOrder'] = idOrder;
-      if (phoneNumber != null && phoneNumber !="") params['phoneNumber'] = phoneNumber;
+      if (startDate != null && startDate != "") params['startDate'] = startDate;
+      if (endDate != null && endDate != "") params['endDate'] = endDate;
+      if (tagStatus != null && tagStatus != "") params['tagStatus'] = tagStatus;
+      if (idPaymentType != null && idPaymentType != "")
+        params['idTypeOrder'] = idPaymentType;
+      if (idOrder != null && idOrder != "") params['idOrder'] = idOrder;
+      if (phoneNumber != null && phoneNumber != "")
+        params['phoneNumber'] = phoneNumber;
 
       final response = await merchantService.getRefunds(params);
 
       final data = jsonDecode(response.toString());
 
-
       setRefunds = data['data'];
-
-
     } on DioError catch (error) {
       onDioerror(error);
-      
+
       notifyListeners();
-      
-    }catch (error) {
+    } catch (error) {
       super.setSimpleError(true);
       super.setErrorMessage("Ocurrió un error inesperado");
       super.setTrackingCode(error.toString());
-      Snackbars.customSnackbar(
-        navigatorKey.currentContext!,
-        title: "Ocurrió un error inesperado",
-        message: error.toString()
-      );
+      Snackbars.customSnackbar(navigatorKey.currentContext!,
+          title: "Ocurrió un error inesperado", message: error.toString());
       notifyListeners();
     } finally {
       super.setLoadingStatus(false);
       notifyListeners();
     }
-
   }
 
-
   //obtener bancos
-  Future <void> getlistBanks () async { 
+  Future<void> getlistBanks({int? idCurrency}) async {
     super.setLoadingStatus(true);
     notifyListeners();
 
     try {
       final params = <String, dynamic>{};
-      params['idCurrency'] = 2;
+      if (idCurrency != null) {
+        params['idCurrency'] = idCurrency;
+      } else {
+        params['idCurrency'] = 2;
+      }
+
       final response = await merchantService.getBanksList(params);
 
       final data = jsonDecode(response.toString());
 
-     setlistBanks = data['data'];
-
+      setlistBanks = data['data'];
     } on DioError catch (error) {
       onDioerror(error);
-      
+
       notifyListeners();
 
       rethrow;
-      
-    }catch (error) {
+    } catch (error) {
       super.setSimpleError(true);
       super.setErrorMessage("Ocurrió un error inesperado");
       super.setTrackingCode(error.toString());
-      Snackbars.customSnackbar(
-        navigatorKey.currentContext!,
-        title: "Ocurrió un error inesperado",
-        message: error.toString()
-      );
+      Snackbars.customSnackbar(navigatorKey.currentContext!,
+          title: "Ocurrió un error inesperado", message: error.toString());
       notifyListeners();
       rethrow;
     } finally {
       super.setLoadingStatus(false);
       notifyListeners();
     }
-
   }
 
   //se obtienen los listados de estatus de pagos moviles
-  Future <void> listMobilePaymentsStatus () async {
-
+  Future<void> listMobilePaymentsStatus() async {
     super.setLoadingStatus(true);
     notifyListeners();
 
     try {
-
       final response = await merchantService.getListMobilePaymentsStatus();
 
       final data = jsonDecode(response.toString());
 
       setStatus = data['data'];
-      
     } on DioError catch (error) {
+      onDioerror(error);
 
-     onDioerror(error);
-
-      
       notifyListeners();
-      
+
       rethrow;
-    }catch (error) {
+    } catch (error) {
       super.setSimpleError(true);
       super.setErrorMessage("Ocurrió un error inesperado");
       super.setTrackingCode(error.toString());
 
-      Snackbars.customSnackbar(
-        navigatorKey.currentContext!,
-        title: "Ocurrió un error inesperado",
-        message: error.toString()
-      );
+      Snackbars.customSnackbar(navigatorKey.currentContext!,
+          title: "Ocurrió un error inesperado", message: error.toString());
       notifyListeners();
       rethrow;
     } finally {
       super.setLoadingStatus(false);
       notifyListeners();
     }
-  } 
+  }
 
   //listado de pagos moviles
-  Future <void> listMobilePayments (
-    {int? limit,
+  Future<void> listMobilePayments({
+    int? limit,
     int? page,
     String? startDate,
     String? endDate,
@@ -522,8 +464,8 @@ class MerchantProvider extends GeneralProvider {
     String? idStatus,
     String? idIssuingBank,
     String? idReceivingBank,
-    String? transactionNumber,}
-    ) async { 
+    String? transactionNumber,
+  }) async {
     super.setLoadingStatus(true);
     notifyListeners();
 
@@ -533,70 +475,60 @@ class MerchantProvider extends GeneralProvider {
 
       if (limit != null) params['limit'] = limit;
       if (page != null) params['page'] = page;
-      if (startDate != null && startDate !="") params['startDate'] = startDate;
-      if (endDate != null && endDate !="") params['endDate'] = endDate;
-      if (idStatus != null && idStatus !="") params['idStatus'] = idStatus;
-      if (idIssuingBank != null && idIssuingBank !="") params['idIssuingBank'] = idIssuingBank;
-      if (idReceivingBank != null && idReceivingBank !="") params['idReceivingBank'] = idReceivingBank;
-      if (issuingPhone != null && issuingPhone !="") params['issuingPhone'] = issuingPhone;
-      if (transactionNumber != null && transactionNumber !="") params['transactionNumber'] = transactionNumber;
+      if (startDate != null && startDate != "") params['startDate'] = startDate;
+      if (endDate != null && endDate != "") params['endDate'] = endDate;
+      if (idStatus != null && idStatus != "") params['idStatus'] = idStatus;
+      if (idIssuingBank != null && idIssuingBank != "")
+        params['idIssuingBank'] = idIssuingBank;
+      if (idReceivingBank != null && idReceivingBank != "")
+        params['idReceivingBank'] = idReceivingBank;
+      if (issuingPhone != null && issuingPhone != "")
+        params['issuingPhone'] = issuingPhone;
+      if (transactionNumber != null && transactionNumber != "")
+        params['transactionNumber'] = transactionNumber;
 
       final response = await merchantService.getListBankMobiles(params);
 
       final data = jsonDecode(response.toString());
 
-
       setPaymentslist = data['data'];
-
-
     } on DioError catch (error) {
       onDioerror(error);
-      
+
       notifyListeners();
-      
-    }catch (error) {
+    } catch (error) {
       super.setSimpleError(true);
       super.setErrorMessage("Ocurrió un error inesperado");
       super.setTrackingCode(error.toString());
-      Snackbars.customSnackbar(
-        navigatorKey.currentContext!,
-        title: "Ocurrió un error inesperado",
-        message: error.toString()
-      );
+      Snackbars.customSnackbar(navigatorKey.currentContext!,
+          title: "Ocurrió un error inesperado", message: error.toString());
       notifyListeners();
     } finally {
       super.setLoadingStatus(false);
       notifyListeners();
     }
-
   }
-
 
   void onDioerror(error) {
-     final response = error.response;
-      final data = response?.data as Map<String, dynamic>;
+    final response = error.response;
+    final data = response?.data as Map<String, dynamic>;
 
-      final resp = ApiResponse.fromJson(
-        response?.data as Map<String, dynamic>,
-        (json) => data['data'], // No hay data para el caso de error
-        (json) => ApiError(
-          message: json['message'],
-          value: json['value'],
-          trackingCode: json['trackingCode'],
-        ),
-      );
+    final resp = ApiResponse.fromJson(
+      response?.data as Map<String, dynamic>,
+      (json) => data['data'], // No hay data para el caso de error
+      (json) => ApiError(
+        message: json['message'],
+        value: json['value'],
+        trackingCode: json['trackingCode'],
+      ),
+    );
 
-      super.setSimpleError(true);
-      super.setErrorMessage(resp.message);
-      
+    super.setSimpleError(true);
+    super.setErrorMessage(resp.message);
 
-      super.setTrackingCode(resp.trackingCode);
+    super.setTrackingCode(resp.trackingCode);
 
-      Snackbars.customSnackbar(
-        navigatorKey.currentContext!,
-        title: resp.trackingCode,
-        message: resp.message
-      );
+    Snackbars.customSnackbar(navigatorKey.currentContext!,
+        title: resp.trackingCode, message: resp.message);
   }
-
 }

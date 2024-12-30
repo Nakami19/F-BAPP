@@ -1,31 +1,5 @@
 import 'package:f_bapp/config/helpers/fade_page_transition.dart';
 import 'package:f_bapp/config/router/routes.dart';
-import 'package:f_bapp/presentation/screens/auth/first_login_screen.dart';
-import 'package:f_bapp/presentation/screens/auth/second_login_screen.dart';
-import 'package:f_bapp/presentation/screens/home_screen.dart';
-import 'package:f_bapp/presentation/screens/main_screen.dart';
-import 'package:f_bapp/presentation/screens/modules/administration/administration_screen.dart';
-import 'package:f_bapp/presentation/screens/modules/ldap/ldap_screen.dart';
-import 'package:f_bapp/presentation/screens/modules/merchant/create_order_screen.dart';
-import 'package:f_bapp/presentation/screens/modules/merchant/devolutions/devolution_detail_screen.dart';
-import 'package:f_bapp/presentation/screens/modules/merchant/devolutions/list_devolutions_screen.dart';
-import 'package:f_bapp/presentation/screens/modules/merchant/mobile_payments/list_mobile_payments.dart';
-import 'package:f_bapp/presentation/screens/modules/merchant/list_profits_screen.dart';
-import 'package:f_bapp/presentation/screens/modules/merchant/merchant_actions_screen.dart';
-import 'package:f_bapp/presentation/screens/modules/merchant/mobile_payments/payment_detail_screen.dart';
-import 'package:f_bapp/presentation/screens/modules/merchant/orders/list_orders_screen.dart';
-import 'package:f_bapp/presentation/screens/modules/merchant/orders/order_detail_screen.dart';
-import 'package:f_bapp/presentation/screens/modules/merchant/orders/payment_history_screen.dart';
-import 'package:f_bapp/presentation/screens/modules/merchant/orders/user_details_screen.dart';
-import 'package:f_bapp/presentation/screens/modules/merchant/mobile_payments/refund_payments_screen.dart';
-import 'package:f_bapp/presentation/screens/modules/merchant/unclaimed_payments_screen.dart';
-import 'package:f_bapp/presentation/screens/modules/onboarding/onboarding_screen.dart';
-import 'package:f_bapp/presentation/screens/modules/onboarding/templates_screen.dart';
-import 'package:f_bapp/presentation/screens/modules/onboarding/verifications_screen.dart';
-import 'package:f_bapp/presentation/screens/modules/onboardingV1/onboardingv1_screen.dart';
-import 'package:f_bapp/presentation/screens/modules/operations/operations_screen.dart';
-import 'package:f_bapp/presentation/screens/profile/profile_screen.dart';
-import 'package:f_bapp/presentation/screens/terms_condition_screen.dart';
 import 'package:flutter/material.dart';
 
 class AppRouter {

@@ -29,7 +29,6 @@ const String firstLoginScreen = '/firstLogin';
 const String secondLoginScreen = '/secondLogin';
 const String homeScreen = '/home';
 const String termsConditionsScreen = '/termsConditionsScreen';
-// const String tabsScreen = '/tabsScreen';
 const String userdetailScreen = '/Datos usuario';
 
 //Dashboard
@@ -113,7 +112,6 @@ class AppRoutes {
         const MainScreen(selectedIndex: 2, child: ListProfitsScreen()),
     userdetailScreen: (_) =>
         const MainScreen(selectedIndex: 2, child: UserDetailsScreen()),
-
 
     //Onboarding
     onboardingScreen: (_) =>
