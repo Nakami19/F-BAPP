@@ -14,15 +14,28 @@ class ThemeProvider with ChangeNotifier {
   }
 
 // Método para cargar el estado del tema desde el almacenamiento seguro.
-   Future<void> loadDarkModeFromStorage() async {
+  //  Future<void> loadDarkModeFromStorage() async {
 
-    //Verifica si hay datos para el modo oscuro guardados, de no haber se establece un valor default
-    _isDarkModeEnabled = await storage.getValue('darkMode') ?? false;
+  //   //Verifica si hay datos para el modo oscuro guardados, de no haber se establece un valor default
+  //   _isDarkModeEnabled = await storage.getValue('darkMode') ?? false;
 
-    // Actualiza el estilo del sistema según el tema actual
-    _updateSystemChromeStyle();
-    notifyListeners();
-  }
+    
+
+  //   // Actualiza el estilo del sistema según el tema actual
+  //   _updateSystemChromeStyle();
+  //   notifyListeners();
+  // }
+
+  Future<void> loadDarkModeFromStorage() async {
+  final storedValue = await storage.getValue('darkMode');
+  
+  // Convierte el valor almacenado a booleano
+  _isDarkModeEnabled = storedValue == 'true'; // Si el valor es "true", establece como verdadero
+
+  // Actualiza el estilo del sistema según el tema actual
+  _updateSystemChromeStyle();
+  notifyListeners();
+}
 
   void toggleDarkMode() {
 
@@ -36,8 +49,8 @@ class ThemeProvider with ChangeNotifier {
 
   //Guarda el estado actual del tema
   void _saveDarkModeToStorage() async {
-    storage.setKeyValue('darkMode', _isDarkModeEnabled);
-  }
+  await storage.setKeyValue('darkMode', _isDarkModeEnabled.toString());
+}
 
   // Actualiza el estilo del sistema según el tema actual
    void _updateSystemChromeStyle() {

@@ -1,5 +1,11 @@
 ## [F-APP]
 
+## [1.0.0+35] - 2024-12-30 - Natalia. R
+
+## Fix
+
+- Error al instalar aplicacion cuando version es mayor a +26, enabledBiometricValue siempre retornaba true 
+
 ## [1.0.0+34] - 2024-12-30 - Natalia. R
 
 ## Added

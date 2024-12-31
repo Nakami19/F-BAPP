@@ -54,4 +54,13 @@ class StorageService extends KeyValueStorageService {
             'Set not implemented for type ${T.runtimeType}');
     }
   }
+
+   /// Método para eliminar todos los datos
+  Future<void> deleteAll() async {
+    final prefs = await getSharedPrefs();
+    final keys = prefs.getKeys(); // Obtener todas las claves almacenadas
+    for (String key in keys) {
+      await prefs.remove(key); // Eliminar cada clave
+    }
+  }
 }

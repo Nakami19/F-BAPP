@@ -2,6 +2,8 @@ import 'dart:async';
 import 'package:f_bapp/common/data/constants.dart';
 import 'package:f_bapp/common/data/enviroment.dart';
 import 'package:f_bapp/common/providers/theme_provider.dart';
+import 'package:f_bapp/infrastructure/shared/secure_storage_service.dart';
+import 'package:f_bapp/infrastructure/shared/versionManager.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
@@ -15,6 +17,9 @@ FutureOr<void> main() async {
 
   // se obtiene informacion de la app desde el pubspec
   final appInfo = await PackageInfo.fromPlatform();
+  final secureStorageService = SecureStorageService();
+  final versionManager = VersionManager(secureStorageService);
+  await versionManager.handleVersionChange();
   Constants.appVersion = appInfo.version;
   Constants.buildNumber = appInfo.buildNumber;
 

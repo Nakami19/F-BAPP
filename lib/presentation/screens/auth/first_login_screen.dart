@@ -52,9 +52,12 @@ class _FirstLoginScreenState extends State<FirstLoginScreen> {
 
 
     Future.microtask(() async {
+      await _clearStorageOnFirstInstall();
       //Verifica si la biometria esta habilitada
-      var enabledBiometricValue = await normalStorage.getValue<String>('enabledBiometric');
+      // var enabledBiometricValue = await normalStorage.getValue<String>('enabledBiometric');
+      var enabledBiometricValue = await normalStorage.getValue<String>('enabledBiometric') ?? "false";
 
+      print(enabledBiometricValue);
       //Datos del usuario
       var encodedUserData = await normalStorage.getValue<String>('userCompleteName');
 
@@ -98,6 +101,26 @@ class _FirstLoginScreenState extends State<FirstLoginScreen> {
 
     super.dispose();
   }
+
+  Future<void> _clearStorageOnFirstInstall() async {
+  final isFirstInstallKey = 'isFirstInstall';
+  
+  // Comprobar si es la primera instalación
+  final prefs = await normalStorage.getSharedPrefs();
+  final isFirstInstall = prefs.getBool(isFirstInstallKey) ?? true;
+
+  if (isFirstInstall) {
+   
+    await normalStorage.deleteAll();
+    // Eliminar todos los datos de FlutterSecureStorage
+    await storageService.deleteAll();
+
+    // Marcar que ya no es la primera instalación
+    await prefs.setBool(isFirstInstallKey, false);
+
+    print('Datos borrados al instalar la aplicación por primera vez.');
+  }
+}
 
   @override
   Widget build(BuildContext context) {
