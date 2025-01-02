@@ -53,5 +53,20 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	 <key>CFBundleDisplayName</key>
+    <string>App Name</string>
+    <key>CFBundleIdentifier</key>
+    <string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+    <key>CFBundleIconFiles</key>
+    <array>
+        <string>AppIcon</string>
+    </array>
+    <key>NSAppTransportSecurity</key>
+    <dict>
+        <key>NSAllowsArbitraryLoads</key>
+        <true/>
+    </dict>
+    <key>NSPrivacyUsageDescription</key>
+    <string>Esta app requiere acceso a datos sensibles para brindar un mejor servicio.</string>
 </dict>
 </plist>
