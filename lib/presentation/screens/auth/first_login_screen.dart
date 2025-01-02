@@ -23,6 +23,7 @@ import 'package:provider/provider.dart';
 import '../../../common/widgets/shared/info_chinchin_popup.dart';
 import '../../../common/widgets/shared/terms_condition_button.dart';
 import '../../../common/providers/theme_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class FirstLoginScreen extends StatefulWidget {
   const FirstLoginScreen({super.key});
@@ -50,48 +51,52 @@ class _FirstLoginScreenState extends State<FirstLoginScreen> {
 
     final loginProvider = context.read<LoginProvider>();
 
+    // debugPrintStoredData();
 
     Future.microtask(() async {
-      await _clearStorageOnFirstInstall();
       //Verifica si la biometria esta habilitada
-      // var enabledBiometricValue = await normalStorage.getValue<String>('enabledBiometric');
-      var enabledBiometricValue = await normalStorage.getValue<String>('enabledBiometric') ?? "false";
+      var enabledBiometricValue = await normalStorage.getValue<String>(
+          'enabledBiometric'); 
+      
+      // var enabledBiometricValue = await normalStorage.getValue<String>('enabledBiometric') ?? "false";
 
-      print(enabledBiometricValue);
       //Datos del usuario
-      var encodedUserData = await normalStorage.getValue<String>('userCompleteName');
+      var encodedUserData =
+          await normalStorage.getValue<String>('userCompleteName');
 
-      //Si hay datos almacenados indica que los datos existen y los decodifica 
+
+      //Si hay datos almacenados indica que los datos existen y los decodifica
       if (encodedUserData != '' && encodedUserData != null) {
         existUserData = true;
         decodedUserData = json.decode(encodedUserData);
       }
 
       //Indicar si la biometria esta habilitada
+      // enabledBiometric = (enabledBiometricValue?.toLowerCase() == "true");
       enabledBiometric = enabledBiometricValue == "true" ? true : false;
 
       loginProvider.changeBiometricStatus(enabledBiometric);
 
-
       // Voy a obtener la biometria
 
+      
       final biometricData = await storageService.getValue('userLoginData');
 
       // Si existe la biometria entonces la decodifico
       if (biometricData != '' &&
           biometricData != null &&
           enabledBiometric == true) {
-            setState(() {
-              existBiometricData = true;
-        decodedBiometricData = json.decode(biometricData);
-            });
+        setState(() {
+          existBiometricData = true;
+          decodedBiometricData = json.decode(biometricData);
+        });
       } else {
         existBiometricData = false;
       }
 
       //Se establece que el navbar debe mostrarse
-    final navProvider = context.read<NavigationProvider>();
-    navProvider.updateShowNavBar(true);
+      final navProvider = context.read<NavigationProvider>();
+      navProvider.updateShowNavBar(true);
     });
   }
 
@@ -102,25 +107,25 @@ class _FirstLoginScreenState extends State<FirstLoginScreen> {
     super.dispose();
   }
 
-  Future<void> _clearStorageOnFirstInstall() async {
-  final isFirstInstallKey = 'isFirstInstall';
-  
-  // Comprobar si es la primera instalación
-  final prefs = await normalStorage.getSharedPrefs();
-  final isFirstInstall = prefs.getBool(isFirstInstallKey) ?? true;
+  void debugPrintStoredData() async {
+    final secureStorageService = SecureStorageService();
+    final sharedPreferences = await SharedPreferences.getInstance();
 
-  if (isFirstInstall) {
-   
-    await normalStorage.deleteAll();
-    // Eliminar todos los datos de FlutterSecureStorage
-    await storageService.deleteAll();
+    // Leer datos de SecureStorage
+    final secureStorageData = await secureStorageService.readAll();
+    print("Datos en SecureStorage:");
+    print(secureStorageData);
+    secureStorageData.forEach((key, value) {
+      print("Hola $key: $value");
+    });
 
-    // Marcar que ya no es la primera instalación
-    await prefs.setBool(isFirstInstallKey, false);
-
-    print('Datos borrados al instalar la aplicación por primera vez.');
+    // Leer datos de SharedPreferences
+    print("Datos en SharedPreferences:");
+    final sharedPrefsKeys = sharedPreferences.getKeys();
+    for (var key in sharedPrefsKeys) {
+      print("Hey $key: ${sharedPreferences.get(key)}");
+    }
   }
-}
 
   @override
   Widget build(BuildContext context) {
@@ -142,16 +147,13 @@ class _FirstLoginScreenState extends State<FirstLoginScreen> {
           buildNumber: Constants.buildNumber!,
           version: Constants.appVersion!,
         ),
-
         body: Center(
           child: SingleChildScrollView(
-
             child: Form(
               key: firstLoginForm,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-
                   //Logo business
                   SvgPicture.asset(
                     '${DataConstant.imagesChinchin}/chinchin-logo-business-base.svg',
@@ -215,7 +217,6 @@ class _FirstLoginScreenState extends State<FirstLoginScreen> {
                     height: 20,
                   ),
 
-
                   if (loginProvider.actionWithUser) ...[
                     // No tengo biometria
                     if (enabledBiometric == false &&
@@ -256,7 +257,7 @@ class _FirstLoginScreenState extends State<FirstLoginScreen> {
                   //No tengo biometria
                   if (enabledBiometric == false &&
                           existBiometricData == false ||
-                      useAnotherAccount) 
+                      useAnotherAccount)
                     Column(
                       children: [
                         Padding(
@@ -272,11 +273,12 @@ class _FirstLoginScreenState extends State<FirstLoginScreen> {
                                   loginProvider.disposeValues();
                                   final verifyUserResp = await loginProvider
                                       .verifyUser(userLoginController.text);
-                          
-                                  if (loginProvider.statusCode != HttpStatus.ok) {
+
+                                  if (loginProvider.statusCode !=
+                                      HttpStatus.ok) {
                                     return;
                                   }
-                          
+
                                   if (loginProvider.existUser == true) {
                                     Navigator.pushNamed(
                                       context,
@@ -288,31 +290,28 @@ class _FirstLoginScreenState extends State<FirstLoginScreen> {
                                 }
                               }),
                         ),
-
-                            CustomButton(
-                          provider:
-                              Provider.of<LoginProvider>(context, listen: false),
-                          title: '¿Olvidó su contraseña?',
-                          isPrimaryColor: false,
-                          isOutline: false,
-                          isText: true,
-                          styleText: textStyle.labelLarge,
-                          paddingV: 5,
-                          height: 35,
-                          paddingH: 70,
-                          onTap: () {}),
+                        CustomButton(
+                            provider: Provider.of<LoginProvider>(context,
+                                listen: false),
+                            title: '¿Olvidó su contraseña?',
+                            isPrimaryColor: false,
+                            isOutline: false,
+                            isText: true,
+                            styleText: textStyle.labelLarge,
+                            paddingV: 5,
+                            height: 35,
+                            paddingH: 70,
+                            onTap: () {}),
                       ],
                     ),
-                    
-                    //tengo biometria y vengo de otra cuenta
-                    if (enabledBiometric == true &&
-                          existBiometricData == true &&
-                      useAnotherAccount) 
-                      TextButton(
+
+                  //tengo biometria y vengo de otra cuenta
+                  if (enabledBiometric == true &&
+                      existBiometricData == true &&
+                      useAnotherAccount)
+                    TextButton(
                       style: TextButton.styleFrom(
-                        elevation: 0,
-                        overlayColor: Colors.transparent
-                      ),  
+                          elevation: 0, overlayColor: Colors.transparent),
                       onPressed: () {
                         setState(() {
                           useAnotherAccount = false;
@@ -336,17 +335,14 @@ class _FirstLoginScreenState extends State<FirstLoginScreen> {
                     provider: loginProvider,
                     paddingH: 25,
                   ),
-                
 
-                //si tiene biometria y no viene de otra cuenta
-                  if (enabledBiometric && 
-                  existBiometricData && 
-                  !useAnotherAccount)
+                  //si tiene biometria y no viene de otra cuenta
+                  if (enabledBiometric &&
+                      existBiometricData &&
+                      !useAnotherAccount)
                     TextButton(
                       style: TextButton.styleFrom(
-                        elevation: 0,
-                        overlayColor: Colors.transparent
-                      ),
+                          elevation: 0, overlayColor: Colors.transparent),
                       onPressed: () {
                         setState(() {
                           useAnotherAccount = true;
@@ -365,7 +361,6 @@ class _FirstLoginScreenState extends State<FirstLoginScreen> {
             ),
           ),
         ),
-        
         bottomNavigationBar: Column(
           mainAxisSize: MainAxisSize.min,
           children: [

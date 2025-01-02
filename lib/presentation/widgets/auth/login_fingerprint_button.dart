@@ -105,6 +105,8 @@ class _FingerPrintAuthButtonState extends State<FingerPrintAuthButton> {
 
                     loginProvider.userLogin = loginResp?['userdata']['member'];
 
+                    print(loginResp?['userdata']);
+
                     // Guarda los nuevos datos de inicio de sesión
                     keyValueStorageServicer.setKeyValue('userLoginData', loginResp?['userdata']);
 

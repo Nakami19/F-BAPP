@@ -1,5 +1,11 @@
 ## [F-APP]
 
+## [1.0.0+36] - 2025-1-2 - Natalia. R
+
+## Fix
+
+- Error con biometria al instalar aplicacion, se mantenian datos de biometria al desinstalar e instalar de nuevo la app
+
 ## [1.0.0+35] - 2024-12-30 - Natalia. R
 
 ## Fix
