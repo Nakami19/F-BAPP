@@ -136,4 +136,34 @@ class UserProvider extends GeneralProvider {
       );
   }
 
+  //Funcion para ver si se tiene o no el privilegio 
+  bool verificationPrivileges(String key) {
+  try {
+    // Si no se ha indicado ninguna acción, retornamos false
+    if (key.isEmpty) {
+      return false;
+    }
+
+    // Verificamos si los privilegios están disponibles
+    if (privileges == null || privileges!.isEmpty) {
+      return false;
+    }
+
+    // Creamos una lista para guardar las acciones del usuario
+    List<PrivilegesActions> currentActions = [];
+
+    // Iteramos por cada módulo de privilegios
+    for (var privilege in privileges!) {
+      // Agregamos las acciones del módulo a la lista de acciones del usuario
+      currentActions.addAll(privilege.actions);
+    }
+
+    // Verificamos si alguna de las acciones tiene el key requerido
+    return currentActions.any((action) => action.key == key);
+  } catch (error) {
+    // Si hay algún error en el proceso, retornamos false
+    return false;
+  }
+}
+
 }

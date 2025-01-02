@@ -42,7 +42,7 @@ class _DevolutionDetailScreenState extends State<DevolutionDetailScreen> {
         }
       },
       appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(110),
+          preferredSize: Size.fromHeight(80 + MediaQuery.of(context).padding.top),
           child: Screensappbar(
             title: 'Detalle de devolución',
             screenKey: _devolutionScaffoldKey,

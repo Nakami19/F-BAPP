@@ -51,7 +51,7 @@ class _MerchantScreenState extends State<MerchantScreen> {
         }
       },
       appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(110),
+          preferredSize: Size.fromHeight(80 + MediaQuery.of(context).padding.top),
           child: Screensappbar(
             title: 'Merchant',
             screenKey: _merchantScaffoldKey,

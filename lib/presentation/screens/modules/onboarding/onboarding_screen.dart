@@ -65,25 +65,24 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               itemCount: showactions.length,
               itemBuilder: (context, index) {
                 final action = showactions[index];
-                return GestureDetector(
-                  onTap: () {},
-                  child: SizedBox(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 25, vertical: 10),
-                      child: LargeCard(
-                        image:
-                            '${DataConstant.imagesModules}/${DataConstant.modulePathOnboarding}/chinchin-${action.key}_onboarding-on.svg',
-                        placeholder:
-                            '${DataConstant.imagesModules}/${DataConstant.modulePathOnboarding}/chinchin-details_onboarding_membership_v2_onboarding-on.svg',
-                        title: action.actionName,
-                        height: 85,
-                        // imageHeight: 100,
-                        textStyle: textStyle.bodyMedium!.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                return Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 25, vertical: 10),
+                  child: LargeCard(
+                    image:
+                        '${DataConstant.imagesModules}/${DataConstant.modulePathOnboarding}/chinchin-${action.key}_onboarding-on.svg',
+                    placeholder:
+                        '${DataConstant.imagesModules}/${DataConstant.modulePathOnboarding}/chinchin-details_onboarding_membership_v2_onboarding-on.svg',
+                    title: action.actionName,
+                    height: 85,
+                    // imageHeight: 100,
+                    textStyle: textStyle.bodyMedium!.copyWith(
+                      fontWeight: FontWeight.bold,
                     ),
+                    onTap:() {
+                      Navigator.pushNamed(
+                          context, '/${action.actionName}Screen');
+                    } ,
                   ),
                 );
               }),

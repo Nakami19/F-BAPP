@@ -52,7 +52,7 @@ class _AdministrationScreenState extends State<AdministrationScreen> {
         }
       },
       appBar: PreferredSize(
-          preferredSize: Size.fromHeight(110),
+          preferredSize: Size.fromHeight(80 + MediaQuery.of(context).padding.top),
           child: Screensappbar(
               title: 'Administración',
               screenKey: _administrationScaffoldKey,

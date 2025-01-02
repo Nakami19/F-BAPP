@@ -12,6 +12,7 @@ import 'package:f_bapp/config/router/routes.dart';
 import 'package:f_bapp/presentation/providers/modules/merchant_provider.dart';
 import 'package:f_bapp/presentation/providers/shared/navigation_provider.dart';
 import 'package:f_bapp/presentation/providers/shared/session_provider.dart';
+import 'package:f_bapp/presentation/providers/shared/user_provider.dart';
 import 'package:f_bapp/presentation/widgets/shared/app_dialogs.dart';
 import 'package:f_bapp/presentation/widgets/shared/drawer_menu.dart';
 import 'package:f_bapp/presentation/widgets/shared/screens_appbar.dart';
@@ -83,6 +84,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     final navProvider = context.watch<NavigationProvider>();
     final textStyle = Theme.of(context).textTheme;
     final merchantProvider = context.watch<MerchantProvider>();
+    final userProvider = context.read<UserProvider>();
 
     return Scaffold(
         drawer: DrawerMenu(),
@@ -154,6 +156,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                 //Botones
                 Row(
                   children: [
+                  if(userProvider.verificationPrivileges('revert_order'))
                     Expanded(
                       child: SizedBox(
                         height: 70,
@@ -229,6 +232,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                 ),
 
                 //Indicador para ir a vista de historial de pagos
+                if(userProvider.verificationPrivileges('order_report_payment_attempts'))
                 Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 15, vertical: 5),

@@ -1,5 +1,12 @@
 ## [F-APP]
 
+## [1.0.0+38] - 2025-1-2 - Natalia. R
+
+## Added
+
+- Vista de acciones de onboarding: https://chintech.atlassian.net/browse/SCT-6788, https://chintech.atlassian.net/browse/SCT-6789
+- Integradas acciones en menu de onboarding: https://chintech.atlassian.net/browse/SCT-6790
+
 ## [1.0.0+37] - 2025-1-2 - Natalia. R
 
 ## Added
@@ -16,13 +23,13 @@
 
 ## Fix
 
-- Error al instalar aplicacion cuando version es mayor a +26, enabledBiometricValue siempre retornaba true 
+- Error en biometria al instalar aplicacion cuando version es mayor a +26
 
 ## [1.0.0+34] - 2024-12-30 - Natalia. R
 
 ## Added
 
-- Añadida vista de crear orden de pasarela
+- Añadida vista de crear orden de pasarela: https://chintech.atlassian.net/browse/SCT-6785
 
 ## [1.0.0+33] - 2024-12-30 - Natalia. R
 
@@ -34,14 +41,15 @@
 
 ## Added
 
-- Añadidos endpoints de listado de bancos y tipos de documentos
+- Integrado endpoint de listado de bancos: https://chintech.atlassian.net/browse/SCT-6674
+- Integrado endpoint de tipos de documentos: https://chintech.atlassian.net/browse/SCT-6675
 
 ## [1.0.0+31] - 2024-12-27 - Natalia. R
 
 ## Added
 
-- Añadida vista de envio de pago movil
-- Añadido input de monto
+- Añadida vista de envio de pago movil: https://chintech.atlassian.net/browse/SCT-6672
+- Añadido input de monto: https://chintech.atlassian.net/browse/SCT-6673
 
 
 ## [1.0.0+30] - 2024-12-26 - Natalia. R
@@ -54,13 +62,15 @@
 
 ## Added 
 
-- Añadida e integrada vista de detalle de un pago
+- Añadida vista de detalle de un pago: https://chintech.atlassian.net/browse/SCT-6669, https://chintech.atlassian.net/browse/SCT-6670
+- Integrada vista de detalle de un pago: https://chintech.atlassian.net/browse/SCT-6671
 
 ## [1.0.0+28] - 2024-12-26 - Natalia. R
 
 ## Added 
 
-- Añadida e integrada vista de listado de pagos moviles
+- Añadida vista de listado de pagos moviles:  https://chintech.atlassian.net/browse/SCT-6666
+- Integrada vista de listado de pagos moviles: https://chintech.atlassian.net/browse/SCT-6668
 
 ## FIX
 
@@ -70,7 +80,8 @@
 
 ## Added 
 
-- Añadida vista de listado de devoluciones y detalle de devolucion
+- Añadida vista de listado de devoluciones y detalle de devolucion: https://chintech.atlassian.net/browse/SCT-6296 , https://chintech.atlassian.net/browse/SCT-6297 
+- Añadida vista de detalle de devolucion: https://chintech.atlassian.net/browse/SCT-6298 , https://chintech.atlassian.net/browse/SCT-6299 , https://chintech.atlassian.net/browse/SCT-6300
 
 ## [1.0.0+26] - 2024-12-23 - Natalia. R
 
@@ -88,13 +99,13 @@
 
 ## Added 
 
-- Integrada api para el detalle de orden
+- Integrada api para el detalle de orden : https://chintech.atlassian.net/browse/SCT-6295
 
 ## [1.0.0+23] - 2024-12-20 - Natalia. R
 
 ## Added
 
-- Añadida y estructurada vista de detalle de orden
+- Añadida y estructurada vista de detalle de orden: https://chintech.atlassian.net/browse/SCT-6293 , https://chintech.atlassian.net/browse/SCT-6294
 
 - Añadida funcion de detener al temporizador mientras se refresca la sesion
 

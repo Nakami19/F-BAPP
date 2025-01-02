@@ -14,6 +14,7 @@ import 'package:f_bapp/config/router/routes.dart';
 import 'package:f_bapp/config/theme/business_app_colors.dart';
 import 'package:f_bapp/presentation/providers/modules/merchant_provider.dart';
 import 'package:f_bapp/presentation/providers/shared/navigation_provider.dart';
+import 'package:f_bapp/presentation/providers/shared/user_provider.dart';
 import 'package:f_bapp/presentation/providers/shared/utils_provider.dart';
 import 'package:f_bapp/presentation/widgets/shared/drawer_menu.dart';
 import 'package:f_bapp/presentation/widgets/shared/screens_appbar.dart';
@@ -57,13 +58,18 @@ class _ListMobilePaymentsState extends State<ListMobilePayments> {
     idController = TextEditingController(text: "");
     phoneController = TextEditingController(text: "");
 
-    filterIcons = [
-      {'icon': Icons.download_rounded, 'onPressed': () {}},
+    final userProvider = context.read<UserProvider>();
+
+    if (userProvider.verificationPrivileges('download_mobilepayments_report')) {
+      filterIcons.add({'icon': Icons.download_rounded, 'onPressed': () {}});
+    }
+
+    filterIcons.add(
       {
         'icon': Icons.refresh_rounded,
         'onPressed': refreshPayments,
       },
-    ];
+    );
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final merchantProvider = context.read<MerchantProvider>();
@@ -162,6 +168,7 @@ class _ListMobilePaymentsState extends State<ListMobilePayments> {
     final textStyle = Theme.of(context).textTheme;
     final merchantProvider = context.watch<MerchantProvider>();
     final utilsProvider = context.watch<UtilsProvider>();
+    final userProvider = context.read<UserProvider>();
 
     //Componentes que tendra el filtro
     final List<Widget> filters = [
@@ -381,23 +388,26 @@ class _ListMobilePaymentsState extends State<ListMobilePayments> {
                           texts: buildTextsFromPayments(payment,
                               statusColors), // Lista con los textos generada
                           onTap: () {
+                            if (userProvider.verificationPrivileges(
+                                'mobilepayment_report_detail')) {
+                              merchantProvider.paymentInfo = payment;
+
+                              merchantProvider.paymentInfo!['popRoute'] =
+                                  listmobilepaymentsScreen;
+                              Map<String, dynamic> status =
+                                  merchantProvider.status!.firstWhere(
+                                (status) =>
+                                    status["idStatus"] == payment['idStatus'],
+                              );
+
+                              merchantProvider.paymentInfo!['status'] =
+                                  status['name'];
+                              Navigator.pushNamed(
+                                context,
+                                paymentDetail,
+                              );
+                            }
                             // merchantProvider.refundInfo = refund;
-                            merchantProvider.paymentInfo = payment;
-
-                            merchantProvider.paymentInfo!['popRoute'] =
-                                listmobilepaymentsScreen;
-                            Map<String, dynamic> status =
-                                merchantProvider.status!.firstWhere(
-                              (status) =>
-                                  status["idStatus"] == payment['idStatus'],
-                            );
-
-                            merchantProvider.paymentInfo!['status'] =
-                                status['name'];
-                            Navigator.pushNamed(
-                              context,
-                              paymentDetail,
-                            );
                           },
                         ),
                       );

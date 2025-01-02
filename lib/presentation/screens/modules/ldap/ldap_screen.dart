@@ -51,7 +51,7 @@ class _LdapScreenState extends State<LdapScreen> {
         }
       },
       appBar: PreferredSize(
-          preferredSize: Size.fromHeight(110),
+          preferredSize: Size.fromHeight(80 + MediaQuery.of(context).padding.top),
           child: Screensappbar(
               title: 'Ldap',
               screenKey: _ldapScaffoldKey,

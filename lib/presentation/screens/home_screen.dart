@@ -72,7 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
         },
         extendBodyBehindAppBar: true,
         appBar: PreferredSize(
-            preferredSize: Size.fromHeight(150),
+            preferredSize:  Size.fromHeight(150 + MediaQuery.of(context).padding.top),
             child: DashboardAppbar(
               screenKey: _homeScaffoldKey,
             )),
@@ -193,7 +193,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           image:
                               '${DataConstant.imagesModules}/${privilege.icon}/chinchin-${privilege.icon}-on.svg',
                           placeholder:
-                              '${DataConstant.imagesModules}/${privilege.icon}}/chinchin-${privilege.icon}-on.svg',
+                              '${DataConstant.imagesModules}/${privilege.icon}/chinchin-${privilege.icon}-on.svg',
                           title: privilege.moduleName,
                           height: 120,
                           width: 130,

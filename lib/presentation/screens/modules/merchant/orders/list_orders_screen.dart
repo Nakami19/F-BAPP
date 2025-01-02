@@ -12,6 +12,7 @@ import 'package:f_bapp/config/router/routes.dart';
 import 'package:f_bapp/config/theme/business_app_colors.dart';
 import 'package:f_bapp/presentation/providers/modules/merchant_provider.dart';
 import 'package:f_bapp/presentation/providers/shared/navigation_provider.dart';
+import 'package:f_bapp/presentation/providers/shared/user_provider.dart';
 import 'package:f_bapp/presentation/providers/shared/utils_provider.dart';
 import 'package:f_bapp/presentation/widgets/shared/drawer_menu.dart';
 import 'package:f_bapp/presentation/widgets/shared/screens_appbar.dart';
@@ -53,13 +54,19 @@ class _ListOrdersScreenState extends State<ListOrdersScreen> {
     idController = TextEditingController();
     dateController = TextEditingController(text: '$startDate - $endDate');
 
-    filterIcons = [
-      {'icon': Icons.download_rounded, 'onPressed': () {}},
+    final userProvider = context.read<UserProvider>();
+
+    if (userProvider.verificationPrivileges('download_merchant_orders')) {
+      filterIcons.add({'icon': Icons.download_rounded, 'onPressed': () {}});
+    }
+
+    filterIcons.add(
       {
         'icon': Icons.refresh_rounded,
         'onPressed': refreshOrders,
       },
-    ];
+    );
+
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final merchantProvider = context.read<MerchantProvider>();
@@ -149,6 +156,7 @@ class _ListOrdersScreenState extends State<ListOrdersScreen> {
     final merchantProvider = context.watch<MerchantProvider>();
     final utilsProvider = context.watch<UtilsProvider>();
     final textStyle = Theme.of(context).textTheme;
+    final userProvider = context.read<UserProvider>();
 
     //Componentes que tendra el filtro
     final List<Widget> filters = [
@@ -329,12 +337,15 @@ class _ListOrdersScreenState extends State<ListOrdersScreen> {
                             texts: buildTextsFromOrder(order,
                                 statusColors), // Lista con los textos generada
                             onTap: () {
-                              merchantProvider.infoOrder = order;
-                              Navigator.pushNamed(
-                                context,
-                                '/Detalle de orden',
-                                arguments: order['idOrder'],
-                              );
+                              if (userProvider.verificationPrivileges(
+                                  'order_report_detail')) {
+                                merchantProvider.infoOrder = order;
+                                Navigator.pushNamed(
+                                  context,
+                                  '/Detalle de orden',
+                                  arguments: order['idOrder'],
+                                );
+                              }
                             },
                           ),
                         );
