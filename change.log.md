@@ -1,5 +1,11 @@
 ## [F-APP]
 
+## [1.0.0+40] - 2025-1-3 - Natalia. R
+
+## FIX
+
+- Cambiar a colores mas claros no-data.svg
+
 ## [1.0.0+39] - 2025-1-3 - Natalia. R
 
 ## Added
