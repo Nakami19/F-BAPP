@@ -70,15 +70,13 @@ class _PaymentHistoryScreenState extends State<PaymentHistoryScreen> {
 
       typePayment = await merchantProvider.typePayment();
 
-      if (merchantProvider.orderInfo!=null) {
+      if (merchantProvider.orderInfo != null) {
         await merchantProvider.getTransactionsList(
-        limit: 5,
-        page: 0,
-        idOrder: merchantProvider.orderInfo?["idOrder"],
-      );
+          limit: 5,
+          page: 0,
+          idOrder: merchantProvider.orderInfo?["idOrder"],
+        );
       }
-
-      
 
       //el total de elementos para la paginacion sera igual a la cantidad elementos que halla
 
@@ -323,11 +321,12 @@ class _PaymentHistoryScreenState extends State<PaymentHistoryScreen> {
                               statusColors), // Lista con los textos generada
                           onTap: () {
                             merchantProvider.paymentInfo = payment;
-                             merchantProvider.paymentInfo!['popRoute'] = paymentHistory;
-                              Navigator.pushNamed(
-                                context,
-                                paymentDetail,
-                              );
+                            merchantProvider.paymentInfo!['popRoute'] =
+                                paymentHistory;
+                            Navigator.pushNamed(
+                              context,
+                              paymentDetail,
+                            );
                           },
                         ),
                       );
@@ -345,6 +344,24 @@ class _PaymentHistoryScreenState extends State<PaymentHistoryScreen> {
                       tagStatus: tagstatus,
                       idPaymentType: paymentType,
                       startDate: startDate);
+
+                  if (tagstatus != "") {
+                    dropdownValue = tagstatus;
+                  } else {
+                    dropdownValue = null;
+                  }
+
+                  if (paymentType != "") {
+                    dropdownValue2 = paymentType;
+                  } else {
+                    dropdownValue = null;
+                  }
+
+                  if (startDate != "" && endDate != "") {
+                    dateController.text = '$startDate - $endDate';
+                  } else {
+                    dateController.text = '';
+                  }
                 },
 
                 //Funcion al pasar a la pagina anterior
@@ -356,6 +373,24 @@ class _PaymentHistoryScreenState extends State<PaymentHistoryScreen> {
                       tagStatus: tagstatus,
                       idPaymentType: paymentType,
                       startDate: startDate);
+
+                  if (tagstatus != "") {
+                    dropdownValue = tagstatus;
+                  } else {
+                    dropdownValue = null;
+                  }
+
+                  if (paymentType != "") {
+                    dropdownValue2 = paymentType;
+                  } else {
+                    dropdownValue = null;
+                  }
+
+                  if (startDate != "" && endDate != "") {
+                    dateController.text = '$startDate - $endDate';
+                  } else {
+                    dateController.text = '';
+                  }
                 },
               )
             ],

@@ -34,6 +34,48 @@ class OnboardingProvider extends GeneralProvider{
     notifyListeners();
   }
 
+  //estados en las acciones de merchant
+  List<dynamic>? verificationStatus;
+
+ List<dynamic>? get getVerificationStatus => verificationStatus;
+
+  set setStatus(List<dynamic>? newStatus) {
+    verificationStatus = newStatus;
+    notifyListeners();
+  }
+
+  //Obtiene el listado de tipos de estado de verificación
+  Future<void> listVerificationStatus() async {
+    super.setLoadingStatus(true);
+    notifyListeners();
+
+    try {
+      final response = await onboardingService.getListVerificationStatus();
+
+      final data = jsonDecode(response.toString());
+
+      setStatus = data['data'];
+    } on DioError catch (error) {
+      onDioerror(error);
+
+      notifyListeners();
+
+      rethrow;
+    } catch (error) {
+      super.setSimpleError(true);
+      super.setErrorMessage("Ocurrió un error inesperado");
+      super.setTrackingCode(error.toString());
+
+      Snackbars.customSnackbar(navigatorKey.currentContext!,
+          title: "Ocurrió un error inesperado", message: error.toString());
+      notifyListeners();
+      rethrow;
+    } finally {
+      super.setLoadingStatus(false);
+      notifyListeners();
+    }
+  }
+
   //Obtener el listado de verificaciones
   Future<void> listVerifications({
     int? limit,
@@ -157,4 +199,5 @@ class OnboardingProvider extends GeneralProvider{
     Snackbars.customSnackbar(navigatorKey.currentContext!,
         title: resp.trackingCode, message: resp.message);
   }
+
 }

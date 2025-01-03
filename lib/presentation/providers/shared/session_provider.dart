@@ -92,6 +92,7 @@ List<dynamic>? currencies;
                 title: 'Refrescar sesión',
                 content: const Text('¿Deseas extender el tiempo de tu sesión?'),
                 cancelButtonText: 'CERRAR',
+                provider: SessionProvider(),
                 closeAction: () {
                   timer.cancel();
                   destroySession();

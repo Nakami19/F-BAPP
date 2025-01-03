@@ -1,8 +1,14 @@
 ## [F-APP]
 
+## [1.0.0+41] - 2025-1-3 - Natalia. R
+
+## Added
+
+- Filtrado por estatus: https://chintech.atlassian.net/browse/SCT-6793 
+
 ## [1.0.0+40] - 2025-1-3 - Natalia. R
 
-## FIX
+## Fix
 
 - Cambiar a colores mas claros no-data.svg
 

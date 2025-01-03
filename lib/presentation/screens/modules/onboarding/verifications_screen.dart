@@ -5,6 +5,7 @@ import 'package:f_bapp/common/widgets/inputs/custom_dropdown.dart';
 import 'package:f_bapp/common/widgets/inputs/custom_text_form_field.dart';
 import 'package:f_bapp/common/widgets/inputs/date_input.dart';
 import 'package:f_bapp/common/widgets/inputs/filter_container.dart';
+import 'package:f_bapp/common/widgets/inputs/status_checkboxs.dart';
 import 'package:f_bapp/common/widgets/shared/custom_skeleton.dart';
 import 'package:f_bapp/common/widgets/shared/pagination.dart';
 import 'package:f_bapp/config/data_constants/data_constants.dart';
@@ -39,6 +40,8 @@ class _VerificationsScreenState extends State<VerificationsScreen> {
   String searchValue = '';
   String endDate = '';
   String startDate = '';
+  List<String> statusesIdsList = [];
+  Set<String> selectedStatuses={}; 
 
   @override
   void initState() {
@@ -56,6 +59,7 @@ class _VerificationsScreenState extends State<VerificationsScreen> {
 
       //peticiones para obtener la lista de verificaciones y los tipos de plantillas
       await onboardingProvider.verificationTemplates();
+      await onboardingProvider.listVerificationStatus();
       await onboardingProvider.listVerifications(
         limit: 5,
         page: 0,
@@ -84,20 +88,24 @@ class _VerificationsScreenState extends State<VerificationsScreen> {
       searchController.clear();
       dateController.clear();
       dropdownValue = null;
+      selectedStatuses.clear();
     });
 
     template = "";
     searchValue = '';
     endDate = '';
     startDate = '';
+    statusesIdsList = [];
 
     await onboardingProvider.listVerifications(
-        page: paginationProvider.page,
-        limit: 5,
-        startDate: startDate,
-        endDate: endDate,
-        search: searchValue,
-        idVerificationTemplate: template);
+      page: paginationProvider.page,
+      limit: 5,
+      startDate: startDate,
+      endDate: endDate,
+      search: searchValue,
+      idVerificationTemplate: template,
+      statusesIdsLists: statusesIdsList,
+    );
 
     paginationProvider.resetPagination();
     paginationProvider.setTotal(onboardingProvider.verifications!['count']);
@@ -113,16 +121,24 @@ class _VerificationsScreenState extends State<VerificationsScreen> {
         dateController.text != "" ? dateController.text.split(" - ")[1] : "";
     startDate =
         dateController.text != "" ? dateController.text.split(" - ")[0] : "";
+            
+    // Actualiza la lista con los valores seleccionados
+    statusesIdsList = selectedStatuses.toList();
+
+
+    print('Hola ${statusesIdsList}');
 
     //se hace la peticion con los filtros aplicados
     final onboardingProvider = context.read<OnboardingProvider>();
     await onboardingProvider.listVerifications(
-        page: 0,
-        limit: 5,
-        startDate: startDate,
-        endDate: endDate,
-        search: searchValue,
-        idVerificationTemplate: template);
+      page: 0,
+      limit: 5,
+      startDate: startDate,
+      endDate: endDate,
+      search: searchValue,
+      idVerificationTemplate: template,
+      statusesIdsLists: statusesIdsList,
+    );
 
     paginationProvider.resetPagination();
     paginationProvider.setTotal(onboardingProvider.verifications!['count']);
@@ -178,6 +194,16 @@ class _VerificationsScreenState extends State<VerificationsScreen> {
           hintText: 'Fecha de emision',
         ),
       ),
+      StatusCheckboxs(
+        status: onboardingProvider.verificationStatus ?? [],
+        selectedStatuses: selectedStatuses,
+        // onTap: (Set<String> selectedStatuses) {
+        //   setState(() {
+        //     // Actualiza la lista con los valores seleccionados
+        //     statusesIdsList = selectedStatuses.toList();
+        //   });
+        // },
+      )
     ];
 
     return Scaffold(
@@ -311,23 +337,59 @@ class _VerificationsScreenState extends State<VerificationsScreen> {
                 //Funcion al pasar a la siguiente pagina
                 onNextPressed: () {
                   onboardingProvider.listVerifications(
-                      page: paginationProvider.page,
-                      limit: 5,
-                      startDate: startDate,
-                      endDate: endDate,
-                      search: searchValue,
-                      idVerificationTemplate: template);
+                    page: paginationProvider.page,
+                    limit: 5,
+                    startDate: startDate,
+                    endDate: endDate,
+                    search: searchValue,
+                    idVerificationTemplate: template,
+                    statusesIdsLists: statusesIdsList,
+                  );
+
+                  //se mantienen los valores en el filtro si se hace una busqueda
+                  if (template!="") {
+                    dropdownValue=template;
+                  } else {
+                    dropdownValue = null;
+                  }
+                  searchController.text =searchValue;
+                  if (startDate!="" && endDate!="") {
+                      dateController.text = '$startDate - $endDate';
+                    } else {
+                      dateController.text='';
+                    }
+                  
+                  selectedStatuses = statusesIdsList.toSet();
+
                 },
 
                 //Funcion al pasar a la pagina anterior
                 onPreviousPressed: () {
                   onboardingProvider.listVerifications(
-                      page: paginationProvider.page,
-                      limit: 5,
-                      startDate: startDate,
-                      endDate: endDate,
-                      search: searchValue,
-                      idVerificationTemplate: template);
+                    page: paginationProvider.page,
+                    limit: 5,
+                    startDate: startDate,
+                    endDate: endDate,
+                    search: searchValue,
+                    idVerificationTemplate: template,
+                    statusesIdsLists: statusesIdsList,
+                  );
+
+                  //se mantienen los valores en el filtro si se hace una busqueda
+                  if (template!="") {
+                    dropdownValue=template;
+                  } else {
+                    dropdownValue = null;
+                  }
+                  searchController.text =searchValue;
+                  if (startDate!="" && endDate!="") {
+                      dateController.text = '$startDate - $endDate';
+                    } else {
+                      dateController.text='';
+                    }
+                  
+                  selectedStatuses = statusesIdsList.toSet();
+                  
                 },
               )
             ],

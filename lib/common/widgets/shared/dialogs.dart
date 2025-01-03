@@ -18,6 +18,7 @@ class Dialogs {
       bool? showOnlyConfirmButton = false,
       String? confirmButtonText = 'CONFIRMAR',
       String? cancelButtonText = 'CANCELAR',
+      GeneralProvider? provider,
       required VoidCallback actionSuccess,
       VoidCallback? closeAction}) {
     final themeProvider = context.watch<ThemeProvider>();
@@ -45,7 +46,7 @@ class Dialogs {
                       isOutline: false,
                       onTap: actionSuccess,
                       height: 50,
-                      provider: GeneralProvider())
+                      provider:provider ?? GeneralProvider())
                 ]
               : <Widget>[
 

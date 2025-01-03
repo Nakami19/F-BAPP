@@ -32,5 +32,17 @@ class OnboardingServices {
     }
   }
 
+   Future<Response> getListVerificationStatus () async {
+    try {
+      final response = await dio.get(
+        '${Enviroment.ccFbusGateway}/v2/list/verification/status',
+      );
+
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
 
 }

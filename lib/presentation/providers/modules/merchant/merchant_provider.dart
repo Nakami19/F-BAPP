@@ -509,6 +509,17 @@ class MerchantProvider extends GeneralProvider {
     }
   }
 
+  @override
+  void resetValues () {
+    setPaymentslist = null;
+    setOrders = null;
+    setRefunds = null;
+    setStatus = null;
+    setlistBanks = null;
+    setuserData = null;
+
+  }
+
   void onDioerror(error) {
     final response = error.response;
     final data = response?.data as Map<String, dynamic>;

@@ -66,7 +66,8 @@ class _ListOrdersScreenState extends State<ListOrdersScreen> {
         'onPressed': refreshOrders,
       },
     );
-
+    final merchantProvider = context.read<MerchantProvider>();
+    merchantProvider.setOrders = null;
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final merchantProvider = context.read<MerchantProvider>();
@@ -363,6 +364,19 @@ class _ListOrdersScreenState extends State<ListOrdersScreen> {
                         endDate: endDate,
                         idOrder: id,
                         tagStatus: status);
+
+                    if (status != "") {
+                      dropdownValue = status;
+                    } else {
+                      dropdownValue = null;
+                    }
+                    idController.text = id;
+
+                    if (startDate != "" && endDate != "") {
+                      dateController.text = '$startDate - $endDate';
+                    } else {
+                      dateController.text = '${DateFormatter.formatDate2(DateTime.now()).toString()} - ${DateFormatter.formatDate2(DateTime.now()).toString()}';
+                    }
                   },
 
                   //Funcion al pasar a la pagina anterior
@@ -374,6 +388,19 @@ class _ListOrdersScreenState extends State<ListOrdersScreen> {
                         endDate: endDate,
                         idOrder: id,
                         tagStatus: status);
+
+                        if (status != "") {
+                      dropdownValue = status;
+                    } else {
+                      dropdownValue = null;
+                    }
+                    idController.text = id;
+
+                    if (startDate != "" && endDate != "") {
+                      dateController.text = '$startDate - $endDate';
+                    } else {
+                      dateController.text = '';
+                    }
                   },
                 )
               ]

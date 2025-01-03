@@ -140,7 +140,6 @@ class _ListDevolutionsScreenState extends State<ListDevolutionsScreen> {
     startDate =
         dateController.text != "" ? dateController.text.split(" - ")[0] : "";
 
-
     //se hace la peticion con los filtros aplicados
     final merchantProvider = context.read<MerchantProvider>();
     await merchantProvider.listRefunds(
@@ -202,8 +201,7 @@ class _ListDevolutionsScreenState extends State<ListDevolutionsScreen> {
             }
 
             return null;
-          }
-          ),
+          }),
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 3),
         child: CustomDropdown(
@@ -251,7 +249,8 @@ class _ListDevolutionsScreenState extends State<ListDevolutionsScreen> {
           }
         },
         appBar: PreferredSize(
-            preferredSize: Size.fromHeight(80 + MediaQuery.of(context).padding.top),
+            preferredSize:
+                Size.fromHeight(80 + MediaQuery.of(context).padding.top),
             child: Screensappbar(
               title: 'Listado de devoluciones',
               screenKey: _listdevolutionsScaffoldKey,
@@ -386,6 +385,22 @@ class _ListDevolutionsScreenState extends State<ListDevolutionsScreen> {
                       idOrder: idOrder,
                       tagStatus: status,
                     );
+
+                    //los valores en el filtro se mantienen si se realizo la busqueda
+                    idOrderController.text=idOrder;
+                    phoneNumberController.text = phoneNumber;
+                    if (startDate!="" && endDate!="") {
+                      dateController.text = '$startDate - $endDate';
+                    } else {
+                      dateController.text='';
+                    }
+
+                    if (status!="") {
+                      dropdownValue = status;
+                    } else {
+                      dropdownValue=null;
+                    }
+                    
                   },
 
                   //Funcion al pasar a la pagina anterior
@@ -398,6 +413,20 @@ class _ListDevolutionsScreenState extends State<ListDevolutionsScreen> {
                       idOrder: idOrder,
                       tagStatus: status,
                     );
+
+                    idOrderController.text=idOrder;
+                    phoneNumberController.text = phoneNumber;
+                    if (startDate!="" && endDate!="") {
+                      dateController.text = '$startDate - $endDate';
+                    } else {
+                      dateController.text='';
+                    }
+
+                    if (status!="") {
+                      dropdownValue = status;
+                    } else {
+                      dropdownValue=null;
+                    }
                   },
                 )
               ]
