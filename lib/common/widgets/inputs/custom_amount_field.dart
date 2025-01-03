@@ -73,13 +73,14 @@ class _CustomAmountFieldState extends State<CustomAmountField> {
     focusNode.dispose();
     super.dispose();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
 
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: widget.paddingV, horizontal: widget.paddingH),
+      padding: EdgeInsets.symmetric(
+          vertical: widget.paddingV, horizontal: widget.paddingH),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -90,8 +91,8 @@ class _CustomAmountFieldState extends State<CustomAmountField> {
                   //configura con las opciones proporcionadas
                   controller: widget.amountcontroller,
                   //input numerico
-                  keyboardType:
-                      TextInputType.numberWithOptions(decimal: widget.useDecimals),
+                  keyboardType: TextInputType.numberWithOptions(
+                      decimal: widget.useDecimals),
                   inputFormatters: [
                     //formato 00,00
                     DigitFormatter.inputMoneyFormatter,
@@ -166,7 +167,11 @@ class _CustomAmountFieldState extends State<CustomAmountField> {
                   onTap: () {
                     //Oculta el teclado en dispositivos iOS si el tipo es numérico.
 
-                    FocusScope.of(context).unfocus();
+                    if (Theme.of(context).platform == TargetPlatform.iOS) {
+                      FocusScope.of(context).unfocus();
+                    }
+
+                    // FocusScope.of(context).unfocus();
                   },
                   onChanged: widget.onChanged,
                 ),

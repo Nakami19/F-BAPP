@@ -1,5 +1,11 @@
 ## [F-APP]
 
+## [1.0.0+42] - 2025-1-3 - Natalia. R
+
+## Fix
+
+- Input de monto e input de busqueda en listado de verificaciones
+
 ## [1.0.0+41] - 2025-1-3 - Natalia. R
 
 ## Added

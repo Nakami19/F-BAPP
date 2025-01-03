@@ -162,9 +162,7 @@ class _VerificationsScreenState extends State<VerificationsScreen> {
           enabled: true,
           validator: (value) {
             if (value != null && value != "") {
-              if (value.length != 24) {
-                return 'La cantidad de caracteres permitidos es 24';
-              }
+             
             }
 
             return null;
@@ -389,7 +387,7 @@ class _VerificationsScreenState extends State<VerificationsScreen> {
                     }
                   
                   selectedStatuses = statusesIdsList.toSet();
-                  
+
                 },
               )
             ],
