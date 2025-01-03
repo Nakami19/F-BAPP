@@ -9,7 +9,7 @@ import 'package:f_bapp/common/widgets/inputs/custom_text_form_field.dart';
 import 'package:f_bapp/common/widgets/shared/custom_skeleton.dart';
 import 'package:f_bapp/common/widgets/shared/snackbars.dart';
 import 'package:f_bapp/config/router/routes.dart';
-import 'package:f_bapp/presentation/providers/modules/merchant_provider.dart';
+import 'package:f_bapp/presentation/providers/modules/merchant/merchant_provider.dart';
 import 'package:f_bapp/presentation/providers/shared/navigation_provider.dart';
 import 'package:f_bapp/presentation/providers/shared/session_provider.dart';
 import 'package:f_bapp/presentation/providers/shared/user_provider.dart';

@@ -16,5 +16,10 @@ import 'package:flutter/material.dart';
     "REVERSADA": Color.fromARGB(219, 246, 195, 26),
     'Confirmada': primaryColor,
     "Por Confirmar":Color.fromARGB(219, 246, 195, 26),
+    'APROBADO': primaryColor,
+    'POR CARGAR': Colors.grey,
+    'FINALIZADO': Color(0xff02a8f5),
+    'PROCESANDO': Color(0xff02a8f5),
+    'REVISIÓN MANUAL': Color.fromARGB(219, 246, 195, 26)
   };
 

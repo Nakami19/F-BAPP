@@ -8,6 +8,8 @@ class TextCard extends StatelessWidget {
     this.height,
     this.width,
     this.onTap,
+    this.textsStyle,
+    this.statusTextStyle,
     required this.texts,
   });
 
@@ -15,6 +17,8 @@ class TextCard extends StatelessWidget {
   final double? height;
   final double? width;
   final List<Map<String, dynamic>> texts;
+  final TextStyle? textsStyle;
+  final TextStyle? statusTextStyle;
 
   @override
   Widget build(BuildContext context) {
@@ -72,14 +76,18 @@ class TextCard extends StatelessWidget {
                             children: [
                               TextSpan(
                                 text: label,
-                                style: textStyle.bodySmall!.copyWith(
+                                style: textsStyle?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ) ?? textStyle.bodySmall!.copyWith(
                                   fontSize: 13,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
                               TextSpan(
                                 text: value,
-                                style: textStyle.bodySmall!.copyWith(
+                                style: textsStyle?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ) ?? textStyle.bodySmall!.copyWith(
                                   fontSize: 13,
                                   fontWeight: FontWeight.normal,
                                 ),
@@ -133,7 +141,10 @@ class TextCard extends StatelessWidget {
                         width: 90,
                         child: Text(
                           status,
-                          style: textStyle.bodySmall!.copyWith(
+                          style: statusTextStyle?.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: statusColor ?? primaryColor,
+                          ) ?? textStyle.bodySmall!.copyWith(
                             fontWeight: FontWeight.w600,
                             color: statusColor ?? primaryColor,
                             fontSize: 13,

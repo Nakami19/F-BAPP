@@ -3,7 +3,7 @@ import 'package:f_bapp/common/data/digit_formatter.dart';
 import 'package:f_bapp/common/widgets/cards/information_card.dart';
 import 'package:f_bapp/common/widgets/shared/custom_skeleton.dart';
 import 'package:f_bapp/config/router/routes.dart';
-import 'package:f_bapp/presentation/providers/modules/merchant_provider.dart';
+import 'package:f_bapp/presentation/providers/modules/merchant/merchant_provider.dart';
 import 'package:f_bapp/presentation/providers/shared/navigation_provider.dart';
 import 'package:f_bapp/presentation/providers/shared/utils_provider.dart';
 import 'package:f_bapp/presentation/widgets/shared/drawer_menu.dart';

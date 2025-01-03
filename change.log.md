@@ -1,5 +1,12 @@
 ## [F-APP]
 
+## [1.0.0+39] - 2025-1-3 - Natalia. R
+
+## Added
+
+- Vista listado de verificaciones: https://chintech.atlassian.net/browse/SCT-6792
+- Integrado listado de verificaciones : https://chintech.atlassian.net/browse/SCT-6794
+
 ## [1.0.0+38] - 2025-1-2 - Natalia. R
 
 ## Added

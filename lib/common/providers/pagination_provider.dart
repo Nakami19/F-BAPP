@@ -1,6 +1,6 @@
 import 'package:f_bapp/common/providers/general_provider.dart';
 import 'package:f_bapp/common/widgets/cards/text_card.dart';
-import 'package:f_bapp/presentation/providers/modules/merchant_provider.dart';
+import 'package:f_bapp/presentation/providers/modules/merchant/merchant_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

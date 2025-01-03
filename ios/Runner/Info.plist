@@ -54,7 +54,7 @@
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	 <key>CFBundleDisplayName</key>
-    <string>App Name</string>
+    <string>$(BUNDLE_DISPLAY_NAME)</string>
     <key>CFBundleIdentifier</key>
     <string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
     <key>CFBundleIconFiles</key>

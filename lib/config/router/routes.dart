@@ -3,7 +3,7 @@ import 'package:f_bapp/presentation/screens/auth/second_login_screen.dart';
 import 'package:f_bapp/presentation/screens/home_screen.dart';
 import 'package:f_bapp/presentation/screens/main_screen.dart';
 import 'package:f_bapp/presentation/screens/modules/administration/administration_screen.dart';
-import 'package:f_bapp/presentation/screens/modules/merchant/create_order_screen.dart';
+import 'package:f_bapp/presentation/screens/modules/merchant/orders/create_order_screen.dart';
 import 'package:f_bapp/presentation/screens/modules/merchant/devolutions/devolution_detail_screen.dart';
 import 'package:f_bapp/presentation/screens/modules/merchant/devolutions/list_devolutions_screen.dart';
 import 'package:f_bapp/presentation/screens/modules/merchant/list_profits_screen.dart';

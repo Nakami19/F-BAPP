@@ -1,5 +1,6 @@
 import 'package:f_bapp/common/providers/pagination_provider.dart';
-import 'package:f_bapp/presentation/providers/modules/merchant_provider.dart';
+import 'package:f_bapp/presentation/providers/modules/merchant/merchant_provider.dart';
+import 'package:f_bapp/presentation/providers/modules/onboarding/onboarding_provider.dart';
 import 'package:f_bapp/presentation/providers/shared/navigation_provider.dart';
 import 'package:f_bapp/presentation/providers/shared/utils_provider.dart';
 import 'package:f_bapp/presentation/providers/shared/user_provider.dart';
@@ -22,6 +23,7 @@ class AppProviders {
     ChangeNotifierProvider(create: (_) => NavigationProvider()),
     ChangeNotifierProvider(create: (_) => PaginationProvider()),
     ChangeNotifierProvider(create: (_) => MerchantProvider()),
+    ChangeNotifierProvider(create: (_) => OnboardingProvider()),
   ];
 
   static List<GeneralProvider> getDisposableProviders(BuildContext context) {

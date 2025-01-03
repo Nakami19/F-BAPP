@@ -1,5 +1,5 @@
 import 'package:f_bapp/common/widgets/cards/information_card.dart';
-import 'package:f_bapp/presentation/providers/modules/merchant_provider.dart';
+import 'package:f_bapp/presentation/providers/modules/merchant/merchant_provider.dart';
 import 'package:f_bapp/presentation/widgets/shared/drawer_menu.dart';
 import 'package:f_bapp/presentation/widgets/shared/screens_appbar.dart';
 import 'package:flutter/material.dart';

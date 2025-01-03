@@ -10,7 +10,7 @@ import 'package:f_bapp/common/widgets/shared/pagination.dart';
 import 'package:f_bapp/config/data_constants/data_constants.dart';
 import 'package:f_bapp/config/router/routes.dart';
 import 'package:f_bapp/config/theme/business_app_colors.dart';
-import 'package:f_bapp/presentation/providers/modules/merchant_provider.dart';
+import 'package:f_bapp/presentation/providers/modules/merchant/merchant_provider.dart';
 import 'package:f_bapp/presentation/providers/shared/navigation_provider.dart';
 import 'package:f_bapp/presentation/providers/shared/user_provider.dart';
 import 'package:f_bapp/presentation/providers/shared/utils_provider.dart';
@@ -109,10 +109,10 @@ class _ListOrdersScreenState extends State<ListOrdersScreen> {
       dropdownValue = null;
     });
 
-    String status = "";
-    String id = "";
-    String endDate = DateFormatter.formatDate2(DateTime.now()).toString();
-    String startDate = DateFormatter.formatDate2(DateTime.now()).toString();
+    status = "";
+    id = "";
+    endDate = DateFormatter.formatDate2(DateTime.now()).toString();
+    startDate = DateFormatter.formatDate2(DateTime.now()).toString();
 
     await merchantProvider.listorders(
         page: 0,

@@ -1,5 +1,5 @@
 import 'package:f_bapp/common/providers/pagination_provider.dart';
-import 'package:f_bapp/presentation/providers/modules/merchant_provider.dart';
+import 'package:f_bapp/presentation/providers/modules/merchant/merchant_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

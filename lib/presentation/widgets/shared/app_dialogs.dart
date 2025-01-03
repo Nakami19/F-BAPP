@@ -12,7 +12,7 @@ import 'package:f_bapp/infrastructure/shared/secure_storage_service.dart';
 import 'package:f_bapp/infrastructure/shared/storage_service_impl.dart';
 import 'package:f_bapp/presentation/providers/app_providers.dart';
 import 'package:f_bapp/presentation/providers/auth/login_provider.dart';
-import 'package:f_bapp/presentation/providers/modules/merchant_provider.dart';
+import 'package:f_bapp/presentation/providers/modules/merchant/merchant_provider.dart';
 import 'package:f_bapp/presentation/providers/shared/session_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
